@@ -1,0 +1,56 @@
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download-Test🔥</title>
+</head>
+<body>
+    <h1>Download-機能を実装するロボ玉🔥</h1>
+
+    <h1>ぷるぷるロボ玉をDownloadするぜ🐹</h1>
+    
+    <h2>
+        <a href="./robotama.jpg" download>ぷるぷるロボ玉🔥</a>
+    </h2>
+
+    <h3>上のコードでは、HTMLファイルのアンカー（anchor）要素を作成し、そのhref属性にダウンロードされるファイルのリンク（パス）を指定しています。</h3>
+
+    <h3>リソースまでのファイルのパスをしっかりと指定するのがポイント🔥</h3>
+
+    <h2>
+        <a href="./robotama.jpg" download="purupuru-robotama.jpg">ぷるんぷるんロボ玉🔥</a>
+    </h2>
+
+    <h3>download="別名" という形で、Download時の名前を設定することができます🔥</h3>
+
+
+
+    <h3>参考・引用</h3>
+    <ol>
+        <li>
+            <a href="https://javascript.keicode.com/newjs/download-files.php" target="_blank">ファイルをダウンロード保存する方法</a>
+        </li>
+
+        <li>
+            <a href="https://www.keicode.com/script/html5-download.php" target="_blank">HTML5 a タグの download 属性</a>
+        </li>
+    </ol>
+
+    <script>
+
+        function myfunc(filename, pathname){
+
+            const anchor = document.createElement('a');
+            anchor.download = filename;
+            
+            const textnode = document.createTextNode("Click here to download!"); 
+            document.body.appendChild(anchor);
+            anchor.appendChild(textnode); 
+
+            anchor.href = pathname;
+        }
+
+        myfunc("GunmaRobotama","./robotama.jpg");
+    </script>
+</body>
+</html>
