@@ -142,7 +142,7 @@
 
 
 
-        // 1. LoginCheckをする
+        // 1. LoginCheckをする => LoginCheck処理を実装する
         let loginFlag = true;
 
         // 2. Member-Reject-FlagをCheckする
@@ -167,7 +167,7 @@
             const cookieSplit = cookie.split('=');
             console.log({cookieSplit});
               
-            memberCookieFlag = cookieSplit[0] == 'cggs-member-cookie' ? true : false;
+            acceptFlag = cookieSplit[0] == 'cggs-member-cookie' ? true : false;
         }
 
         console.log({acceptFlag});
