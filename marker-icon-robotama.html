@@ -1,0 +1,82 @@
+<html style="height: 100%; margin: 0;">
+<head>
+    <title>Leaflet</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./node_modules/leaflet/dist/leaflet.css" />
+    <script src="./node_modules/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body style="height: 100%; margin: 0; overflow: hidden;">
+    <div id="map" style="height: 100%; width: 100%;"></div>
+</body>
+
+<script>
+
+    // 1. map-Instance => L(Leaflet) の map-Func => setView-Func([緯度, 経度], ZoomLevel)
+    const map = L.map('map',{
+        doubleClickZoom: false, // default true
+        scrollWheelZoom:false,
+        boxZoom:false,
+        tap:false,
+        keyboard:false,
+        zoomControl:false,
+        // closePopupOnClick: false,
+    })
+    .setView([51.5, -0.09], 3); // イギリスを中心地に設定する🔥
+
+
+    // 2. 地図データの読み込み Ver. 国土地理院 English
+    L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/english/{z}/{x}/{y}.png', //  'Web配信されている地図の URL ', => OpenStreetMap や 国土地理院 などの Map-Dataを選択することができる。
+    {
+        attribution: 'Map data <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>', // attribution: '属性表示',
+        minZoom:2,
+        maxZoom: 6,    
+    }).addTo(map);
+
+
+    const robotamaIcon = L.icon({
+        iconUrl: ['./robotama-icon.png'], // => 元々の画像Sizeで表示される🔥
+        //iconSize: [38, 95]  // アイコンサイズ
+    });
+
+    
+    // [ 表示させるアイコンを変更したい場合 ]
+    // const robotamaIcon の部分の記述を変更します。
+
+    // iconUrl: 画像ファイルパス
+    // iconRetinaUrl: モバイル用画像ファイルパス
+    // iconSize: アイコンのサイズ
+    // iconAnchor: 画像のオフセット位置
+    // popupAnchor: ポップアップの表示位置
+
+
+    // marker() で指定-Point に Markerを追加する => .addTo()は、 L.tileLayer()で読み込んだ地図をWebGISオブジェクトに追加する関数
+
+    L.marker(
+        [51.5, -0.09], 
+        { icon: robotamaIcon }  // ここで、OriginalアイコンをSetする🔥
+        )
+    .addTo(map)
+    .bindPopup('ロボ玉万歳！！！.<br> 神聖グンマー帝国、万歳！！.');
+
+    L.marker([38.9, -77.01], {icon: robotamaIcon}).addTo(map).bindPopup('アメリカ合衆国-Robotama');
+
+    L.marker([38.9, 35.2], {icon: robotamaIcon}).addTo(map).bindPopup('イスラエル国-Robotama') //.openPopup();
+
+    L.marker([41.89, 12.48], {icon: robotamaIcon}).addTo(map).bindPopup('イタリア共和国-Robotama'); // .openPopup();
+
+    L.marker([52.5, 13.4], {icon: robotamaIcon}).addTo(map).bindPopup('ドイツ連邦共和国-Robotama'); // .openPopup();
+
+    // openPopup() をすると、Clickしなくても Popupが出現した状態(Open-状態)になる！ => 1つだけ
+    L.marker([35.68, 139.69], {icon: robotamaIcon}).addTo(map).bindPopup('日本-Robotama').openPopup();
+
+    L.marker([-41.289, 174.7], {icon: robotamaIcon}).addTo(map).bindPopup('ニュージーランド-Robotama');
+
+
+    // [ 参考・引用 ]
+    // 【JavaScript】LeafLetのマーカーを任意の画像に変換する方法 => https://cpoint-lab.co.jp/article/201905/9485/
+
+    // Leaflet #010 – マーカーのアイコンを変更 => https://day-journal.com/memo/leaflet-010/
+
+</script>
+</html>
