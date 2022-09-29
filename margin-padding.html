@@ -1,0 +1,183 @@
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>margin-padding-Test🔥</title>
+    <style>
+        .robotama {
+            background-color: orange;
+            padding: 10px;
+            border: solid 3px black;
+            margin: 10px;
+        }
+
+        .robotama1 {
+            background-color: orange;
+            border: solid 3px black;
+            margin-top: 50px;
+            margin-left: 100px;
+            padding-left: 500px;
+        }
+
+        .robotama2 {
+            background-color: orange;
+            border: solid 3px black;
+            padding: 10px 20px 20px 30px;
+            margin: 10px 20px 20px 30px;
+        }
+        
+        .robotama3 {
+            background-color: orange;
+            border: solid 3px black;
+            padding: 20px 50px;
+            margin: 30px 50px;
+        }
+
+        .parent {
+            /*親要素は灰色で塗る*/
+            background: silver;
+            /*親要素の幅を1000pxに*/
+            width: 1000px;	
+        }
+        .parent p {
+            /* 合計: 100% になるように設定する */
+
+            /* 要素の幅: 親との対比(相対比率)で60% の Size */
+            width: 60%;
+            /* 600px */
+
+            /* 左も右も20%ずつ */
+            margin: 0 20%;
+            /* 左右: 200pxずつ */
+
+            /*今回はpaddingはゼロに*/
+            padding: 0;
+            background: orange;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>margin と padding を学習するロボ玉🔥</h1>
+
+    <h2>1. CSSのmarginとpaddingとは？</h2>
+
+    <p>CSSでは要素のまわりの余白をmargin（マージン）とpadding（パディング）というプロパティで指定します。</p>
+
+    <h3>1-1.marginとpaddingの違いは？</h3>
+
+    <p>padding：要素の内側の余白</p>
+
+    <p>=> padding : 詰め物, 綿</p>
+
+    <p>margin：要素の外側の余白</p>
+
+    <p>=> margin : 余白・余地</p>
+
+    <h3>1-2. CSSの余白の考え方（ボックスモデル）</h3>
+
+    <p>要素の中身（内容）があり、そのまわりの余白がpaddingです。
+        <br>
+        そのまわりにはborder（線）があり、
+        それより外側の余白がmarginです。
+    </p>
+
+    <h4>要素 => padding => border(境界線) => margin</h4>
+
+    <p>「オレンジ色の部分」と「線の部分」が合わせて要素全体になります。
+        <br>
+        その外側のmarginは要素外の余白なわけですね。
+        <br>
+        この図のようなCSSの余白の考え方は「ボックスモデル」と呼ばれます。
+    </p>
+
+    <p>要素に対してwidthとheightの値を指定した場合には、要素の中身の部分の大きさが変わります。</p>
+
+
+    <h2>2. marginとpaddingの書き方</h2>
+
+    <h3>2-1. 上下左右のmargin・paddingをまとめて指定</h3>
+
+    <p class="robotama">ロボ玉-HTML-Element🔥</p>
+
+
+    <h3>2-2. 上下左右の一部だけ指定</h3>
+
+    <p class="robotama1">ロボ玉試作1号機🔥</p>
+
+
+    <h3>2-3. 上・右・下・左の余白をまとめて指定</h3>
+
+    <p class="robotama2">ロボ玉試作2号機🔥</p>
+
+    
+
+    <h3>2-4. 上下と左右の余白をまとめて指定</h3>
+
+    <p class="robotama3">ロボ玉試作3号機🔥</p> 
+
+
+    <h2>3. marginとpaddingの値を %で指定する</h2>
+
+
+    <h3>3-1. % 指定の考え方と計算</h3>
+
+    <p>% = 親要素の幅に対する比率🔥</p>
+
+    <p> %は親要素の幅に対する比率で計算されます。
+        <br>
+        例えば親要素の幅（width）が1000pxの場合、40% ＝ 400pxになります。
+    </p>
+
+    <p>親要素の幅が変われば%指定されているpaddingやmarginの幅も変わります🔥</p>
+
+    <p>レスポンシブ対応に最適🔥</p>
+
+    <p>%指定するときには、横の%の合計が100%になるようにします（でないとはみ出てしまいます）。「margin30%、padding30%、width40%」という具合ですね。</p>
+
+    <p>そのため「paddingを%指定したい」というときは、基本的にはmarginもwidhtも合わせて%指定する必要があります（でないと合計100%になりません）。</p>
+
+
+    <div class="parent">
+        <p>%指定するロボ玉🔥</p>
+    </div>
+
+    <p>divで親要素を作り、その中に段落要素（p）を入れています。
+        <br>
+        この段落要素のmarginを左右20%ずつ、widthを60%（計100%）に指定してみます。
+    </p>
+
+    <h3>3-2. %指定の使いどころは？</h3>
+
+    <p>
+        ページの内容全体を表すbody要素の幅は、pxで指定されていないとブラウザの幅になります。
+        <br>
+        つまり、幅1200pxのブラウザでウェブページを見ればbodyの幅は1200pxに、幅400pxのスマホブラウザでページを見ればbodyの幅は400pxになるわけですね。
+        <br>
+        そのため、ウェブページを開いたブラウザの幅に対して％指定をすることができるのです。
+    </p>
+
+
+    <h2>4. marginの相殺</h2>
+
+    <h3>4-1. margin指定が複数並ぶと１つしか適用されない</h3>
+
+    <p>marginが衝突したときは、値が大きい方が適用される🔥</p>
+
+    <h3>4-2. 親要素ともmarginの相殺は起こる</h3>
+
+    <p>「marginが並ぶとそのうちの１つしか適用されない」、また「要素間の余白が最も大きくなるmarginが適用される」のだと覚えておきましょう。</p>
+
+    <h3>4-3. paddingでは相殺は起こらない</h3>
+
+    
+    <h2>5. 要素を左右中央配置にするテクニック</h2>
+
+    <h3>5-1. marginを活用して中央配置する</h3>
+
+    <h3>5-2. margin: autoで上下中央配置はできない</h3>
+
+    <h3>5-3. paddingで中央寄せはできない</h3>
+
+</body>
+</html>
