@@ -167,7 +167,7 @@
             const cookieSplit = cookie.split('=');
             console.log({cookieSplit});
               
-            acceptFlag = cookieSplit[0] == 'cggs-member-cookie' ? true : false;
+            if (cookieSplit[0] == 'cggs-member-cookie') acceptFlag = true;
         }
 
         console.log({acceptFlag});
