@@ -1,0 +1,70 @@
+
+<h1>JavaScriptで、リンク(URL)を開く方法（location.hrefとwindow.open()）</h1>
+
+<h2>1. 特定の動作の後に違うURLへ遷移させたい</h2>
+
+<h2>2. Javascriptを使って新規タブでリンクを開きたい</h2>
+
+<h2>3. Javascriptを使って新規ウィンドウでリンクを開きたい</h2>
+
+
+
+<h2>Javascriptでリンクを開く方法その１ location.href</h2>
+
+<h2>Javascriptでリンクを開く方法その２ window.open()（※新規タブ）</h2>
+
+<h2>Javascriptでリンクを開く方法その３ window.open()（※新規ウィンドウ）</h2>
+
+<p>以下のボタンを押すとこのブログのTOPページへ遷移します</p>
+
+<button onClick="changeLocation()">遷移する</button>
+
+
+<script>
+
+    const url = window.location.href;
+
+    console.log(url);
+
+
+    function changeLocation() {
+        window.location.href = 'https://masanyon.com/';
+    }
+    
+</script>
+
+
+<p>以下のボタンを押すと新規タブでこのブログが開きます</p>
+
+<button onClick="openNewTab()">新規タブで開く</button>
+
+<script>
+    function openNewTab() {
+        window.open('https://masanyon.com/');
+    }
+</script>
+
+
+<p>以下のボタンを押すと新規ウィンドウでこのブログが開きます</p>
+
+<button onClick="openNewWindow()">新規ウィンドウで開く</button>
+
+<script>
+    function openNewWindow() {
+        window.open('https://masanyon.com/', null, 'top=100, left=500, width=1000, height=800');
+    }
+</script>
+
+
+
+<h3>参考・引用</h3>
+<ol>
+    <li>
+        <a href="https://hataworakuni.net/how-to-open-url-in-javascript" target="_blank">【Javascript】リンク(URL)を開く方法（location.hrefとwindow.open()）</a>
+    </li>
+</ol>
+
+
+
+
+
