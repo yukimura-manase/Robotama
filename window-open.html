@@ -15,46 +15,58 @@
 
 <h2>Javascriptでリンクを開く方法その３ window.open()（※新規ウィンドウ）</h2>
 
-<p>以下のボタンを押すとこのブログのTOPページへ遷移します</p>
+
+<p>ページ移動・リンクを開くボタン</p>
 
 <button onClick="changeLocation()">遷移する</button>
 
-
 <script>
-
+    // 1. window.location.href には、アクセス中のWebページのURLが格納されている。
     const url = window.location.href;
 
     console.log(url);
 
-
+    // 2. window.location.href に移動したい WebページのURLを代入すれば、ページ遷移できる。
     function changeLocation() {
-        window.location.href = 'https://masanyon.com/';
+        window.location.href = "https://masanyon.com/";
     }
     
 </script>
 
 
-<p>以下のボタンを押すと新規タブでこのブログが開きます</p>
+<p>新規タブで、リンクを開く(Webページを開く)ボタン</p>
 
-<button onClick="openNewTab()">新規タブで開く</button>
+<button onClick="openNewTab()">New-Tab-Open</button>
 
 <script>
+    // window.open() の引数に、開きたいWebページのURLを渡せば、新規タブでWebページを開ける。
     function openNewTab() {
-        window.open('https://masanyon.com/');
+        window.open("https://masanyon.com/");
     }
 </script>
 
 
-<p>以下のボタンを押すと新規ウィンドウでこのブログが開きます</p>
+<p>新規ウィンドウで、リンクを開く(Webページを開く)ボタン</p>
 
-<button onClick="openNewWindow()">新規ウィンドウで開く</button>
+<button onClick="openPopup()">New-Window-Open</button>
 
 <script>
-    function openNewWindow() {
-        window.open('https://masanyon.com/', null, 'top=100, left=500, width=1000, height=800');
+    // window.open() の第3引数に「 popup 」を設定すると、新規Windowで開くことができます。
+    function openPopup() {
+        window.open("https://masanyon.com/",null, "popup");
     }
 </script>
 
+<button onClick="openNewWindow()">New-Window-Open Ver. Width-Height-設定</button>
+
+<script>
+    
+
+    // 新規Windowの幅や高さなどの設定をすることもできます。
+    function openNewWindow() {
+        window.open("https://masanyon.com/", null, "top=300, left=500, width=800, height=800");
+    }
+</script>
 
 
 <h3>参考・引用</h3>
@@ -62,9 +74,7 @@
     <li>
         <a href="https://hataworakuni.net/how-to-open-url-in-javascript" target="_blank">【Javascript】リンク(URL)を開く方法（location.hrefとwindow.open()）</a>
     </li>
+    <li>
+        <a href="https://developer.mozilla.org/ja/docs/Web/API/Window/open" target="_blank">Window.open()</a>
+    </li>
 </ol>
-
-
-
-
-
