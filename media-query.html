@@ -1,0 +1,87 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media-Query-Test🔥</title>
+
+    
+<style>
+
+/* Media-Sizeに関係なく適用させるCSS */
+.box1 {
+    width:200px;
+    height:100px;
+}
+
+.box2 {
+    width:200px;
+    height:100px;
+}
+
+.box3 {
+    width:200px;
+    height:100px;
+}
+
+
+/*　画面サイズ:768px からは、ここのStyleを適用する => 768pxが最小値(768px 以上)　*/
+@media (min-width:768px) {
+    .box1 {
+        background-color: red;
+    }
+
+    .box2 {
+        background-color: blue;
+    }
+
+    .box3 {
+        background-color: chartreuse;
+    }
+        
+}
+
+    
+/*　画面サイズ:767px までは、ここのStyleを適用する => 767pxが最大値(767px 以下)　*/
+@media (max-width:767px) {
+
+    .box1 {
+        background-color: orange;
+    }
+
+    .box2 {
+        background-color: aquamarine;
+    }
+
+    .box3 {
+        background-color: gray;
+    }
+
+}
+
+/* ブレイクポイントとは何か？ */
+
+/* max-widthやmin-widthで指定した画面幅のように適用されるスタイルが切り替わるポイントをブレイクポイント(breakpoint)と呼びます。 */
+
+/* 今回なら、 767 と 768px がブレークポイント */
+
+
+</style>
+</head>
+<body>
+    <h1>Media-Query-Test-Robotama🔥</h1>
+
+    <div class="box1"></div>
+    <div class="box2"></div>
+    <div class="box3"></div>
+
+
+
+    <h3>参考・引用</h3>
+    <ol>
+        <li>
+            <a href="https://prograshi.com/design/css/media-query/" target="_blank">【CSS】メディアクエリ(@media)とは何か？使い方を実例で解説｜.cssファイルやlinkタグでの画面幅以上・以下の指定（初心者向け、わかりやすい）</a>
+        </li>
+    </ol>
+    
+</body>
+</html>
