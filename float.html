@@ -1,0 +1,109 @@
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <title>Float-Test🔥</title>
+  </head>
+  <style>
+    .center-block {
+
+        text-align: center;
+    }
+    /* [ float: left ] の設定によって、指定された要素は、左に回り込む */
+    .left{
+      float: left;
+    }
+
+    .right{
+        float: right;
+    }
+
+    .left-clear {
+        /* [ float: left ] を解除する  */
+        clear: left;
+    }
+
+    .clear {
+        /* [ float: right ] と [ float: left ] どちらも解除する  */
+        clear: both;
+    }
+
+    .right-clear {
+        clear: right;
+    }
+
+    .box1{
+        background-color: red;
+        
+        width:200px;
+        height:100px;
+    }
+    .box2{
+        background-color: blue;
+        width:200px;
+        height:100px;
+    }
+    .box3{
+        background-color: chartreuse;
+        width:200px;
+        height:100px;
+    }
+
+    
+  </style>
+<body>
+
+    <div>
+        <h1>【CSS入門】floatの使い方を理解する</h1>
+
+        <p>「floatは要素を浮かせる」ことが、floatプロパティの機能です。</p>
+    
+        <p>floatは、指定した要素を浮動化（浮いた状態）にさせ、右や左に配置することができます。</p>
+
+        <p>
+            横並びにする際に使用するfloatプロパティの値は、leftとrightの2つです。
+            <br>
+            要素を横並びにする際に、要素を左に寄せたいときはleft、右に寄せたいときはrightを使用します。
+        </p>
+
+        <h2>Block要素は、縦方向に積み上がる</h2>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+    
+    <h2>Block要素を、横並びにするときに「 float 」が役立つ</h2>
+
+    <div>
+        <h2>[ float: left; ] Block</h2>
+        <p>[ float: left; ]を設定すると、縦並びになっていた要素を、左側から順番に横並びにすることができます。</p>
+        <p>[ float: left; ]だと左側に横並びになる！</p>
+        
+    </div>
+
+    <div class="box1 left"></div>
+    <div class="box2 left"></div>
+    <div class="box3 left"></div>
+
+    <div class="left-clear">
+        <h2 >[ float: right; ] Block</h2>
+        <p>[ float: right; ]を設定すると、縦並びになっていた要素を、右側から順番に横並びにすることができます。</p>
+        <p>上にある[ float: left; ] の影響を[ clear: left; ]で解除します</p>
+        <p>floatによる回り込みを解除するには、回り込む要素に対してclearプロパティを使います。</p>
+    </div>
+    
+    
+    <div class="box1 right"></div>
+    <div class="box2 right"></div>
+    <div class="box3 right"></div>
+
+
+    <h3 class="clear">参考・引用</h3>
+    <ol>
+        <li>
+            <a href="https://www.itra.co.jp/webmedia/float-property.html" target="_blank">【初心者向け！】CSS floatプロパティを図解で分かりやすく解説！</a>
+        </li>
+    </ol>
+    
+
+</html>
