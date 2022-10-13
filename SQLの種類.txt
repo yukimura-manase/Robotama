@@ -1,0 +1,59 @@
+
+[ SQLの種類(DDL, DML, DCL, TCL)について初心者向けに解説 ]
+
+
+    SQLコマンドは、DDL, DML, DCL, TCLという種類に分類することができます。
+
+    ここでは、DDL, DML, DCL, TCLの違いについて紹介します。
+
+
+
+1. DDL ( Data Definition Language ) => ( CREATE / ALTER / DROP … )
+
+
+    Data Definition Language(データ定義言語) の略で、データを定義するためのSQLです。
+
+    CREATE ALTER DROP などが該当します。
+
+    DBを作成・削除したり、DB内の基本構造であるテーブル作成・削除したり、DBの構造を操作するために使用します。
+
+
+2. DML ( Data Manipulation Language ) => ( SELECT / INSERT / UPDATE / DELETE … )
+
+
+    Data Manipulation Language(データ操作言語) の略で、データを操作するためのSQLです。
+
+    SELECT INSERT UPDATE DELETE などが該当します。
+
+    DBに格納されたレコード(データ)を操作するために、使用します。
+
+
+3. DCL ( Data Control Language ) => ( GRANT / REVOKE … )
+
+
+    Data Control Language(データ制御言語) の略で、データを制御するためのSQLです。
+
+    GRANT REVOKE などが該当します。
+
+    DBのアクセス権限などの設定を操作・制御するのに使用します。
+
+
+4. TCL ( Transaction Control Language ) => ( BEGIN / COMMIT / ROLLBACK … )
+
+
+    Transaction Control Language(トランザクション制御言語) の略で、トランザクションを制御するためのSQLです。
+
+    BEGIN COMMIT ROLLBACK などが該当します。
+
+    データの整合性を保つためのトランザクション関係の制御のために使用します。
+
+
+
+参考・引用
+
+1. SQLの種類(DDL, DML, DCL, TCL)
+https://www.wakuwakubank.com/posts/806-mysql-sql-ddl-dml-dcl-tcl/
+
+
+
+
