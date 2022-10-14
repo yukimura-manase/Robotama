@@ -1,0 +1,1539 @@
+
+[ httpd 【HyperText Transfer Protocol Daemon】 HTTPデーモンとは何か？ ]
+
+1. httpdとは、主にUNIX系OSのWebサーバソフトでよく見られる実行ファイル名およびコマンド名。
+
+    Web上のデータ伝送に用いるHTTP（Hypertext Transport Protocol）を扱うデーモン（daemon）という意味。
+
+2. 一度起動されると常にメモリ上に留まって要求に応じて動作する常駐プログラム（デーモン）の一種で、
+    
+    外部からのHTTP接続を受け付けて要求されたファイルを送信したり、送られたデータを受け取って保存したり、指定されたプログラムを起動したりする。
+
+    世界で最初のWebサーバは1990年にWebの発明者であるティム・バーナーズ・リー（Tim Berners-Lee）氏らが開発した「CERN httpd」で、名称の通り実行ファイル名がhttpdだった。
+    
+    これを踏襲して、現在最も普及しているApache HTTP Serverなど数多くのWebサーバソフトウェアが実行ファイル名としてhttpdという名称を採用している。
+
+
+httpd 【HyperText Transfer Protocol Daemon】 HTTPデーモン
+https://e-words.jp/w/httpd.html
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Apache基本設定🔥 ]
+
+
+    設定ファイル(httpd.conf)の位置と補助設定ファイルの読み込み
+
+    ServerNameディレクティブ：サーバが自分自身を表す時に使用するホスト名とポート番号
+
+    Listenディレクティブ：リクエストを受け付けるポート番号
+
+    ServerAdminディレクティブ：連絡先メールアドレスまたは参照先URLの設定
+
+    ServerRootディレクティブ：相対パスの起点となるApacheがインストールされているディレクトリ
+
+    Includeディレクティブ：他に用意した設定ファイルを取り込む
+
+    DocumentRootディレクティブ：Webサーバで公開するコンテンツを配置するディレクトリ
+
+    DirectoryIndexディレクティブ：ディレクトリへのリクエストに対してどのファイルを返すのか
+
+    Optionsディレクティブ：ディレクトリで使用可能な機能を設定する
+
+    Aliasディレクティブ：特定のパスへのリクエストに対してドキュメントルート以外のディレクトリを割り当てる
+
+    Redirectディレクティブ：特定のパスへのリクエストに対してリダイレクトする
+
+    AddTypeディレクティブ：ファイルの拡張子をMIMEタイプに関連付ける
+
+    Defineディレクティブ：変数を定義する
+
+    SetEnvIfディレクティブ：リクエストに含まれる情報に基づいて環境変数を設定する
+
+    TimeOutディレクティブ：リクエストやレスポンスの送信が失敗するまでの待ち時間
+
+    KeepAliveディレクティブ：HTTP KeepAliveを有効にする
+
+    KeepAliveTimeoutディレクティブ：KeepAliveが有効なときに次のリクエストが来るまで待つ時間
+
+    MaxKeepAliveRequestsディレクティブ：KeepAliveが有効なときに受け付け可能なリクエストの数
+
+    ErrorDocumentディレクティブ：エラー発生時に表示するメッセージを変更する
+
+    PidFileディレクティブ：PIDを保存するファイルを設定する
+
+    DirectorySlashディレクティブ：ディレクトリを表すURLの末尾がスラッシュでない場合の扱い
+
+
+
+Apache基本設定
+https://www.javadrive.jp/apache/ini/
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+< 設定ファイル(httpd.conf)の位置と補助設定ファイルの読み込み >
+
+0. Apache の設定は httpd.conf ファイルに対して行います。
+
+    => また補助の設定ファイルを用意して httpd.conf ファイルに読み込むこともできます。
+    
+    => ここでは httpd.conf ファイルの場所、そして別に用意した補助設定ファイルを読み込む方法について解説します。
+
+
+1. httpd.confファイルの位置
+
+    => Apache の設定ファイルである httpd.conf ファイルは「(インストールしたディレクトリ)\Apache24\conf\」ディレクトリに入っています。
+
+
+2. 設定変更を行う前に、変更前に戻せるように httpd.conf ファイルをコピーして別の名前で保存しておくと安心です。
+
+
+3. 補助設定ファイルの読み込み方法
+
+    => 現在のバージョンではいくつかの設定項目については別ファイルに分離し、必要に応じて httpd.conf ファイルに読み込むようになっています。
+    
+    => デフォルトで用意されている補助設定ファイルは「(インストールしたディレクトリ)\Apache24\conf\extra\」ディレクトリに格納されています。
+
+
+4. httpd.conf ファイルで別の設定ファイルを読み込むには Include ディレクティブを使用します。
+
+    => 具体的な例として httpd.conf ファイルの最後の方を見てください。次のような記述があります。
+
+    デフォルトでは 各行の先頭に「#」が記述されているのでコメントとなっており、
+    
+    実際には補助設定ファイルを読み込んでいませんが、
+    
+    例えばユーザーディレクトリに関する補助設定ファイルを読み込みたい場合には、文の先頭にある「#」を削除して次のように記述します。
+
+        # User home directories
+        Include conf/extra/httpd-userdir.conf
+
+    これで補助設定ファイルである「conf\extra\httpd-userdir.conf」ファイルが読み込まれます。
+    
+    なお Include ディレクティブの詳しい使い方については「Includeディレクティブ：補助設定ファイルを読み込む」を参照されてください。
+
+
+設定ファイル(httpd.conf)の位置と補助設定ファイルの読み込み
+https://www.javadrive.jp/apache/setting/index1.html
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ ServerNameディレクティブ：サーバが自分自身を表す時に使用するホスト名とポート番号 ]
+
+
+0. ServerName ディレクティブは Apache が自分自分自身のホスト名とポート番号を表示するときに使用するホスト名とポート番号を設定するのに使用します。
+
+    ここでは Apache の ServerName ディレクティブの使い方について解説します。
+
+
+1. ServerNameディレクティブの使い方
+
+    ServerName ディレクティブは Apache サーバが自分自身のホスト名を示す時に使われるホスト名とポート番号を設定します。書式は次のとおりです。
+
+        ServerName [スキーム名]ホスト名[:ポート番号]
+
+    記述できる場所は httpd.conf です。
+
+
+    Apache を使って起動している Web サーバのホスト名が www.example.com でポート番号が 80 番の場合には、次のように記述します。
+
+        ServerName www.example.com:80
+
+
+    ポート番号は省略可能ですが、省略された場合はリクエストが送られてきたときに使われたポート番号を使用します。
+    
+    通常はリクエストを受け付けているポート番号と同じだと思いますのが、ポート番号も明示的に指定しておくことがより望ましいです。
+
+    ホスト名は Web サーバが起動している IP アドレスに対して割り当てられているホスト名を指定しますが、 
+    DNS で別の名前を設定している場合などに別名の方を正式なホスト名にしたい場合には別名の方を設定します。 
+    
+    ServerName が指定されていない場合は Web サーバの IP アドレスを逆引きしてホスト名を取得します。
+
+
+2. httpd.conファイルでの記述
+
+    ServerName localhost:80
+
+    今回は Apache をローカル環境で動かしているのでホスト名が localhost となっています。またポート番号は 80 となっています。
+
+    Apache の ServerName ディレクティブの使い方について解説しました。
+
+
+
+
+ServerNameディレクティブ：サーバが自分自身を表す時に使用するホスト名とポート番号
+https://www.javadrive.jp/apache/ini/index11.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Listenディレクティブ：リクエストを受け付けるポート番号 ]
+
+0. Listen ディレクティブは Apache がクライアントからのリクエストを受け付けるポート番号を指定するのに使用します。
+
+    ここでは Apache の Listen ディレクティブの使い方について解説します。
+
+1. Listenディレクティブの使い方
+
+    Listen ディレクティブは Apache がクライアントからリクエストを受け付けるポート番号を指定します。 Listen ディレクティブは必須のディレクティブです。書式は次の通りです。
+
+        Listen [IPアドレス:]ポート番号 [プロトコル]
+
+    記述できる場所は httpd.conf です。
+
+
+    Apache のような Web サーバに対する http を使ったアクセスには 80 番、 https を使ったアクセスには 443 を通常使用します。
+    
+    ポート番号として 80 番を使用する場合は次のように記述します。
+
+        Listen 80
+
+    受け付けることができるポート番号は複数指定できます。
+    
+    複数のポート番号を受け付ける場合は Listen ディレクティブを複数記述して下さい。
+    
+    下記の場合は 80 番ポートと 8080 番ポートでのリクエストを受け付けるようになります。
+
+        Listen 80
+        Listen 8080
+
+    ポート番号だけを指定した場合には、全てのインターフェースから指定したポート番号のリクエストを受け付けます。 
+    
+    Apache が稼動しているサーバに複数のインターフェースが接続されていて特定のインターフェースからのみリクエストを受け付けたいのであれば、そのインターフェースの IP アドレスを指定して下さい。
+
+        Listen 192.168.128.1:80
+
+    プロトコルに関してはポート番号 443 番を使う場合には https が、それ以外のポート番号の場合は http がデフォルトで設定されます。
+    
+    もし https を使ってアクセスに対して 443 番以外のポート番号使用する場合はプロトコルを明示的に指定して下さい。
+    
+    例えば https によるアクセスで 8443 番を受け付けるバイアは次のように記述します。
+
+        Listen 8443 https
+
+
+2. ポート番号を変更する
+
+    それでは実際にポート番号を変更してみます。 
+    
+    httpd.conf ファイルを開き、次のように記述されている箇所を検索してください。
+
+    リクエストを受け付けるポート番号として 80 番が指定されています。
+
+    それではポート番号として 8080 番に変更します。
+
+
+    httpd.conf ファイルを保存します。そのあとで Apache を再起動して設定ファイルを読み込みなおしてください。そのあとでまず次のように Apache へアクセスしてみます。
+
+        http://localhost/
+
+    ブラウザからアクセスするとき、ポート番号を指定していない場合は 80 番が指定した場合と同じです。その為、次のように 80 番を指定した場合と同じになります。
+
+        http://localhost:80/
+
+    現在 Apache はポート番号として 8080 番でリクエストを受け付けているので、 80 番を使ってアクセスするとアクセスすることができません。
+
+
+    今度は 8080 番を指定して Apache へアクセスしてみます。
+
+        http://localhost:8080/
+
+    今度は正常に Apache へアクセスすることができました。
+
+
+    http を使ってアクセスする場合は通常 80 番を使用しておけば問題ありません。
+    
+    ただすでに同じサーバに別の Web サーバが起動して 80 番を使用している場合などには 8080 番など別のポート番号を使用するように変更してください。
+
+
+
+Listenディレクティブ：リクエストを受け付けるポート番号
+https://www.javadrive.jp/apache/ini/index3.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ ServerAdminディレクティブ：連絡先メールアドレスまたは参照先URLの設定 ]
+
+0. ServerAdmin ディレクティブは Apache がエラー表示を行う場合などに問い合わせ先となる連絡先メールアドレスまたは参照先 URL を設定するのに使用します。
+
+    ここでは Apache の ServerAdmin ディレクティブの使い方について解説します。
+
+
+1. ServerAdminディレクティブの使い方
+
+    ServerAdmin ディレクティブは Apache がエラー表示を行う場合などに、問い合わせ先となる連絡先メールアドレスを表示する時に使われます。
+    
+    書式は次のとおりです。
+
+        ServerAdmin メールアドレス|URL
+
+    記述できる場所は httpd.conf, VirtualHost です。
+
+
+    メールアドレスまたは問い合わせ先などが記述された URL を記述します。
+    
+    URL を掲載する場合はこの設定ファイルが使われている Apache のサーバとは別のサーバの URL を記述する点に注意してください。 
+    
+    Apache に障害発生時などに問い合わせ先などが記載された URL が同じ Apache のサーバだと結局連絡ができなくなってしまいます。
+
+    
+    メールアドレスを記述する場合は次のように記述します。
+
+        ServerAdmin contact@example.com
+
+    URL を記述する場合は次のように記述します。
+
+    ServerAdmin https://www.example.com/contact.html
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        #
+        # ServerAdmin: Your address, where problems with the server should be
+        # e-mailed.  This address appears on some server-generated pages, such
+        # as error documents.  e.g. admin@your-domain.com
+        #
+        ServerAdmin admin@example.com
+
+    デフォルトの値はインストール時に指定した管理者のメールアドレスが設定されています。
+    
+    サーバに問題が発生した場合の連絡先メールアドレスを別に用意された場合に ServerAdmin ディレクティブに設定されてください。
+
+
+ServerAdminディレクティブ：連絡先メールアドレスまたは参照先URLの設定
+https://www.javadrive.jp/apache/ini/index4.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ ServerRootディレクティブ：相対パスの起点となるApacheがインストールされているディレクトリ ]
+
+0. ServerRoot ディレクティブは Apache がインストールされているディレクトリを設定するのに使用します。 
+
+    httpd.conf ファイル内でディレクトリを相対パスで記述した場合、 ServerRoot ディレクティブで設定されたディレクトリが相対パスの起点となります。
+    
+    ここでは Apache の ServerRoot ディレクティブの使い方について解説します。
+
+
+1. ServerRootディレクティブ
+
+    ServerRoot ディレクティブは Apache がインストールされているディレクトリを設定します。
+    
+    書式は次のとおりです。
+
+        ServerRoot ディレクトリ
+
+    記述できる場所は httpd.conf です。
+
+
+    ServerRoot ディレクティブには絶対パスで指定する必要があります。
+    
+    例えば Apache をインストールしたディレクトリが d:/pg/Apache/Apache24 だった場合には次のように記述します。
+
+
+        ServerRoot d:/pg/Apache/Apache24
+
+
+    Apache の設定ファイルである httpd.conf の中でディレクティブに対して相対パスを使ってパスを記述する場合、 SeverRoot ディレクティブで指定したディレクトリが起点となります。
+    
+    例えば次のようにあるディレクティブに対して相対パスでファイル名が指定されていた場合、 ServerRoot ディレクティブに設定されている d:/pg/Apache/Apache24 が起点となるので次の 2 つは同じ結果となります。
+
+        xxxxxx conf/extra/xxxx.conf
+        xxxxxx d:/pg/Apache/Apache24/conf/extra/xxxx.conf
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        #
+        # ServerRoot: The top of the directory tree under which the server's
+        # configuration, error, and log files are kept.
+        #
+        # Do not add a slash at the end of the directory path.  If you point
+        # ServerRoot at a non-local disk, be sure to specify a local disk on the
+        # Mutex directive, if file-based mutexes are used.  If you wish to share the
+        # same ServerRoot for multiple httpd daemons, you will need to change at
+        # least PidFile.
+        #
+        Define SRVROOT "d:/pg/Apache/Apache24"
+
+        ServerRoot "${SRVROOT}"
+
+
+    まず Define ディレクティブを使って変数 SRVROOT に対して Apache をインストールしたディレクトリのパスを設定しています。
+    
+    そのあとで ServerRoot ディレクティブに対して変数 SRVROOT に格納されている値を設定しています。
+
+    ※ Define ディレクティブについては「Defineディレクティブ：変数を定義する」を参照されてください。
+    
+
+
+
+
+ServerRootディレクティブ：相対パスの起点となるApacheがインストールされているディレクトリ
+https://www.javadrive.jp/apache/ini/index5.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ DocumentRootディレクティブ：Webサーバで公開するコンテンツを配置するディレクトリ ]
+
+0. DocumentRoot ディレクティブは Apache が Web サーバとして外部に公開するコンテンツを配置するディレクトリを設定するのに使用します。
+
+    このディレクトリはドキュメントルートと呼ばれます。
+    
+    ここでは Apache の DocumentRoot ディレクティブの使い方について解説します。
+
+
+1. DocumentRootディレクティブの使い方
+
+    DocumentRoot ディレクティブでは Apache サーバが外部に公開する Web ページを配置するディレクトリを設定します。
+    
+    書式は次のとおりです。
+
+        DocumentRoot ディレクトリ
+
+    記述できる場所は httpd.conf, VirtualHost です。
+
+    ディレクトリは絶対パス、又は ServerRoot ディレクティブで設定したディレクトリからの相対パスで指定します。
+    
+    最後にスラッシュ(/)は記述しないで下さい。
+    
+    ここで設定したディレクトリをドキュメントルートと呼びます。
+
+    ※ ServerRoot ディレクティブについては「ServerRootディレクティブ：相対パスの起点となるApacheがインストールされているディレクトリ」を参照されてください。
+
+    例えば d:/pg/Apache/Apache24/htdocs ディレクトリに設定する場合には次のように記述します。
+    
+    上が相対パスで指定した場合、下が絶対パスで指定した場合です。
+
+        DocumentRoot htdocs
+        DocumentRoot d:/pg/Apache/Apache24/htdocs
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        #
+        # DocumentRoot: The directory out of which you will serve your
+        # documents. By default, all requests are taken from this directory, but
+        # symbolic links and aliases may be used to point to other locations.
+        #
+        DocumentRoot "${SRVROOT}/htdocs"
+
+
+    デフォルトの設定では Apache がインストールされたディレクトリの中にある htdocs ディレクトリがドキュメントルートに設定されています。
+
+
+
+3. ブラウザで指定されたURLに対してどのファイルがクライアントへ送信されるのか
+
+    ユーザーがブラウザを使って Web サーバへアクセスした場合、入力された URL のパス部分を Apache のドキュメントルートに付け加えた場所にあるファイルがクライアントへ返されます。
+
+    例えばブラウザから http://www.example.com/index.html のようにルートにある index.html ファイルへアクセスした場合、
+
+    ドキュメントルートのディレクトリの中にある index.html ファイルがクライアントへ返されます。
+
+    同じようにブラウザから http://www.example.com/sub/hello.html へアクセスした場合、
+    
+    ドキュメントルートの中の sub ディレクトリの中にある hello.html ファイルがクライアントへ返されます。
+
+
+4. ドキュメントルートを変更する
+
+    それでは実際にドキュメントルートを変更してみます。
+    
+    ドキュメントルートのディレクトリは Apache をインストールしたディレクトリの下だけでなく自由に設定することができます。
+    
+    今回は d:\contents というディレクトリを作成して DocumentRoot ディレクティブに設定します。
+
+    httpd.conf ファイルを開き、次のように記述されている箇所を検索してください。
+
+        #
+        # DocumentRoot: The directory out of which you will serve your
+        # documents. By default, all requests are taken from this directory, but
+        # symbolic links and aliases may be used to point to other locations.
+        #
+        DocumentRoot "${SRVROOT}/htdocs"
+
+    次のように変更しました。
+
+        #
+        # DocumentRoot: The directory out of which you will serve your
+        # documents. By default, all requests are taken from this directory, but
+        # symbolic links and aliases may be used to point to other locations.
+        #
+        DocumentRoot d:/contents
+
+
+    ※ Winows の場合でもディレクトリの区切りはスラッシュ(/)です。また最後にスラッシュは記述しないでください。
+
+    また httpd.conf には元々のドキュメントルートに対して次の設定が行われています。
+
+        <Directory "${SRVROOT}/htdocs">
+            Options Indexes FollowSymLinks
+            AllowOverride None
+            Require all granted
+        </Directory>
+
+    今回この部分も次のように変更しました。
+
+        <Directory d:/contents>
+            Options Indexes FollowSymLinks
+            AllowOverride None
+            Require all granted
+        </Directory>
+
+    httpd.conf ファイルを保存します。
+    
+    そのあとで Apache を再起動して設定ファイルを読み込みなおしてください。
+
+    次にドキュメントルートにファイルを配置します。 
+    
+    
+    d:\contnts ディレクトリに次のように index.html ファイルを設置しました。
+
+
+    ブラウザから http://localhost/index.html へアクセスします。
+    
+    新しくドキュメントルートに設定したディレクトリに設置した index.html ファイルがクライアントへ返されて次のようにブラウザに表示されました。
+
+
+
+
+
+DocumentRootディレクティブ：Webサーバで公開するコンテンツを配置するディレクトリ
+https://www.javadrive.jp/apache/ini/index9.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Includeディレクティブ：補助設定ファイルを読み込む ]
+
+0. Include ディレクティブは Apache の設定ファイルである httpd.conf とは別に用意した設定ファイルを httpd.conf に取り込むときに使用します。
+
+    ここでは Apache の Include ディレクティブの使い方について解説します。
+
+
+1. Includeディレクティブの使い方
+
+    Include ディレクティブは httpd.conf ファイルと別に用意された設定ファイルを取り込む場合に使います。
+    
+    書式は次のとおりです。
+
+        Include ファイル名 | ディレクトリ名
+
+
+    ファイル名は絶対パスでの指定、又は ServerRoot ディレクティブで設定したディレクトリからの相対パスで指定します。
+    
+    ( ServerRoot ディレクティブについては「ServerRootディレクティブ：相対パスの起点となるApacheがインストールされているディレクトリ」を参照されてください)。
+
+
+    例えば d:/pg/Apache/Apache24/conf/extra/my.conf ファイルを取り込む場合には次のように記述します。
+    (上が相対パスで記述した場合で、下が絶対パスで指定した場合です)。
+
+        Include conf/extra/my.conf
+        Include d:/pg/Apache/Apache24/conf/extra/my.conf
+
+    ファイル名にはワイルドカードの * を使用することができます。
+    
+    下記の場合は conf/extra/ ディレクトリに含まれていて拡張子が .conf のファイルをすべて設定ファイルとして取り込みます。
+
+        Include conf/extra/*.conf
+
+
+    ファイル名ではなくディレクトリ名を指定した場合は、指定したディレクトリ(およびサブディレクトリ)に含まれるすべてのファイルを設定ファイルとして取り込みます。
+    
+    下記の場合は conf/extra/ ディレクトリに含まれるすべてのファイルを設定ファイルとして取り込みます。
+
+        Include conf/extra/
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        # Supplemental configuration
+        #
+        # The configuration files in the conf/extra/ directory can be 
+        # included to add extra features or to modify the default configuration of 
+        # the server, or you may simply copy their contents here and change as 
+        # necessary.
+
+        # Server-pool management (MPM specific)
+        #Include conf/extra/httpd-mpm.conf
+
+        # Multi-language error messages
+        #Include conf/extra/httpd-multilang-errordoc.conf
+
+        # Fancy directory listings
+        #Include conf/extra/httpd-autoindex.conf
+
+        # Language settings
+        #Include conf/extra/httpd-languages.conf
+
+        # User home directories
+        #Include conf/extra/httpd-userdir.conf
+
+        # Real-time info on requests and configuration
+        #Include conf/extra/httpd-info.conf
+
+        # Virtual hosts
+        #Include conf/extra/httpd-vhosts.conf
+
+        # Local access to the Apache HTTP Server Manual
+        #Include conf/extra/httpd-manual.conf
+
+        # Distributed authoring and versioning (WebDAV)
+        #Include conf/extra/httpd-dav.conf
+
+        # Various default settings
+        #Include conf/extra/httpd-default.conf
+
+        # Configure mod_proxy_html to understand HTML4/XHTML1
+        <IfModule proxy_html_module>
+            Include conf/extra/proxy-html.conf
+        </IfModule>
+
+
+    複数の Include ディレクティブが記述されています(現在はコメントとなっているため読み込まれてはいません)。
+    
+    この中にある設定ファイルを httpd.conf に取り込みたい場合にはコメントを外して Include ディレクティブを有効にしてください。
+
+    例えば Language settings に関する設定ファイルである httpd-languages.conf を取り込む場合は、次のように先頭の # を削除します。
+
+        # Language settings
+        Include conf/extra/httpd-languages.conf
+
+    相対パスで記述されているので ServerRoot ディレクティブに設定されているディレクトリからの相対パスとなります。
+    
+    なお最初から用意されているこれらの設定ファイルは (Apacheをインストールしたディレクトリ)\conf\extra ディレクトリ見て頂くと設定ファイルの中身を確認することができます。
+
+
+
+Includeディレクティブ：補助設定ファイルを読み込む
+https://www.javadrive.jp/apache/setting/index2.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ DirectoryIndexディレクティブ：ディレクトリへのリクエストに対してどのファイルを返すのか ]
+
+0. DirectoryIndex ディレクティブは、ブラウザから Apache へディレクトリへのリクエスト
+
+    (例えば http://www.example.com/sub/ などのようなリクエスト)があった場合にどのファイルを返すのかを設定するときに使用します。
+
+    ここでは Apache の DirectoryIndex ディレクティブの使い方について解説します。
+
+
+1. DirectoryIndexディレクティブの使い方
+
+    DirectoryIndex ディレクティブはクライアントからのリクエストが最後が「/」で終るディレクトリだった場合にどのファイルをクライアントへ返すのかを設定する場合に使います。書式は次のとおりです。
+
+    DirectoryIndex ファイル名 [ファイル名 [...]]
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。 .htaccess で設定する場合は AllowOverride Indexes が設定されている必要があります。
+
+    ファイル名は1つまたは複数指定することが可能です。例えばリクエストがディレクトリだった場合、そのディレクトリに含まれる index.html ファイルを返す場合には次のように記述します。
+
+    DirectoryIndex index.html
+
+    このように設定されている場合、例えば http://www.example.com/ へリクエストがあったときに http://www.example.com/index.html が存在するか調べ、存在した場合はクライアントへ返します。
+
+    DirectoryIndex ディレクティブには複数のファイル名を指定できます。複数指定する場合はスペースで区切って続けて記述してください。
+
+    DirectoryIndex index.html index.php index.htm
+
+    複数記述した場合、記述された順番にファイルが存在するかどうかを調べ、存在したファイルが見つかればそのファイルを返します。上記の場合は先に index.html を探し、見つからなかった場合は index.php を探し、最後に index.htm を探します。
+
+    リクエストがあったディレクトリとは別のディレクトリに含まれるファイルを返すこともできます。その場合はドキュメントルートからのパス付きでファイルを指定します。
+
+    DirectoryIndex index.html index.php /sub/sorry.html
+
+    上記の場合は、リクエストのあったディレクトリに index.html 、 index.php と順にファイルを探し、どちらも見つからなかった場合は /sub/sorry.html ファイルをクライアントへ返します。
+
+
+2. httpd.conファイルでの記述
+
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+    #
+    # DirectoryIndex: sets the file that Apache will serve if a directory
+    # is requested.
+    #
+    <IfModule dir_module>
+    DirectoryIndex index.html
+    </IfModule>
+    DirectoryIndex ディレクティブに対して index.html が設定されています。この設定は dir_module モジュールが使用可能になっている場合に有効です。
+
+
+3. DirectoryIndexディレクティブで指定したファイルが存在しない場合
+    
+    
+    DirectoryIndex ディレクティブで設定したファイルがリクエストのあったディレクトリにひとつも存在しない場合、次のいずれかのデータがクライアントへ返されます。 
+    
+    1 つ目はそのディレクトリに対して Option ディレクティブで Indexes が有効になっている場合です。
+    
+    この場合はディレクトリ内のファイルやサブディレクトリの一覧をクライアントへ返します。
+
+        Directory-構造&Link-画面
+
+
+    もう 1 つは Option ディレクティブで Indexes が有効になっていない場合です。
+    
+    もしリクエストのあったディレクトリは存在するけれど DirectoryIndex ディレクティブで設定したファイルがひとつも存在しない場合は次のようなエラー画面が表示されます。
+
+        Forbidden-画面
+
+
+    なおディレクトリのリクエストがあった場合に、そのディレクトリが存在しないものだった場合には 
+    Option ディレクティブで Indexes が有効になっているかどうかに関わらず 404 Not Found となります。
+
+
+        Not-Found-画面
+
+    httpd.conf ファイルではドキュメントルートのディレクトリに対してデフォルトで次のように記述されています。
+
+        <Directory "${SRVROOT}/htdocs">
+            #
+            # Possible values for the Options directive are "None", "All",
+            # or any combination of:
+            #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+            #
+            # Note that "MultiViews" must be named *explicitly* --- "Options All"
+            # doesn't give it to you.
+            #
+            # The Options directive is both complicated and important.  Please see
+            # http://httpd.apache.org/docs/2.4/mod/core.html#options
+            # for more information.
+            #
+            Options Indexes FollowSymLinks
+        </Directory>
+
+
+    Option ディレクティブで Indexes が有効になっています。
+    
+    その為、クライアントからディレクトリへのリクエストがあった場合、そのディレクトリ内に DirectoryIndex ディレクティブに設定したファイルが見つからなかった場合はディレクトリに含まれるファイルの一覧を表示します。
+
+    ※ Option ディレクティブについて詳しくは「Optionsディレクティブ：ディレクトリで使用可能な機能を設定する」を参照されてください。
+
+
+
+DirectoryIndexディレクティブ：ディレクトリへのリクエストに対してどのファイルを返すのか
+https://www.javadrive.jp/apache/ini/index10.html
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Optionsディレクティブ：ディレクトリで使用可能な機能を設定する ]
+
+0. Options ディレクティブは、対象のディレクトリに対して使用可能な機能を設定する場合に使用します。
+
+    設定可能な機能として
+        
+        (1)CGIの実行、
+        (2)シンボリックリンクをたどることができる、
+        (3)SSIを有効にする、
+        (4)ファイル一覧の表示、
+    
+    などがあります。
+    
+    ここでは Apache の Options ディレクティブの使い方について解説します。
+
+
+1. Optionsディレクティブの書式
+
+    Options ディレクティブを使用すると対象のディレクトリに対して使用可能な機能を追加したり削除したりすることができます。
+    
+    書式は次のとおりです。
+
+        Options オプション [オプション] ...
+        Options [+|-]オプション [[+|-]オプション] ...
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。 
+    
+    .htaccess で設定する場合は AllowOverride Options が設定されている必要があります。
+
+
+    設定する機能をオプションとして指定します。
+    
+    指定可能なオプションは次の通りです。
+
+        All             MultiViews 以外のすべての機能を有効にする(デフォルト)
+        None            すべての機能を無効にする
+        ExecCGI         CGI スクリプトの実行を許可する
+        FollowSymLinks  シンボリックリンクをたどることを許可する
+        Includes        SSI を有効にする
+        IncludesNOEXEC  SSI を有効にする(#exec コマンド と #exec CGI は無効) 
+        Indexes         ファイル一覧の表示を行う
+        MultiViews      コンテントネゴシエーションを有効にする
+        SymLinksIfOwnerMatch  同じオーナーの場合だけシンボリックリンクをたどれる
+
+
+    それぞれのオプションの詳細はこのあとで解説します。
+
+
+2. Optionsディレクティブの記述方法
+
+
+    Options ディレクティブはディレクトリに対して使用するため、 Directory ディレクティブのブロック内で記述するか .htaccess ファイルの中で記述します。
+    
+    例えば d:\pg\Apache\Apache24\htdocs ディレクトリに対して Option ディレクティブを設定する場合は次のように記述します。
+
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+            Options オプション1 オプション2 ...
+        </Directory>
+        
+    ※ Directory ディレクティブについては「Directoryディレクティブ/DirectoryMatchディレクティブ：設定が適用されるディレクトリを指定する」を参照されてください。
+
+
+
+3. すべての機能を有効または無効にする
+
+    すべての機能を有効にするには All を指定します。
+    (ただし MultiViews だけは有効とならないため、別途指定が必要です)。
+
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+            Options All
+        </Directory>
+
+
+    すべての機能を無効にするには None を指定します。
+
+
+    <Directory d:/pg/Apache/Apache24/htdocs>
+        Options None
+    </Directory>
+
+
+
+4. 有効にする機能を上書きで指定する
+
+    特定の機能を指定して有効にするには、有効にする機能を半角スペースで区切って記述してください。
+    
+    例えば ExecCGI と Includes の 2 つの機能を有効にするには次のように記述します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+            Options ExecCGI Includes
+        </Directory>
+
+
+    このように + まはた - を使わないで機能を有効した場合、設定前にどのような機能が有効にになっていたかに関わらず新しく設定した機能だけが有効となります。
+    
+    例えば次のように親ディレクトリと子ディレクトリでそれぞれ Options ディレクティブが設定されている場合で考えてみます。
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+            Options Includes
+        </Directory>
+
+        <Directory d:/pg/Apache/Apache24/htdocs/blog>
+            Options ExecCGI
+        </Directory>
+
+
+    htdocs/blog ディレクトリには、親ディレクトリに対する Options ディレクティブの設定と、
+    
+    自分自身のディレクトリに対する Options ディレクティブの設定が順に適用されます
+    
+    (上位のディレクトリに対する設定から順に適用されます)。
+    
+    
+    ただ追加で適用されていくのではなく上書きで適用されていくため、親ディレクトリに対する設定で Includes が有効に設定されていますが、
+    
+    自分自身のディレクトリに対する設定で上書きされるため ExecCGI だけが有効となり Includes は有効とはなりません。
+
+
+5. 機能を追加または削除する => +/- を使用する🔥
+
+    既存の設定を上書きするのではなく、機能を追加したり既存の設定から削除したりする場合はオプションの前に + または - を付けます。
+
+        Options +オプション
+        Options -オプション
+
+    次の例をみてください。
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+            Options Includes ExecCGI
+        </Directory>
+
+        <Directory d:/pg/Apache/Apache24/htdocs/blog>
+            Options +FollowSymLinks -ExecCGI
+        </Directory>
+
+
+    htdocs/blog ディレクトリには、まず親ディレクトリに対する Options ディレクティブの設定で Includes と ExecCGI が有効になり、
+    
+    そのあとで自分自身のディレクトリに対する Options ディレクティブの設定で FollowSymLinks が追加で有効となり ExecCGI が無効となります。
+    
+    結果的に htdocs/blog ディレクトリには Includes と FollowSymLinks が有効となります。
+
+
+6. ExecCGI
+
+    ここからは個別の機能について解説していきます。
+    
+    最初は ExecCGI です。 ExecCGI が有効になっている場合、対象のディレクトリ内で CGI のプログラムを実行することができます。
+
+
+
+
+Optionsディレクティブ：ディレクトリで使用可能な機能を設定する
+https://www.javadrive.jp/apache/ini/index24.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+< Directoryディレクティブ/DirectoryMatchディレクティブ：設定が適用されるディレクトリを指定する >
+
+0. Directory ディレクティブは、他のディレクティブを使った設定が適用されるディレクトリを指定するときに使用します。
+
+    また DirectoryMatch ディレクティブは正規表現を使って適用するディレクトリを指定することができます。
+    
+    ここでは Apache の Directory ディレクティブおよび DirectoryMatch ディレクティブの使い方について解説します。
+
+
+1. Directoryディレクティブの使い方
+
+    Directory ディレクティブは、他のディレクティブを使った設定の適用する範囲をディレクトリ単位で指定する場合に使用します。書式は次のとおりです。
+
+        <Directory ディレクトリパス>
+        ...
+        設定ディレクティブ
+        ...
+        </Directory>
+
+
+    記述できる場所は httpd.conf, VirtualHost です。
+
+    ディレクトリを表すパスは絶対パスで指定してください。
+    
+
+    指定したディレクトリおよびそのサブディレクトリに対してブロック内に記述した設定が適用されます。
+
+    例えば d:/Apache/Apache24/htdocs ディレクトリおよびサブディレクトリに対する設定を行いたい場合は次のように記述します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs>
+        ...
+        ...
+        </Directory>
+
+
+    Windows の場合はドライブからの指定となりますが、実際に試してみたところドライブを省略した場合は Apache をインストールしたドライブが指定されたものとして扱われるようです。
+    
+    よって先ほどの例は次のようにドライブを省略して記述しても問題ありませんでした。
+
+        <Directory /pg/Apache/Apache24/htdocs>
+        ...
+        ...
+        </Directory>
+
+
+    ルートディレクトリ以下のすべてのディレクトリに対する設定を記述する場合は、ディレクトリに / を指定してください。
+
+        <Directory />
+        ...
+        ...
+        </Directory>
+
+
+2. ワイルドカードを使った指定
+
+    ディレクトリの指定には「*」や「?」などのワイルドカードを使った指定も可能です。
+    
+    「*」は任意の文字、「?」は任意の 1 文字にマッチします。(ただしいずれもスラッシュ(/)にはマッチしません)。
+
+    次の例をみてください。
+
+        <Directory d:/pg/Apache/Apache24/*/img>
+        ...
+        ...
+        </Directory>
+
+
+    この場合、次のようなディレクトリ(およびそのサブディレクトリ)がすべて対象となります。
+
+        d:/og/Apache/Apache24/doc/img
+        d:/pg/Apache/Apache24/manual/img
+        d:/pg/Apache/Apache24/report/img
+
+
+
+3. 複数のDirectoryディレクティブがある場合の適用される順番
+
+
+    ディレクトリとそのサブディレクトリに設定をそれぞれ記述した場合、
+    
+    ルートディレクトリからのパス名が短い順に適用され、同じ項目に対する設定はあとから適用された設定で上書きされます。
+
+    次の例をみてください。
+
+        <Directory d:/pg/Apache/Apache24>
+        Require all granted
+        </Directory>
+
+        <Directory d:/pg/Apache>
+        Require all denied
+        </Directory>
+
+
+    最初によりパスの指定が短い d:/pg/Apache ディレクトリに対する設定が適用され 
+    
+    d:/pg/Apache ディレクトリおよびサブディレクトリに対して Require all denied (すべてのアクセスを許可しない) が設定されます。
+    
+
+    次に d:/pg/Apache/Apache24 に対する設定が適用されるため、 
+    
+    d:/pg/Apache/Apache24 は Require all granted (すべてのアクセスを許可する) が適用されます。
+
+
+
+4. DirectoryMatchディレクティブによる正規表現を使ったディレクトリの指定
+
+
+    DirectoryMatch ディレクティブは、基本的な使い方は Directory ディレクティブと同じですがディレクトリパスの指定に正規表現を使用することができます。
+    
+    書式は次のとおりです。
+
+        <DirectoryMatch 正規表現を使ったディレクトリ名>
+            ...
+            設定ディレクティブ
+            ...
+        </DirectoryMatch>
+
+
+    記述できる場所は httpd.conf, VirtualHost です。
+
+    設定を適用するディレクトリを正規表現を使って指定します。
+    
+    例えば d:/pg/Apache/Apache24/htdocs/2020 と d:/pg/Apache/Apache24/htdocs/2021 
+    
+    ディレクトリおよびそのサブディレクトリに対して設定を行いたい場合は次のように記述することができます。
+
+        <DirectoryMatch d:/pg/Apache/Apache24/htdocs/202(0|1)>
+        ...
+        ...
+        </DirectoryMatch>
+
+
+    なお正規表現を使ったディレクトリの指定は Directory ディレクティブでも使用が可能です。
+    
+    正規表現を使用する場合はディレクトリパスの前にチルダ (~) を記述してください。
+
+        <Directory ~ d:/pg/Apache/Apache24/htdocs/202(0|1)>
+        ...
+        ...
+        </Directory>
+
+
+    正規表現の記述方法については「正規表現入門」を参照されてください。
+
+
+
+
+Directoryディレクティブ/DirectoryMatchディレクティブ：設定が適用されるディレクトリを指定する
+https://www.javadrive.jp/apache/section/index1.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Aliasディレクティブ：特定のパスへのリクエストに対してドキュメントルート以外のディレクトリを割り当てる ]
+
+0. Alias ディレクティブは、クライアントからのリクエストに含まれるパスが特定のパスと先頭から一致した場合、
+
+    ドキュメントルート以外のディレクトリからクライアントへページを返すように設定するのに使用します。
+
+    ここでは Apache の Alias ディレクティブの使い方について解説します。
+
+
+1. Aliasディレクティブの使い方
+
+    Alias ディレクティブはリクエストのパス部分が特定のパスと先頭から一致する場合に、
+    
+    ドキュメントルート以外のディレクトリからページを返すように設定します。
+    
+    書式は次のとおりです。
+
+        Alias URLパス ファイルパス
+
+    記述できる場所は httpd.conf, VirtualHost です。
+
+    例えばクライアントからのリクエストに含まれるパスが、
+    
+    先頭から /data と一致した場合にドキュメントルートではなく d:\datadir からクライアントにファイルを返すように設定するには次のように記述します。
+
+        Alias /data d:/datadir
+
+    この場合、リクエストに対して次のパスにあるファイルを返します。
+
+        リクエスト：
+        http://www.example.com/data/index.html
+
+        返すファイル：
+        d:\datadir\index.html
+
+
+        リクエスト：
+        http://www.example.com/data/img/image01.png
+
+        返すファイル：
+        d:\datadir\img\image01.png
+
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        <IfModule alias_module>
+            #
+            # Alias: Maps web paths into filesystem paths and is used to
+            # access content that does not live under the DocumentRoot.
+            # Example:
+            # Alias /webpath /full/filesystem/path
+            #
+            # If you include a trailing / on /webpath then the server will
+            # require it to be present in the URL.  You will also likely
+            # need to provide a <Directory> section to allow access to
+            # the filesystem path.
+        </IfModule>
+
+
+    Alias ディレクティブの設定は alias_module モジュールが使用可能な場合に行います。
+    
+    具体的な設定手順はこのあと解説します。
+
+
+3. Aliasディレクティブを設定する
+
+    それでは実際に Alias ディレクティブを設定してみます。 
+    
+    httpd.conf ファイルを開き、次のように記述されている箇所を検索してください。
+
+        <IfModule alias_module>
+            #
+            # Alias: Maps web paths into filesystem paths and is used to
+            # access content that does not live under the DocumentRoot.
+            # Example:
+            # Alias /webpath /full/filesystem/path
+            #
+            # If you include a trailing / on /webpath then the server will
+            # require it to be present in the URL.  You will also likely
+            # need to provide a <Directory> section to allow access to
+            # the filesystem path.
+        </IfModule>
+
+            
+    Alias ディレクトリに関する設定を記述します。(コメントの部分は省略しています)。
+
+        <IfModule alias_module>
+
+        Alias /data d:/datadir
+
+        </IfModule>
+
+            
+    また Alias ディレクティブで設定したディレクトリに対して全てのアクセスを許可します。
+
+        <IfModule alias_module>
+
+        Alias /data d:/datadir
+
+        <Directory d:/datadir>
+            Require all granted
+        </Directory>
+
+        </IfModule>
+
+            
+    念のため alias_module モジュールが使用可能になっていることを確認してください。
+    
+    httpd.conf に次の記述があれば使用可能です。
+
+        #
+        # Dynamic Shared Object (DSO) Support
+        #
+        # To be able to use the functionality of a module which was built as a DSO you
+        # have to place corresponding `LoadModule' lines at this location so the
+        # directives contained in it are actually available _before_ they are used.
+        # Statically compiled modules (those listed by `httpd -l') do not need
+        # to be loaded here.
+        #
+        # Example:
+        # LoadModule foo_module modules/mod_foo.so
+        #
+        #LoadModule access_compat_module modules/mod_access_compat.so
+
+        LoadModule alias_module modules/mod_alias.so
+
+            
+    httpd.conf ファイルを保存します。そのあとで Apache を再起動して設定ファイルを読み込みなおしてください。
+
+    次に Alias ディレクトリに設定したファイルパスにファイルを設置します。
+
+
+    ブラウザから http://localhost/data/hello.html へアクセスします。
+    
+    Alias ディレクティブに設定したディレクトリに設置した hello.html ファイルがクライアントへ返されて次のようにブラウザに表示されました。
+
+
+    このとき「Forbidden You don't have permission to access this resource.」が表示される場合は、ファイルパスに指定したディレクトリに対してアクセスする権限が設定されているかどうか確認されてください。
+
+
+
+Aliasディレクティブ：特定のパスへのリクエストに対してドキュメントルート以外のディレクトリを割り当てる
+https://www.javadrive.jp/apache/ini/index12.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Redirectディレクティブ：特定のパスへのリクエストに対してリダイレクトする ]
+
+0. Redirect ディレクティブはクライアントからのリクエストに含まれるパスが特定のパスと一致した場合、指定した URL へリダイレクトする設定を行う場合に使用します。
+
+    ここでは Apache の Redirect ディレクティブの使い方について解説します。
+
+
+1. Redirectディレクティブの使い方
+
+    Redirect ディレクティブはリクエストのパスが特定のパスと先頭から一致する場合に、別の URL へリダイレクトする設定を行います。
+    
+    書式は次のとおりです。
+
+        Redirect [ステータス] URLパス URL
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。 
+    
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+    例えばクライアントからのリクエストに含まれるパスが、
+    
+    先頭から /data と一致した場合に http://www.example.com/data へリダイレクトするには次のように記述します。
+
+        Redirect /data http://www.example.com/newdata
+
+
+    この場合、リクエストに対して次の URL へリダイレクトされます。
+
+        リクエスト：
+        http://(元のホスト名)/data/index.html
+
+        リダイレクト先：
+        http://www.example.com/newdata/index.html
+
+
+
+        http://(元のホスト名)/data/img/image01.png
+
+        http://www.example.com/newdata/img/image01.png
+
+
+    リダイレクト先が同じサーバ内の場合は、リダイレクト先の URL をルートディレクトリからの絶対パスで指定することもできます。
+    
+    
+    例えば /data へのリクエストを /newdata へリダイレクトするには次のように記述します。
+
+        Redirect /data /newdata
+
+    この場合、リクエストに対して次の URL へリダイレクトされます。
+
+
+        リクエスト：
+        http://(元のホスト名)/data/index.html
+
+
+        リダイレクト先：
+        http://(元のホスト名)/newdata/index.html
+
+
+
+        http://(元のホスト名)/data/img/image01.png
+
+        http://(元のホスト名)/newdata/img/image01.png
+
+
+
+2. ステータスコードの設定
+
+    Redirect ディレクティブでは HTTP レスポンスステータスコードを指定することもできます。
+    
+    ステータスコードは 300 番台がリダイレクトの際に使用するものですが、他の番号も指定可能なようです。
+    
+    ただし 300 番台以外を明示的に指定する場合はリダイレクト先の URL を指定しないでください。
+
+
+    リダイレクトのときによく使用されるステータスコードには 301 と 302 があります。 
+    
+    301 の場合は恒久的にページが変更になったことを表し、 302 の場合は一時的に変更しているがいずれは元に戻すことを表します。
+
+        301 恒久的なリダイレクト 302 一時的なリダイレクト
+
+
+    なおステータスコードを省略した場合は 302 が指定されたものとみなされます。
+    
+
+    またコードの代わりに permanent (301の代わり) や temp (302の代わり) を使って指定することもできます。
+
+    Redirect 301 /data http://www.example.com/newdata
+
+    Redirect temp /data http://www.example.com/newdata
+
+
+
+3. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        <IfModule alias_module>
+            #
+            # Redirect: Allows you to tell clients about documents that used to 
+            # exist in your server's namespace, but do not anymore. The client 
+            # will make a new request for the document at its new location.
+            # Example:
+            # Redirect permanent /foo http://www.example.com/bar
+        </IfModule>
+
+
+    Redirect ディレクティブの設定は alias_module モジュールが使用可能な場合に行います。
+    
+    具体的な設定手順はこのあと解説します。
+
+
+
+
+4. Redirectディレクティブを設定する
+
+    それでは実際に Redirect ディレクティブを設定してみます。 httpd.conf ファイルを開き、次のように記述されている箇所を検索してください。
+
+        <IfModule alias_module>
+            #
+            # Redirect: Allows you to tell clients about documents that used to 
+            # exist in your server's namespace, but do not anymore. The client 
+            # will make a new request for the document at its new location.
+            # Example:
+            # Redirect permanent /foo http://www.example.com/bar
+        </IfModule>
+
+
+    Redirect ディレクトリに関する設定を記述します。
+    
+    
+    今回は同じサーバ内の別のディレクトリへリダイレクトします。(コメントの部分は省略しています)。
+
+        <IfModule alias_module>
+        Redirect /old /new
+        </IfModule>
+
+
+    念のため alias_module モジュールが使用可能になっていることを確認してください。 httpd.conf に次の記述があれば使用可能です。
+
+        #
+        # Dynamic Shared Object (DSO) Support
+        #
+        # To be able to use the functionality of a module which was built as a DSO you
+        # have to place corresponding `LoadModule' lines at this location so the
+        # directives contained in it are actually available _before_ they are used.
+        # Statically compiled modules (those listed by `httpd -l') do not need
+        # to be loaded here.
+        #
+        # Example:
+        # LoadModule foo_module modules/mod_foo.so
+        #
+        #LoadModule access_compat_module modules/mod_access_compat.so
+
+        LoadModule alias_module modules/mod_alias.so
+
+
+    httpd.conf ファイルを保存します。そのあとで Apache を再起動して設定ファイルを読み込みなおしてください。
+
+
+    ブラウザから http://localhost/old/hello.html へアクセスします。
+    
+    
+    リクエストに含まれるパスが Redirect ディレクティブで設定した URL パスと一致していますので http://localhost/new/hello.html へリダイレクトされます。
+
+
+
+Redirectディレクティブ：特定のパスへのリクエストに対してリダイレクトする
+https://www.javadrive.jp/apache/ini/index15.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Defineディレクティブ：変数を定義する ]
+
+
+0. Define ディレクティブは変数を定義するのに使用します。
+
+    変数に対して値を設定し他のディレクティブに対する設定に使用したり、
+    
+    変数の定義だけを行い IfDefine ディレクティブを使った条件分岐で使用することができます。
+    
+    ここでは Apache の Define ディレクティブの使い方について解説します。
+
+
+1. Defineディレクティブの使い方
+
+    Define ディレクティブは変数を定義するときに使用します。書式は次のとおりです。
+
+        Define 変数名 [値]
+
+
+    記述できる場所は httpd.conf です。
+
+    変数名は定義だけを行うこともできますし、定義した変数に値を設定することもできます。
+    
+    例えば DebugMode という変数を定義だけ行う場合は次のように記述します。
+
+        Define DebugMode
+
+
+    1-1. IfDefine
+    
+    変数を定義だけ行った場合は IfDefine ディレクティブと組み合わせて使用します。
+    
+    IfDefine ディレクティブは、パラメータとして記述した変数が定義されている場合だけブロック内に記述された設定が行われます。
+
+    Define DebugMode
+
+        <IfDefine DebugMode>
+        ・・・
+        ・・・
+        </IfDefine>
+
+    ※ Apache を起動するときに -D変数名 オプションをつけて起動した場合と同じです。
+
+
+    また定義した変数に対して値を設定することもできます。
+    
+    例えば TestDir に対して d:\testdir を設定する場合は次のように記述します。
+
+        Define TestDir d:\testdir
+
+
+
+    変数に定義した値は ${変数名} と記述することで他のディレクティブに対する設定で使用することができます。
+    
+    例えば次の 2 つの Alias ディレクティブは同じ設定となります。
+
+        Define TestDir d:\testdir
+
+        Alias /data ${TestDir}
+        Alias /data d:\testdir
+
+
+2. httpd.conファイルでの記述
+
+    httpd.conf ファイルでは次のような使われ方をしています。
+
+        Define SRVROOT "d:/pg/Apache/Apache24"
+
+        ServerRoot "${SRVROOT}"
+
+
+    変数 SRVROOT に対して d:/pg/Apache/Apache24 を設定しています。
+    
+    そして ServerRoot ディレクティブに対する値として変数 SRVROOT の値を設定しています。
+
+
+
+
+Defineディレクティブ：変数を定義する
+https://www.javadrive.jp/apache/ini/index14.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ ApacheでIPベースのバーチャルホストを利用する ]
+
+
+
+
+ApacheでIPベースのバーチャルホストを利用する
+https://www.javadrive.jp/apache/virtual/index1.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ .htaccessでリダイレクトする方法6選 ]
+
+
+.htaccessでリダイレクトする方法6選
+https://egatech.net/htaccess-redirect/
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ バーチャルホストの設定 ]
+
+    ApacheでIPベースのバーチャルホストを利用する
+    Apacheで名前ベースのバーチャルホストを利用する
+    ServerAliasディレクティブ：バーチャルホストのエイリアスを設定する
+
+
+バーチャルホストの設定
+https://www.javadrive.jp/apache/#section_virtual
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ VirtualHostとは？ ]
+
+
+VirtualHostとは？
+https://blog.senseshare.jp/virtualhost.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+【Apache】VirtualHostを使ってみよう
+https://qiita.com/erik_t/items/63f079826a60aaa642d3
+
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+[ Apache 用語を理解する🔥 ]
+
+    気になったの	    ざっくりした説明
+
+    CustomLog 	    アクセスログ
+
+    ErrorLog	    エラーログ
+
+    AddHandler	    CGIスクリプトを使用するかしないか
+
+    AllowOverride	.htaccess による設定変更を有効にするかどうか
+
+    IfModule	    モジュールが存在する時に処理される
+
+    RewriteEngine	RewriteEngineをONにするかOFFにするか
+
+    RemoveHnadler	ファイル拡張子に関連付けされたハンドラをすべて解除する
+
+    RewriteCond	    書き換えの条件を指定する。条件に一致したときだけ書き換え
+
+    RewriteRule	    書き換えのルール。パターンに一致した値を置換する
+
+    Allow from	    アクセス許可
+
+    Deny from	    アクセス不許可
+
+    Order	        同一のディレクトリに対してDenyとAllowと両方を組み合わせてアクセス制御をする場合
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
