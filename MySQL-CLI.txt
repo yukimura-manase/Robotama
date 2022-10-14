@@ -6,13 +6,13 @@
 
 本番環境は、他のCMSサイトにも使用する予定があるので、以下のようにしてください。
 
-    MariaDB root パスワード変更 QTvJtwoaqbAUPx663d3u => Clear🔥
+    MariaDB root パスワード変更 Robotama => Clear🔥
 
-    MariaDB CGGS ユーザー作成 パスワード FwXjueuzNSqc3hoensC2 => Clear🔥
+    MariaDB Robotama ユーザー作成 パスワード Robotama => Clear🔥
 
-    データベース名は CGGS に変更、 CGGS ユーザーに権限設定 => Clear🔥
+    データベース名は Robotama に変更、 Robotama ユーザーに権限設定 => Clear🔥
 
-    Apacheも CGGS ディレクトリに移動
+    Apacheも Robotama ディレクトリに移動
 
 
 concretecmsのデータベース設定は application/config/database.php
@@ -69,7 +69,7 @@ MariaDB [(none)]> select user, host from mysql.user;
 
 
     # 現在接続しているユーザーに新しいパスワードを設定する場合
-    set password = password('QTvJtwoaqbAUPx663d3u');
+    set password = password('Robotama');
 
 
     # パスワード変更方法-2
@@ -93,9 +93,9 @@ MariaDB [(none)]> select user, host from mysql.user;
 
     ひとまず、User名&Passwordだけ設定する
 
-    CREATE USER CGGS IDENTIFIED BY 'FwXjueuzNSqc3hoensC2';
+    CREATE USER Robotama IDENTIFIED BY 'Robotama';
 
-    create user 'CGGS'@'localhost' IDENTIFIED BY 'FwXjueuzNSqc3hoensC2';
+    create user 'Robotama'@'localhost' IDENTIFIED BY 'Robotama';
 
 
 
@@ -188,9 +188,9 @@ mysqldump -u root -p CGGS > C:\cggs.dump
 < 本番環境のPassWord関連 >
 
 
-    MariaDB root パスワード: QTvJtwoaqbAUPx663d3u
+    MariaDB root パスワード: Robotama
 
-    MariaDB CGGS ユーザー・パスワード: FwXjueuzNSqc3hoensC2
+    MariaDB CGGS ユーザー・パスワード: Robotama
 
         => *6E6FEC51E20F3B7066FAD309632695A2072EC805
 
@@ -205,11 +205,11 @@ mysqldump -u root -p CGGS > C:\cggs.dump
 8. MySQLで新しいユーザーを作成して権限を付与する方法
 
 
-CREATE USER 'CGGS'@'127.0.0.1' IDENTIFIED BY 'FwXjueuzNSqc3hoensC2';
+CREATE USER 'CGGS'@'127.0.0.1' IDENTIFIED BY 'Robotama';
 
-CREATE USER CGGS@localhost IDENTIFIED BY 'FwXjueuzNSqc3hoensC2';
+CREATE USER CGGS@localhost IDENTIFIED BY 'Robotama';
 
-MariaDB [(none)]> CREATE USER CGGS@127.0.0.1 IDENTIFIED BY 'FwXjueuzNSqc3hoensC2';
+MariaDB [(none)]> CREATE USER CGGS@127.0.0.1 IDENTIFIED BY 'Robotama';
 Query OK, 0 rows affected (0.005 sec)
 
 
@@ -303,7 +303,7 @@ Bye
 
 # Restoreする🔥
 
-C:\Users\JCGCMS-AAdmin>mysql -u root -p cggs_maria < C:\COAST_GUARD_GLOBAL_SUMMIT.sql
+C:\Users\JCGCMS-AAdmin>mysql -u root -p cggs_maria < C:\Robotama.sql
 
 Enter password: ********************
 
