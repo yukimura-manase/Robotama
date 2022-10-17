@@ -1,0 +1,100 @@
+
+<h1>【JavaScript】スマホ判定をする2つの方法</h1>
+
+<p>使用中の端末：</p>
+<p id="Terminal"></p>
+
+<script type="text/javascript">
+
+    // 端末を判別する仕組み => 接続してきたユーザーの情報を知るには「navigator オブジェクト」を利用する事で実現します。
+
+    // 「navigator オブジェクト」には、いくつもの「ユーザー端末」の情報が格納されていてプロパティとして、各情報を取得する事が出来ます。
+
+    // userAgentプロパティで判定することができる
+    let userDevice = navigator.userAgent;
+
+    console.log({navigator});
+    console.log({userDevice});
+        // {userDevice: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36'}
+
+        // [ iPhoneから接続された場合の UserAgent ]
+        // Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/577.01 (KHTML, like Gecko) Version/6.8 Mobile/11A111 Safari/9788.91
+
+
+    // 1. navigator.userAgent からスマホ判定するパターン
+    function JudgingFromUserAgent() {
+        // UserAgentからのスマホ判定
+        if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    JudgingFromUserAgent();
+
+
+    // 2. 画面幅から、スマホサイズとして判定するパターン => ブラウザをUserが縮小した場合でも判定できるので、柔軟な対応が可能
+    function JudgingFromScreenWidth() {
+
+        // window.matchMedia()関数を使うことで、デバイス画面幅を判定できる => 画面幅によってUIを変更したいときに使える。
+        // スマホサイズの領域を決めて、判定するのもあり。
+
+        if (window.matchMedia && window.matchMedia('(max-device-width: 640px)').matches) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    JudgingFromScreenWidth();
+
+
+    let tarminal = document.getElementById('Terminal')
+    let msg = ""
+    let ut = navigator.userAgent;
+
+
+    if(ut.indexOf('iPhone') > 0 || ut.indexOf('iPod') > 0 || ut.indexOf('Android') > 0 && ut.indexOf('Mobile') > 0){
+        msg = "SmartPhon";
+    }else if(ut.indexOf('iPad') > 0 || ut.indexOf('Android') > 0){
+        msg ="Tablet";
+    }else{
+        msg = "Personal Computer";
+    }
+
+    tarminal.textContent = msg;
+</script>
+
+
+<span id="members-only-title">Members Only Page</span>
+
+<script type="text/javascript">
+
+    const membersOnlyTitle = document.getElementById('members-only-title');
+
+    if (window.matchMedia && window.matchMedia('(max-device-width: 767px)').matches) {
+        // スマホ端末での表示サイズ
+        membersOnlyTitle.innerHTML = `<h2>Members Only Page</h2>`;
+    } else {
+        // PC・タブレット端末での表示サイズ
+        membersOnlyTitle.innerHTML = `<h1>Members Only Page</h1>`;
+    }
+    
+</script>
+
+
+
+
+<h3>参考・引用</h3>
+<ol>
+    <li>
+        <a href="https://www.site-convert.com/archives/2188" target="_blank">JavaScriptでスマホ判定する2つの方法</a>
+    </li>
+    <li>
+        <a href="https://qiita.com/mzmz__02/items/8a308e768ae83768a9d5" target="_blank">【JavaScript】スマホ判定する方法</a>
+    </li>
+    <li>
+        <a href="https://magazine.techacademy.jp/magazine/24013" target="_blank">JavaScriptでアクセス元の端末がスマホかどうか判定する方法を現役エンジニアが解説【初心者向け】</a>
+    </li>
+</ol>
