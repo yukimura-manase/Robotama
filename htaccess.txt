@@ -1,0 +1,38 @@
+### ApacheのBasic認証をHTTPSで行わせる ###
+
+## 背景
+# mod_rewriteを使ってHTTPアクセスをHTTPSにリダイレクトする設定にしてあるページにBasic認証をかけている場合、なにも考えずに設定すると以下のようなことが起こる:
+
+# 1. 普通にHTTPでアクセス
+# 2. Basic認証が求められるが、この認証は暗号化されない
+# 3. 認証後HTTPSバージョンにリダイレクトされる
+# 4. 再度Basic認証が求められる (これは暗号化される)
+
+# つまり、以下2つの問題がある:
+
+# 1. 暗号化されない状態で認証情報が送信される
+# 2. 同じ認証動作が2度必要になる
+# これを解決する。
+
+# アプローチ
+# 1. HTTPによるアクセスは認証がない状態で認めるが、必ずHTTPS版にリダイレクトする
+# 2. HTTPSのアクセスは認証が必用
+# Apache 2.4での設定
+
+# HTTPSのアクセスはリダイレクト不要なので無視
+RewriteCond %{HTTPS} off
+
+# https://*にリダイレクト
+RewriteRule ^$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# HTTPSアクセスの場合のみ認証を求める
+<If "%{HTTPS} == 'on'">
+AuthUserFile C:\httpd-2.4.54-win64-VS16\Apache24\htdocs\CGGS\.htpasswd
+AuthName "Basic Auth"
+AuthType Basic
+Require valid-user
+</If>
+
+
+# ApacheのBasic認証をHTTPSで行わせる
+# https://gist.github.com/ma10/19ae4c5c6a5c0069228c0b9e74cc89b3
