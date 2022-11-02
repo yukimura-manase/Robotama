@@ -1,0 +1,43 @@
+
+[ Apache 2.4 ディレクトリ一覧を表示させない ]
+
+    Apacheサーバーでディレクトリを非表示にする
+
+    Apacheサーバーでは、「index.html」の等の「 DirectoryIndex」で指定したファイルがない場合に、ディレクトリ一覧が表示される場合があります
+
+    ディレクトリ一覧を表示させないようにするには、「Options Indexes FollowSymLinks」の箇所を次のように変更します
+
+
+
+    [ Default-設定 ]
+
+    <Directory "${SRVROOT}\htdocs\Robotama">
+        Options Indexes FollowSymLinks
+    </Directory>
+
+
+
+
+1. 「Options -Indexes」の記述でディレクトリ一覧を無効にする
+
+
+    <Directory "${SRVROOT}\htdocs\Robotama">
+        Options -Indexes +FollowSymLinks
+    </Directory>
+
+
+
+2. 「Options FollowSymLinks」の記述でディレクトリ一覧を無効にする
+
+
+    <Directory "${SRVROOT}\htdocs\Robotama">
+        Options FollowSymLinks
+    </Directory>
+
+
+
+
+
+Apache 2.4 ディレクトリ一覧を表示させない
+https://ex1.m-yabe.com/archives/4915
+
