@@ -1,0 +1,64 @@
+
+< htaccess の設定 & 使い方 まとめ🔥 >
+
+
+[ 【Apache】.htaccessの書き方と基本的な意味を理解する ]
+
+
+1. 「 .htaccess 」とは？
+
+    .htaccessファイルは、Apacheを使うときに、Webサーバーの動作をディレクトリ単位でコントロールするためのファイルです。
+
+    .htaccessファイルに設定を書くことで、思うようなページ表示させることができます。
+
+2. 「 .htaccess 」の特徴と注意点
+
+    AllowOverrideを「All」に設定して.htaccessを使えるようにする
+
+    .htaccessファイルは各ディレクトリに置きます。
+
+    .htaccessを使えるようにするためには、AllowOverrideを「AllowOverride All」と設定する必要があります。
+
+
+4. AllowOverride Allはパフォーマンスが少し低下する
+
+    AllowOverride Allを有効にした場合、ドキュメントルートから、
+    
+    .htaccessファイルをリクエストごとに毎回 .htaccessファイルがあるかないかに関わらずすべてのフォルダを調べることになるため、少しパフォーマンスは低下します。
+
+    そのため、.htaccessを使わないときは、「AllowOverride None」として無効化し、httpd.confなどで設定します。
+
+
+5. .htaccessは配置したディレクトリとサブディレクトリで有効になる
+
+    .htaccessは配置したディレクトリとサブディレクトリで有効になります。
+
+    上位階層の設定は下位階層の設定に上書きされる
+
+    上位階層の.htaccessの設定は、下位階層の.htaccessの設定によって上書きされます。
+
+
+6. .htaccessの書き方
+
+    DirectoryIndex sample.html
+    Options -Indexes
+
+
+    上の２つは.htaccessの中で使用できるディレクティブです。
+
+    設定したのに反映されない場合は、htaccessのコンテキストで使えるディレクティブかどうかを調べましょう。
+
+    コンテキストやディレクティブ、その調べ方については、【Apache】コンテキストとは？ディレクティブとは？を参照してみてください。
+
+    上のように、各ディレクトリに.htaccessファイルを作成して、中身を記述していきます。
+
+
+7. htaccessはサーバーの再起動は不要 
+
+    .thaccessはリクエストがきたタイミングで毎回読み込まれます。 
+
+    そのため、サーバーを再起動する必要がありません。
+
+
+【Apache】.htaccessの書き方と基本的な意味を理解する
+https://devsakaso.com/apache-htaccess-basics/
