@@ -1,0 +1,123 @@
+
+< Youtube-Bloc の Cookie対応🔥 >
+
+
+ファーストパーティーCookieとは？
+
+    => ファーストパーティクッキー（1st Party Cookie）とは、ユーザーが訪問しているWebサイトのドメインから直接発行されているCookieのことです。 つまり、「Cookieの発行元のドメイン」＝「訪問Webサイトのドメイン」なCookieのこと。
+
+
+サードパーティーCookieとは？
+
+    => サードパーティークッキー（3rd Party Cookie）とは、アクセスしたWebサイトと異なるドメインが発行したCookieのことである。 同一のドメインから発行されたCookieは「ファーストパーティークッキー」という。
+
+
+[ MDN: SameSite cookies ]
+
+    SameSite cookies
+    Set-Cookie HTTP レスポンスヘッダーの SameSite 属性を使用すると、Cookie をファーストパーティまたは同じサイトのコンテキストに制限するかどうかを宣言できます。
+
+    値
+    SameSite 属性は 3 つの値をとります。
+
+    Lax
+    Cookie はトップレベルナビゲーションで送信することが許可されており、サードパーティの Web サイトによって開始された GET リクエストとともに送信されます。これは、モダンブラウザーのデフォルト値です。
+
+    Strict
+    Cookie はファーストパーティのコンテキストでのみ送信され、サードパーティの Web サイトによって開始されたリクエストと一緒に送信されることはありません。
+
+    None
+    Cookie はすべてのコンテキストで送信されます。つまり、クロスオリジンの送信が許可されます。
+
+    None はデフォルト値でしたが、最近のブラウザーバージョンでは、Lax をデフォルト値にして、クロスサイトリクエストフォージェリ (CSRF) 攻撃のクラスに対して適度に堅牢な防御を提供しました。
+
+    None では、最新バージョンのブラウザーで Secure 属性が必要です。詳細については、以下を参照してください。
+
+
+
+[ 様々な環境下でCookieをSameSite=None; Secureに設定して従来通りの挙動に変更する ]
+
+    1. Apacheの場合
+    Apacheは.htaccessでCookieにデフォルトの属性を追加することができます。
+
+        <ifmodule mod_headers.c>
+        Header always edit Set-Cookie (.*) "$1; secure; SameSite=none"
+        </ifmodule>
+
+
+    2. PHP7.3+の場合
+
+        セッションのみ
+
+        Same-Site属性はPHP7.3で新規に追加されました。したがってPHP7.3以上のバージョンではsession_set_cookie_paramsを使用することでセッションにSame-Site属性を付与することができます。
+
+        <?php
+        $cookieParams = session_get_cookie_params();
+        $cookieParams[samesite] = "None";
+        session_set_cookie_params($cookieParams);
+
+        session_start();
+        または、php.iniに以下の設定を追加することでもSame-Site属性を付与することができます。
+
+        session.cookie_samesite=None
+        Cookieすべて
+
+        <?php
+        setcookie('cross-site-cookie', 'name', ['samesite' => 'None', 'secure' => true]);
+
+
+
+1. 様々な環境下でCookieをSameSite=None; Secureに設定して従来通りの挙動に変更する
+https://webty.jp/staffblog/production/post-2629/
+
+
+2. CookieのSecure属性/HttpOnly属性の指摘と修正方法と脆弱性の解説
+https://at-virtual.net/securecoding/cookie%E3%81%AEsecure%E5%B1%9E%E6%80%A7-httponly%E5%B1%9E%E6%80%A7%E3%81%AE%E6%8C%87%E6%91%98%E3%81%A8%E4%BF%AE%E6%AD%A3%E6%96%B9%E6%B3%95%E3%81%A8%E8%84%86%E5%BC%B1%E6%80%A7%E3%81%AE%E8%A7%A3/
+
+
+
+3. 【Google Chrome】CookieのSameSite属性などをデベロッパーツールで確認する
+https://atmarkit.itmedia.co.jp/ait/articles/2002/19/news021.html
+
+
+4. MDN: SameSite cookies
+https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Set-Cookie/SameSite
+
+
+5. SameSite Cookie の説明
+https://web.dev/i18n/ja/samesite-cookies-explained/
+
+
+6. CookieのSameSite Attributeとは？
+https://blog.tomoyukikashiro.me/ja-JP/post/what-is-samesite-cookie
+
+
+7. PHPとJSでCOOKIEを制御する
+https://vielhuber.de/ja/blog-ja/control-cookies-with-php-and-js/
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< Youtube-Bloc の Cookie対応 Part-2🔥 >
+
+
+サードパーティーCookie をどうBlockするか？？？
+
+
+SrcCodeがこうなっていたので、調べてみたら、次のような記事を発見しました！
+
+if ($this->noCookie) {
+    $this->set('youtubeDomain', 'www.youtube-nocookie.com');
+} else {
+    $this->set('youtubeDomain', 'www.youtube.com');
+}
+
+
+YouTube動画をyoutube-nocookie.comで埋め込むと何が変わるのか
+https://zenn.dev/pekeq/articles/30d93ed7ea1a5e
+
+
+
+iframe（ビデオプレーヤーなど）を同意が得られた場合のみロードする
+https://cookiefirst.jp/manual/11834/
