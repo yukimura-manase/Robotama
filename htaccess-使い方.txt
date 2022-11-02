@@ -62,3 +62,1266 @@
 
 【Apache】.htaccessの書き方と基本的な意味を理解する
 https://devsakaso.com/apache-htaccess-basics/
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Apache入門 Ver. 「 .htaccess 」 ]
+
+
+    .htaccessの使い方
+    .htaccessの書き方
+    AllowOverrideディレクティブ：.htaccessを使った設定の上書きを許可する
+    RewriteEngineディレクティブ：リライト機能を有効または無効にする
+    RewriteRuleディレクティブ：URLのリライト/リダイレクトを行う
+    RewriteBaseディレクティブ：リライト先を相対パスで指定するときの基準ディレクトリを設定する
+    RewriteCondディレクティブ：URLのリライト/リダイレクトを行う条件を定義する
+    Redirectディレクティブ：URLのリダイレクトを行う
+    .htaccessサンプル：色々なリダイレクト
+    .htaccessサンプル：URLの正規化
+    .htaccessサンプル：拡張子の省略
+
+
+
+Apache入門
+https://www.javadrive.jp/apache/
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ .htaccessの書き方 ]
+
+
+0. 「 .htaccess 」ファイルの作成方法や、設置する場所、 
+
+    .htaccess に記載した設定が影響する範囲や階層ごとに異なる .htaccess が設置されている場合の優先順位など 
+    
+    .htaccess の基本的な書き方について解説します。
+
+
+1. .htaccessとは
+
+    Apache に関する設定は httpd.conf ファイルにて行いますが、このファイルは管理者権限を持つユーザーしか編集することができません。
+    
+    例えば Apache をレンタルサーバのように複数のユーザーに提供している場合、ユーザーが自分の管理しているディレクトリに対して設定を行おうとしても httpd.conf を直接編集することは通常許可されません。
+
+    そこでユーザーが管理しているディレクトリに対してだけ適用される設定を、ユーザー自身が編集できるようにしたものが .htaccess ファイルです。
+    
+
+    ユーザーは自分で .htaccess ファイルを作成し必要な設定を記述した上でユーザーが管理しているディレクトリに設置すると、設置したディレクトリおよび下位のディレクトリに対して .htaccess に記述した設定が適用されます。
+
+
+    ただ何でも好きな設定を .htaccess に記述できるわけではありません。
+    
+    どのディレクトリに対してどんな設定を .htaccess で設定可能なのかを httpd.conf ファイルにて AllowOverride ディレクティブを使って事前に設定しておく(管理者に依頼して設定してもらう)必要があります。
+
+
+    .htaccess で設定できる項目はすべて httpd.conf ファイルの Directory ディレクティブに対して設定することが可能です。
+    
+    よって .htaccess を利用する明確な理由がなければ .htaccess を使用する必要はありません。
+
+
+
+2. .htaccessの作成
+
+    .htaccess ファイルはテキストファイルです。
+    
+    新しく作成する場合はテキストエディタで新しいファイルを作成し、ファイル名として .htaccess として保存してください。
+    
+    ( AccessFileName ディレクティブに設定することでファイル名は変更も可能です)。
+
+
+    作成したテキストファイルに httpd.conf ファイルに記述するのと同じように設定を記述していきます。
+
+        SetEnvIf Referer www\.example\.com my_referral
+        Require env my_referral
+
+
+    コメントを記述する場合は行の先頭に # を記述してください。その行がコメントとなります。
+
+
+        # 環境変数が定義されている場合だけアクセスを許可
+        SetEnvIf Referer www\.example\.com my_referral
+        Require env my_referral
+
+
+3. .htaccessのアップロード
+
+    作成した .htaccess は他の HTML ファイルなどと同じように対象となるディレクトリにアップロードしてください。
+
+
+4. .htaccessの設定が影響する範囲
+
+    .htaccess ファイルに記述した設定は、 .htaccess ファイルを設置したディレクトリおよび下位のディレクトリで適用されます。
+
+
+    あるディレクトリに適用される設定は、 httpd.conf ファイルに記述された設定に加えて、
+    
+    自分自身のディレクトリおよびその上位のディレクトリに設置されている .htaccess に記述された設定が適用されます。
+
+        / ディレクトリ
+        /.htaccess が適用
+
+        /img ディレクトリ
+        /.htaccess と /img/.htaccess が適用
+
+        /img/sp ディレクトリ
+        /.htaccess と /img/.htaccess と /img/sp/.htaccess が適用
+
+
+    複数の .htaccess が適用されるディレクトリの場合に、どの設定が適用されるのかについてはこのあと解説します。
+
+
+
+5. 複数の.htaccessが適用される場合の優先順位
+
+
+    あるディレクトリに .htaccess が設置されている場合に、そのディレクトリの上位の階層にあるディレクトリにも
+    
+     .htaccess が設置されている場合、複数の .htaccess が適用されることになります。
+     
+     
+    それぞれの .htaccess に競合しない設定が記述されていた場合はどちらの .htaccess に記述されている設定も有効となりますが、
+    
+    競合する設定が記述されていた場合はより下位のディレクトリの .htaccess に記述された設定が有効となります。
+
+
+
+    次の例では / に設置された .htaccess と、その下位ディレクトリの /img に設置された .htaccess の設定内容です。
+
+        /.htaccess
+        Options +Indexes
+        RewriteEngine On
+        RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+        RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+
+        /img/.htaccess
+        ErrorDocument 404 404.html
+        Options -Indexes
+
+
+    /img ディレクトリにはどちらの .htaccess も適用されますが、 Options ディレクティブに関する設定が競合しているため、
+    
+    より下位のディレクトリにある .htaccess で記述されている Options -Indexes が有効となります。
+    
+    結果的に /img ディレクトリには次のような設定が有効となります。
+
+
+        RewriteEngine On
+        RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+        RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+        ErrorDocument 404 404.html
+        Options -Indexes
+
+
+.htaccessの書き方
+https://www.javadrive.jp/apache/htaccess/index1.html
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ AllowOverride-ディレクティブ：.htaccess を使った設定の上書きを許可する ]
+
+0. AllowOverride ディレクティブは、 .htaccess を使ってどのディレクティブに関する設定を変更することができるのかを指定する場合に使用します。
+
+    設定変更の許可はディレクティブ単位ではなく、複数のディレクティブをまとめたグループ単位で行います。
+    
+    ここでは Apache の AllowOverride ディレクティブの使い方について解説します。
+
+
+
+1. AllowOverrideディレクティブの書式
+
+    AllowOverride ディレクティブを使用すると、対象のディレクトリに設置した .htaccess で設定を変更することができるディレクティブの種類を設定することができます。
+    
+    書式は次のとおりです。
+
+        AllowOverride ディレクティブの種類 [ディレクティブの種類] ...
+
+    記述できる場所は Directory です。
+
+
+    設定変更を許可するディレクティブの種類を指定します。
+    
+    種類はディレクティブ毎ではなく、同じようなディレクティブをまとめたグループを指定します。
+    
+
+    指定可能なグループは次の通りです。
+
+        1. AuthConfig  認証に関するディレクティブ
+
+            => AuthConfig は認証に関するディレクティブの設定変更を許可する場合に指定します。 
+
+            => BASIC 認証で使用する AuthName ディレクティブや AuthName ディレクティブの他、
+            
+                アクセス制御で使用する Require ディレクティブもここに含まれます。
+
+
+        2. FileInfo    ドキュメントに関するディレクティブ
+
+            => FileInfo はドキュメントに関するディレクティブの設定変更を許可する場合に指定します。 
+    
+                ErrorDocument ディレクティブや SetEnvIf ディレクティブの他、
+                
+                リダイレクトの設定で使用する RewriteEngine ディレクティブや RewriteCond ディレクティブもここに含まれます。
+
+
+        3.  Indexes     ディレクトリインデックスに関するディレクティブ
+
+            => Indexes はディレクトリインデックスに関するディレクティブの設定変更を許可する場合に指定します。 
+            
+                DirectoryIndex ディレクティブや IndexOptions ディレクティブが含まれます。
+
+
+        4. Limit       (以前の)アクセス制御をに関するディレクティブ
+
+            => Limit は Apache 2.2 以前で使われていたアクセス制限に関するディレクティブの設定変更を許可する場合に指定します。 
+            
+                Allow ディレクティブ, Deny ディレクティブや, Order ディレクティブが含まれます。
+
+
+        5. Options[=Option,...]  Options ディレクティブ
+
+            => Options は Options ディレクティブに関する設定変更を許可する場合に指定します。 
+            
+                単に Options を指定した場合はすべての Options のオプションが変更可能となります。
+                
+                特定のオプションだけを変更可能にする場合は Options=ExecCGI,Indexes のように = のあとにオプションを記述してください。
+                
+                複数のオプションを指定する場合はカンマ(,)で区切り続けて記述します。
+
+                ※ Options ディレクティブについては「Optionsディレクティブ：ディレクトリで使用可能な機能を設定する」を参照されてください。
+
+
+
+2. AllowOverrideディレクティブの記述方法
+
+
+    AllowOverride ディレクティブはディレクトリに対して使用するため、 Directory ディレクティブのブロック内で記述します。
+    
+    例えば d:\pg\Apache\Apache24\htdocs\user ディレクトリに設置した .htaccess で設定の変更を許可する場合には AllowOverride ディレクティブを次のように記述します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs/user>
+        AllowOverride ディレクティブの種類 ディレクティブの種類 ...
+        </Directory>
+
+
+    ※ Directory ディレクティブについては「Directoryディレクティブ/DirectoryMatchディレクティブ：設定が適用されるディレクトリを指定する」を参照されてください。    
+            
+        
+
+3. すべてのディレクティブの設定を許可する
+
+    すべてのディレクティブの設定変更を許可するには All を指定します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs/user>
+            AllowOverride All
+        </Directory>
+
+
+4. .htaccessの利用を許可しない
+
+    .htaccess の利用を許可しない場合は None を指定します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs/user>
+            AllowOverride None
+        </Directory>
+                
+
+
+5. 特定のディレクティブの種類の設定を許可する
+
+    特定のディレクティブの種類の設定変更を許可するには、
+    
+    許可するディレクティブの種類を半角スペースで区切って記述してください。
+    
+    例えば AuthConfig と Options の 2 つのディレクティブの種類に設定変更の許可をするには次のように記述します。
+
+        <Directory d:/pg/Apache/Apache24/htdocs/user>
+            AllowOverride AuthConfig Options
+        </Directory>
+
+
+6. httpd.conファイルでの記述
+
+    httpd.conf ファイルにはデフォルトで次のように記述されています。
+
+        <Directory />
+            AllowOverride none
+        </Directory>
+
+        <Directory "${SRVROOT}/htdocs">
+            AllowOverride None
+        </Directory>
+
+        <Directory "${SRVROOT}/cgi-bin">
+            AllowOverride None
+        </Directory>
+
+
+    3 つのディレクトリに対してそれぞれ AllowOverride None が設定されています。
+    
+    ドキュメントルートに対しても AllowOverride None が設定されていますので、
+    
+    デフォルトの状態ではドキュメントルート以下のどのディレクトリに対して .htaccess を設置しても無視されます。
+
+
+7. ディレクティブがどのディレクティブのグループに含まれるのか
+
+    現在このサイトで解説しているディレクティブに関して、どのディレクティブのグループに含まれるのかを下記に記載します。
+    
+    なお Files ディレクティブと FilesMatch ディレクティブを .htaccess の中で使用できるようにするには AllowOverride All を指定する必要があります。
+
+        [All]
+            Files
+            FilesMatch
+
+        [Indexes]
+            DirectoryIndex
+            DirectorySlash
+
+        [Options]
+            Options
+
+        [FileInfo]
+            Redirect
+            AddType
+            SetEnvIf
+            ErrorDocument
+            RewriteEngine
+            RewriteRule
+            RewriteCond
+            RewriteOptions
+
+        [AuthConfig]
+            Require
+            AuthType
+            AuthName
+            AuthBasicProvider
+            AuthUserFile
+            AuthGroupFile
+            AuthDigestDomain
+            AuthDigestProvider
+
+        [Limit]
+            Order
+            Allow
+            Deny
+
+
+
+AllowOverrideディレクティブ：.htaccessを使った設定の上書きを許可する
+https://www.javadrive.jp/apache/htaccess/index2.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ RewriteEngineディレクティブ：リライト機能を有効または無効にする ]
+
+0. RewriteEngine ディレクティブは、 リライト機能を有効または無効に設定します。
+
+    リライトの設定を記述する前に RewriteEngine ディレクティブを使ってリライト機能を有効にしておく必要があります。
+    
+    ここでは Apache の RewriteEngine ディレクティブの使い方について解説します。
+
+
+1. RewriteEngineディレクティブの使い方
+
+    RewriteEngine ディレクティブはリライト機能を有効または無効に設定します。書式は次のとおりです。
+
+        RewriteEngine on|off
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。
+    
+    
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+
+    on を指定するとリライト機能が有効となり、 off を指定するとリライト機能が無効となります。 
+    
+    
+    RewriteRule ディレクティブなどを使ってリライトを実際に行う前に、 RewriteEngine ディレクティブを使ってリライト機能を有効にしてください。
+    
+    例えばリライト機能を有効にするには次のように記述します。
+
+        RewriteEngine on
+
+
+    なお .htaccess などで RewriteRule ディレクティブを使って、
+    
+    複数のリライトの設定を記述する場合、リライト機能を有効にするのは一度だけで構いません。
+
+        RewriteEngine on
+
+        RewriteRule xxx1 yyy1
+        RewriteRule xxx2 yyy2
+        RewriteRule xxx3 yyy3
+
+
+    リライトの設定を一時的に無効にしたい場合などには、設定をひとつひとつコメントにする代わりに RewriteEngine off に変更してください。
+
+        RewriteEngine off
+
+        RewriteRule xxx1 yyy1
+        RewriteRule xxx2 yyy2
+        RewriteRule xxx3 yyy3
+
+
+
+
+RewriteEngineディレクティブ：リライト機能を有効または無効にする
+https://www.javadrive.jp/apache/htaccess/index3.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+[ RewriteBaseディレクティブ：リライト先を相対パスで指定するときの基準ディレクトリを設定する ]
+
+
+0. RewriteBase ディレクティブは、 RewriteRule ディレクティブによって URL のリライトやリダイレクトが行われるときに、
+
+    リライト先の URL を相対パスで指定するときの記述となるディレクトリを指定します。
+
+
+    ここでは Apache の RewriteBase ディレクティブの使い方について解説します。
+
+
+1. RewriteBaseディレクティブの使い方
+
+    RewriteBase ディレクティブはリライト/リダイレクト先を相対パスで指定する場合の基準ディレクトリを指定する場合に使用します。
+    
+    書式は次のとおりです。
+
+        RewriteBase URLパス
+
+    記述できる場所は Directory, .htaccess です。
+    
+
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+
+    例えばリライト先の URL が /new/hello.html だった場合、 RewriteBase /new と設定しておくことでリライト先の URL を hello.html と記述することができます。
+
+    実際に試してみます。 
+    
+    /old ディレクトリに設置した .htaccess で次のように記述しました。
+
+        RewriteEngine on
+        RewriteBase /new
+        RewriteRule ^hello\.html$ hello.html [R=301]
+        
+    ブラウザから /blog/hello.html へアクセスしてください。
+
+
+    リダイレクト先の記述となる /new ディレクトリに含まれる /new/hello.html へリダイレクトされます。
+
+
+
+RewriteBaseディレクティブ：リライト先を相対パスで指定するときの基準ディレクトリを設定する
+https://www.javadrive.jp/apache/htaccess/index3.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ RewriteCondディレクティブ：URLのリライト/リダイレクトを行う条件を定義する ]
+
+前提: Condとは「条件」という意味🔥
+
+    condとは意味・読み方・使い方
+
+    意味・対訳
+    《略語》condenser（コンデンサー）；condition（条件）；conditional（条件付きの）；conductivity（伝導性）；conductor（指揮者）
+
+
+0. RewriteCond ディレクティブは、 RewriteRule ディレクティブによって URL のリライトやリダイレクトが行われる条件を定義します。
+
+    一つまたは複数の条件を定義し、条件が真となった場合にその直後に記述された RewriteRule ディレクティブが評価されます。
+    
+    ここでは Apache の RewriteCond ディレクティブの使い方について解説します。
+
+
+
+1. RewriteCondディレクティブの使い方
+
+    RewriteCond ディレクティブはリライト/リダイレクト先が実行される条件を定義する場合に使用します。書式は次のとおりです。
+
+        RewriteCond 文字列|変数 正規表現パターン [フラグ]
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。 
+    
+    
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+    RewriteCond ディレクティブでは文字列または変数に格納された値が正規表現パターンとマッチするかどうかを調べます。
+    
+    マッチした場合は、直後に記述された RewriteRule ディレクティブを評価します。
+
+        RewriteEngine on
+        RewriteCond xxx xxxxx
+        RewriteRule yyy yyyyy
+
+
+    RewriteCond ディレクティブで設定した条件が適用されるのは、直後に記述された RewriteRule ディレクティブだけです。
+    
+    別の RewriteRule ディレクティブに対して条件を設定したい場合は別途 RewriteCond ディレクティブを記述する必要があります。
+
+
+2. 複数の条件をANDまたはORで記述する
+
+    一つの RewriteRule ディレクティブに対して複数の RewriteCond ディレクティブを設定することができます。
+
+        RewriteEngine on
+        RewriteCond xxx1 xxxxx1
+        RewriteCond xxx2 xxxxx2
+        RewriteCond xxx3 xxxxx3
+        RewriteRule yyy yyyyy
+
+
+    複数の RewriteCond ディレクティブで記述した場合、特に指定しなければ AND の扱いとなります。
+    
+    上記の場合であれば 3 つの RewriteCond ディレクティブがすべて真となった場合だけ RewriteRule ディレクティブが評価されます。
+
+
+
+    複数の RewriteCond ディレクティブで記述した場合に、
+    
+    少なくとも一つの RewriteCond ディレクティブが真となった場合に 
+    
+    RewriteRule ディレクティブが評価されるようにするには、フラグに[OR]を指定します。
+
+        RewriteEngine on
+        RewriteCond xxx1 xxxxx1 [OR]
+        RewriteCond xxx2 xxxxx2 [OR]
+        RewriteCond xxx3 xxxxx3
+        RewriteRule yyy yyyyy
+
+    上記の場合であれば 3 つの RewriteCond ディレクティブの少なくともひとつが真となった場合に RewriteRule ディレクティブが評価されます。
+
+
+
+3. 使用可能な変数の一覧
+
+    RewriteCond ディレクティブでは文字列または変数をそのあとに記述した正規表現パターンとマッチするかどうかを調べますが、
+    
+    変数を使用する場合は次の変数が使用可能です 。
+
+        【HTTP headers】
+        HTTP_ACCEPT        クライアントがサポート可能なMIMEタイプ
+        HTTP_COOKIE        クッキーに関するデータ
+        HTTP_FORWARDED     プロキシのURI
+        HTTP_HOST          リクエスト先のサーバ名
+        HTTP_PROXY_CONNECTION  プロキシの接続形態
+        HTTP_REFERER       参照元のURL
+        HTTP_USER_AGENT    ユーザーエージェント
+
+        【connection & request】
+        AUTH_TYPE          認証方式
+        CONN_REMOTE_ADDR   ピアIPアドレス
+        CONTEXT_PREFIX
+        CONTEXT_DOCUMENT_ROOT
+        IPV6               IPv6ならon、そうでないならoff
+        PATH_INFO          パス情報
+        QUERY_STRING       クエリ文字列
+        REMOTE_ADDR        リモートアドレス
+        REMOTE_HOST        リモートホスト
+        REMOTE_IDENT       IDENTによるユーザー名
+        REMOTE_PORT        ポート番号
+        REMOTE_USER        認証されたユーザー名
+        REQUEST_METHOD     HTTPリクエストメソッド(GETなど)
+        SCRIPT_FILENAME    REQUEST_FILENAMEと同じ
+
+        【server internals】
+        DOCUMENT_ROOT      DocumentRootディレクティブの値
+        SCRIPT_GROUP       スクリプトグループのグループ名
+        SCRIPT_USER        スクリプトオーナーのユーザー名
+        SERVER_ADDR        サーバアドレス
+        SERVER_ADMIN       ServerAdminディレクティブ
+        SERVER_NAME        ServerNameディレクティブ
+        SERVER_PORT        ServerNameディレクティブのポート番号
+        SERVER_PROTOCOL    リクエストのプロトコル名とバージョン
+        SERVER_SOFTWARE    サーバのソフトウェア情報
+
+        【date and time】
+        TIME_YEAR          現在の年(2021)
+        TIME_MON           現在の月(01,02,...,12)
+        TIME_DAY           現在の日(01,02,...,31)
+        TIME_HOUR          現在の時(00,01,...,23)
+        TIME_MIN           現在の分(00,01,...,59)
+        TIME_SEC           現在の秒(00,01,...,59)
+        TIME_WDAY          現在の曜日(0,1,...6) 0=Sunday
+        TIME               日付と時刻(20211231235959)
+
+        【specials】
+        API_VERSION        APIバージョン
+        CONN_REMOTE_ADDR   ピアIPアドレス
+        HTTPS              HTTPSならonそうでないならoff
+        IS_SUBREQ          サブリクエストならtrue
+        REMOTE_ADDR        リモートホストのIPアドレス
+        REQUEST_FILENAME   リクエストに一致するファイルやスクリプトのパス
+        REQUEST_SCHEME     リクエストスキーマ
+        REQUEST_URI        リクエストURIのパス部分
+        THE_REQUEST        完全なリクエストライン(GET /index.html HTTP/1.1)
+
+
+    上記に記載した変数名の一覧の中から使用する変数名を %{変数名} として記述します。
+    
+    例えばリクエスト先のサーバ名が www.example.com と一致するか調べる場合は次のように記述します。
+
+        RewriteCond %{HTTP_HOST} ^www\.example\.com$
+
+    また次の変数も利用可能です。
+
+        %{ENV:variable}  指定した環境変数の値
+
+        %{SSL:variable}  指定したSSL環境変数の値
+
+        %{HTTP:header}   指定したHTTPリクエストヘッダの値
+
+
+    リクエストに対して各変数に実際にどのような値が格納されるのかを簡単に確認してみます。
+
+    下記は http://www.example.com/old/hello.html?num=10 へアクセスした場合に各変数に格納された値です。
+
+        %{HTTP_HOST}         www.example.com
+        %{HTTP_USER_AGENT}   Mozilla/5.0%20(Windows%20NT%2010.0;%20Win64;%20x64)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/88.0.4324.104%20Safari/537.36
+
+        %{IPV6}              off
+        %{QUERY_STRING}      num=10
+        %{REMOTE_ADDR}       192.168.10.104
+        %{REQUEST_METHOD}    GET
+        %{SCRIPT_FILENAME}   D:/pg/Apache/Apache24/htdocs/old/hello.html
+
+        %{DOCUMENT_ROOT}     D:/pg/Apache/Apache24/htdocs
+        %{SERVER_PROTOCOL}   HTTP/1.1
+        %{SERVER_SOFTWARE}   Apache/2.4.43%20(Win64)%20PHP/7.4.7
+
+        %{TIME_YEAR}         2021
+        %{TIME_MON}          02
+        %{TIME_DAY}          07
+        %{TIME_HOUR}         21
+        %{TIME_MIN}          39
+        %{TIME_SEC}          56
+        %{TIME_WDAY}         0
+        %{TIME}              20210207213956
+
+        %{API_VERSION}       20120211:92
+        %{HTTPS}             off
+        %{REMOTE_ADDR}       192.168.10.104
+        %{REQUEST_FILENAME}  D:/pg/Apache/Apache24/htdocs/old/hello.html
+        %{REQUEST_SCHEME}    http
+        %{REQUEST_URI}       /old/hello.html
+        %{THE_REQUEST}       GET%20/old/hello.html%3fnum=10%20HTTP/1.1
+
+        %{HTTP:Accept-Encoding}  gzip,%20deflate
+        %{HTTP:Accept-Language}  ja,en;q=0.9,en-US;q=0.8
+
+
+
+4. 正規表現パターンを指定する
+
+    文字列または変数の値が、指定した正規表現パターンとマッチした場合に真となり直後に記述された RewriteRule が評価されます。 
+    
+    Apache で使用する正規表現は Perl 互換のものです。例えば www.example.com とマッチするパターンは次のように記述できます。
+
+        ^www\.example\.com$
+
+
+    ^ は先頭とマッチし、 $ は末尾とマッチします。
+    
+    この正規表現は、先頭から www.example.com で始まり、そしてこの文字列の後には何も記述されていない文字列とマッチします。
+
+    ※ 正規表現を使った詳しいパターンの記述方法については「正規表現入門」を参照されてください。
+
+
+5. 正規表現パターンで利用可能な構文
+
+    正規表現パターンの箇所には正規表現のパターンを記述するだけでなく次の構文を記述することもできます。
+
+        !パターン       マッチしない場合にtrue
+        <パターン       文字列として比較、辞書順で小さい場合にtrue
+        >パターン       文字列として比較、辞書順で大きい場合にtrue
+        =パターン       文字列として比較、辞書順で等しい場合にtrue
+        <=パターン      文字列として比較、辞書順で等しいか小さい場合にtrue
+        >=パターン      文字列として比較、辞書順で等しいか大きい場合にtrue
+        -eqパターン     数値として比較、等しい場合にtrue
+        -geパターン     数値として比較、等しいか大きい場合にtrue
+        -gtパターン     数値として比較、大きい場合にtrue
+        -leパターン     数値として比較、等しいか小さい場合にtrue
+        -ltパターン     数値として比較、小さい場合にtrue
+        -neパターン     数値として比較、値が異なる場合にtrue(!-eqと同じ)
+
+        -d           実際に存在しディレクトリだった場合にtrue
+        -f           実際に存在しファイルの場合にtrue
+        -F           アクセス可能な有効なパスの場合にtrue
+        -h           -l と同じ(-lを使うとまぎらしい場合に使用)
+        -l           シンボリックリンクの場合にtrue
+        -L           -l と同じ(-lを使うとまぎらしい場合に使用)
+        -s           サイズが0でないファイルの場合にtrue
+        -U           アクセス可能な有効なURLの場合にtrue
+        -x           実行権限がある場合にtrue
+
+
+    例えば 2020/12/31 23:59:59 までは http://example.com/ へリダイレクトを行い、
+    
+    それ以降は http://www.example.jp/ へリダイレクトする場合は次のように記述します。
+
+        RewriteEngine On
+        RewriteCond %{TIME} <20201231235959
+        RewriteRule ^(.*)$ http://example.com/$1 [R=301,L]
+        RewriteCond %{TIME} >=20210101000000
+        RewriteRule ^(.*)$ http://example.jp/$1 [R=301,L]
+
+    ※ 上記の例ですが実際には 2 つ目の RewriteCond ディレクティブは記載しなくても同じ結果になるのですが、分かりやすいようにあえて記載してあります。
+
+
+
+6. フラグを設定する
+
+    RewriteCond ディレクティブではフラグを設定することで条件を判定する場合の挙動を変更することができます。
+
+        RewriteCond 文字列|変数 正規表現パターン [フラグ]
+
+    RewriteCond ディレクティブで用意されているフラグは 3 つですが、
+    
+    複数のフラグを設定する場合はカンマ(,)で区切って記述します。
+    
+    空白などをいれないようにご注意ください。
+
+        [フラグA,フラグB]
+
+    それぞれのフラグの使い方についてご説明します。
+
+
+
+    1. NCフラグ
+    
+        文字列または変数の値と正規表現パターンを比較するときに大文字と小文字を区別せずに比較します。
+
+            RewriteCond 文字列|変数 正規表現パターン [NC]
+
+
+    2. ORフラグ
+
+        複数の RewriteCond ディレクティブを記述するときに、 AND ではなく OR で真か偽かを判定する。
+        
+        つまり複数のディレクティブのいずれか一つでも真だった場合は、直後にある RewriteRule ディレクティブを評価する。
+
+            RewriteCond 文字列|変数 正規表現パターン [OR]
+        
+
+    3. NVフラグ
+
+        RewriteCond ディレクティブの変数名で HTTP ヘッダーを指定した場合に、レスポンスの Vary ヘッダーに HTTP ヘッダを設定します。
+
+            RewriteCond 文字列|変数 正規表現パターン [OR]
+
+        ※ Vary ヘッダーについては少し古い記事ですがこちらが参考になりました。「スマホ向け表示を分けているときはVary HTTPヘッダーを使うこと」
+
+
+7. RewriteCondディレクティブの動作確認
+
+    それでは実際に RewriteCond ディレクティブを記述してみます。
+    
+    今回はドキュメントルートに設置した .htaccess の中で記述します。
+    
+    今回は wwww なしの example.com へアクセスがあった場合に www 付きの www.example.com へリダイレクトする処理を記述します。
+    
+    その為に、 RewriteCond ディレクティブを使って www なしの example.com へアクセスがあったかどうかの条件判断を記述します。
+
+    まずドキュメントルートに .htaccess を作成します。
+    
+    ( .htaccess の中でリライトに関する設定が有効となるように httpd.conf にて AllowOverride ディレクティブの設定が必要です。
+    
+    詳しくは「AllowOverrideディレクティブ：.htaccessを使った設定の上書きを許可する」を参照されてください)。
+
+
+    .htaccess には次のように記述しました。
+
+        RewriteEngine on
+        RewriteCond %{HTTP_HOST} ^example\.com$
+        RewriteRule ^(.*)$ http://www.example.com/$1 [R=301,L]
+
+    ※ RewriteEngine ディレクティブはリライト機能を有効にするためのディレクティブです。
+
+
+    それでは www なしの http://example.com/new/hello.html へアクセスしてください。
+
+
+    RewriteCond ディレクティブが真となるためその直後に記述された 
+    
+    RewriteRule ディレクティブが評価され、 www 付きの www.example.com へリダイレクトされます。
+
+
+
+8. 正規表現パターンで後方参照を使用する
+
+    RewriteCond ディレクティブの正規表現パターンの中で括弧()で囲んだパターンとマッチした文字列を、 
+    
+    RewriteRule ディレクティブの置換 URL の中で参照して使用することができます。次の例をみてください。
+
+        RewriteEngine on
+        RewriteCond %{QUERY_STRING} page=(.*)
+        RewriteRule ^index.html$ /%1/index.html? [R=301,L]
+
+
+    ドキュメントルートに設置した .htaccess に記述しました。 
+    
+    RewriteCond ディレクティブの正規表現パターンの中の括弧で囲まれた .* の部分にマッチした文字列を、 
+    
+    RewriteRule ディレクティブの置換 URL の中で %1 として参照しています。
+
+
+    今回の場合は、リクエストの中のクエリー文字列の page に対する値の部分が .* の部分にマッチします。
+    
+    そして直後の RewriteRule ディレクティブの中で、リダイレクト先のディレクトリとして参照した値を使用しています。
+    
+    なおリダイレクト先の最後に ? が記述してあるのは、リクエストにあったクエリー文字列をリダイレクト先では付けないようにするためです。
+
+    例えば http://www.example.com/index.html?page=old へアクセスしてみます。
+
+
+    括弧で囲まれた .* の部分には old がマッチするため、 http://www.example.com/old/index.html へリダイレクトされます。
+
+
+
+
+RewriteCondディレクティブ：URLのリライト/リダイレクトを行う条件を定義する
+https://www.javadrive.jp/apache/htaccess/index6.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ RewriteRuleディレクティブ：URLのリライト/リダイレクトを行う ]
+
+0. RewriteRule ディレクティブは、 URL のリライトを実際にどのように行うのかを定義します。
+
+    クライアントからのリクエストに対して、指定した正規表現パターンにマッチした場合に URL のリライトを実行します。
+
+    またフラグを設定してリライトの方法を指定することもできます。
+
+    ここでは Apache の RewriteRule ディレクティブの使い方について解説します。
+
+
+1. RewriteRuleディレクティブの使い方
+
+    RewriteRule ディレクティブはリライトをどのように行うのかルールを定義するために使用します。書式は次のとおりです。
+
+        RewriteRule 正規表現パターン 置換URL [フラグ]
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。 
+    
+    
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+    RewriteRule ディレクティブでは最初にクライアントからのリクエストが正規表現パターンとマッチするかどうかを調べます。
+    
+    マッチした場合は、置換 URL で指定した URL にリクエストを置き換えます。
+
+
+2. リクエストのどの部分が正規表現パターンと比較されるのか
+
+    最初にクライアントからのリクエストの中で、どの部分が正規表現パターンとマッチするかどうかの対象となるのかについてです。
+    
+    クライアントからのリクエストが次のようなものだった場合で考えてみます。
+
+        http://www.example.com/blog/hello.html?num=10
+
+
+    正規表現パターンとマッチするかどうか対象となるのは、ホスト名とポート番号のあとからクエリーの前までの部分です。
+
+
+
+    RewriteRule ディレクティブが Directory ディレクティブのブロック内で記述されている場合、
+    
+    または .htaccess で記述されている場合に対象となるのは次の赤い文字の部分となります。
+
+        http://www.example.com/blog/hello.html?num=10
+
+        => [ blog/hello.html ]
+
+
+    注意点として RewriteRule ディレクティブが VirtualHost ディレクティブのブロック内で記述されている場合、
+    
+    対象となるのは先頭の / を含めた次の赤い文字の部分となります。
+
+        http://www.example.com/blog/hello.html?num=10
+
+        => [ /blog/hello.html ]
+
+
+
+    どこで RewriteRule ディレクティブが記述されているのかによってパターンと比較する対象の文字列が異なるので注意してください。
+
+
+
+    また .htaccess の中で使用する場合で、 .htaccess がサブディレクトリの中に設置されている場合、
+    
+    そのサブディレクトリからの部分が対象となります。
+    
+    例えば blog ディレクトリの中に .htaccess が設置されていた場合は対象となる文字列は次の部分です。
+    
+    ( Directory ディレクティブのブロックの中に記述する場合で、サブディレクトリが対象の場合も同じです)。
+
+        http://www.example.com/blog/hello.html?num=10
+
+
+        => [ hello.html ]
+
+
+
+3. 正規表現パターンを指定する
+リクエストの中の対象の文字列が、指定した正規表現パターンとマッチした場合に URL のリライトが実行されます。 Apache で使用する正規表現は Perl 互換のものです。例えば blog/hello.html とマッチするパターンは次のように記述できます。
+
+^blog/hello\.html$
+^ は先頭とマッチし、 $ は末尾とマッチします。この正規表現は、先頭から blog/hello.html で始まり、そしてこの文字列の後には何も記述されていない文字列とマッチします。
+
+正規表現パターンを次のように記述しても blog/hello.html とマッチしますが、この場合は myblog/hello.html や blog/hello.htmls などにもマッチします。
+
+blog/hello\.html
+※ 正規表現を使った詳しいパターンの記述方法については「正規表現入門」を参照されてください。
+
+
+
+4. 置換URLを指定する
+クライアントからのリクエストが正規表現パターンとマッチした場合、リクエストが置換 URLに指定したページの内容にリライト(外部のサイトの場合はリダイレクト)されます。置換 URL の記述方法は次の 4 つの方法があります。
+
+相対パスで指定する場合は .htaccess が設置されているディレクトリからの相対パスで指定します。例えば /old ディレクトリに .htaccess がある場合に /blog/bye.html のページの内容でリライトする場合は次のように記述します。( Directory ディレクティブのブロックの中に記述する場合で、サブディレクトリが対象の場合も同じです)。
+
+../blog/bye.html
+※ 相対パスの基準となるディレクトリを RewriteBase ディレクティブを指定することもできます。詳しくは「RewriteBaseディレクティブ：リライト/リダイレクト先を相対パスで指定するときの基準ディレクトリを指定する」を参照されてください。
+
+ドキュメントルートからの絶対パスで指定することもできます。例えば /blog/bye.html のページの内容でリライトする場合は次のように記述します。
+
+/blog/bye.html
+他のサイトの URL を指定した場合にはリライトではなくリダイレクトされます。リダイレクト先の URL を http:// などから始まる URL を指定します。現在のサイト内のページを http:// などから始まる URL で記述した場合、同じサイトだった場合にはリダイレクトではなくリライトされますのでご注意ください。
+
+http://www.example.jp/myblog/hey.html
+なお置換 URL として - を記述した場合にはリライトは行われません。フラグだけを適用する場合などに利用します。
+
+-
+
+
+5. リライトとリダイレクトの違い
+RewriteRule ディレクティブを使用した場合、置換 URL として同じサイトのページを指定した場合にはリライトが行われ、別のサイトのページを指定した場合にはリダイレクトが行われます。
+
+リライトというのは、ブラウザのアドレスバーに表示される URL は元のままですが、表示されるページの内容がリライト先のページの内容になります。それに対してリダイレクトというのはリダイレクト先の URL へ改めてリクエストが送信されるため、ブラウザのアドレスバーに表示される URL もリダイレクト先のものになります。
+
+ただ RewriteRule ディレクティブで置換 URL として同じサイトのページを指定した場合でも、フラグで [R=301] のように指定することでリライトではなくリダイレクトにすることができます。(詳しくはフラグの箇所で解説します)。
+
+# リライト
+RewriteRule ^index\.html$ /new/index.html
+
+# リダイレクト
+RewriteRule ^index\.html$ /new/index.html [R=301]
+
+# リダイレクト
+RewriteRule ^index\.html$ http://www.example.com/
+
+
+
+6.RewriteRuleディレクティブの動作確認
+それでは実際に RewriteRule ディレクティブを記述してみます。今回はドキュメントルートに設置した .htaccess の中で記述します。リライトする内容は /old/hello.html を /new/hello.html へリライトし、 /old/search を https://www.google.co.jp/ へリダイレクトしてみます。
+
+まずドキュメントルートに .htaccess を作成します。( .htaccess の中でリライトに関する設定が有効となるように httpd.conf にて AllowOverride ディレクティブの設定が必要です。詳しくは「AllowOverrideディレクティブ：.htaccessを使った設定の上書きを許可する」を参照されてください)。
+
+
+
+.htaccess には次のように記述しました。
+
+RewriteEngine on
+RewriteRule ^old/hello\.html$ /new/hello.html
+RewriteRule ^old/bye\.html$ /new/bye.html [R=301,L]
+RewriteRule ^old/search$ https://www.google.co.jp/
+※ RewriteEngine ディレクティブはリライト機能を有効にするためのディレクティブです。
+
+クライアントからアクセスする /blog ディレクトリにはファイルは何も含まれていません。 /new ディレクトリには hello.html と bye.html が設置されています。
+
+それでは最初に http://www.example.com/old/hello.html へアクセスしてください。
+
+
+置換 URL が同じサイト内のページなので、リライトが行われます。その為、アクセスした URL はそのままで、置換 URL で指定した /new/hello.html のページの内容が画面に表示されます。
+
+
+次に http://www.example.com/old/bye.html へアクセスしてください。
+
+
+置換 URL が同じサイト内のページですが、フラグで [R=301] が指定されているのでリダイレクトが行われます。その為、置換 URL で指定した /new/bye.html のページが画面に表示されます。(アドレスバーに表示される URL はリダイレクト先の URL になります)。
+
+
+最後に http://www.example.com/old/search へアクセスしてください。
+
+
+置換 URL が別のサイトのページのためリダイレクトが行われます。その為、置換 URL で指定した https://www.google.co.jp/ のページが画面に表示されます。
+
+
+このように RewriteRule ディレクティブを使用することで、リライトだけでなくリダイレクトも行うことができます。
+
+
+
+7. 複数のRewriteRuleディレクティブが記述されている場合に連続してリライトが行われるかどうか
+複数の RewriteRule ディレクティブが記述されている場合、リクエストに対して一度だけではなく複数回リライトやリダイレクトが行われる場合があります。 例として /blog ディレクトリに .htaccess を設置し、次のような設定を記述した場合で試してみます。
+
+RewriteEngine on
+RewriteRule ^index_A\.html$ /blog/index_B.html [R=301]
+RewriteRule ^index_B\.html$ /blog/index_C.html [R=301]
+ブラウザから http://www.example.com/blog/index_A.html へアクセスすると、 .htaccess に記述された順番に正規表現パターンとマッチするかどうか調べていきます。今回の場合はまず最初の RewriteRule ディレクティブにマッチするため /blog/index_B.html へリダイレクトされたあと、二番目の RewriteRule ディレクティブにマッチするため /blog/index_C.html へリダイレクトされます。
+
+
+
+次に .htaccess を次のように変更します。先ほどとは RewriteRule ディレクティブが記述された順序が変わっています。
+
+RewriteEngine on
+RewriteRule ^index_B\.html$ /blog/index_C.html [R=301]
+RewriteRule ^index_A\.html$ /blog/index_B.html [R=301]
+ブラウザから http://www.example.com/blog/index_A.html へアクセスすると、今回の場合はまず二番目の RewriteRule ディレクティブにマッチするため /blog/index_B.html へリダイレクトされたあと、それ以降には RewriteRule ディレクティブが存在しないためこれで終わりになるように思われますが、実際には今回も /blog/index_C.html へリダイレクトされます。
+
+これは .htaccess に記述された RewriteRule ディレクティブのいずれかにマッチした場合、次の行からマッチしないか調べるのではなく改めて .htaccess の先頭からマッチするかどうか調べていくためです。その為、まず /blog/index_B.html へリダイレクトされたあと、あらためて最初の RewriteRule ディレクティブにマッチして /blog/index_C.html へリダイレクトされます。
+
+なお正規表現にマッチしてリライトやリダイレクトが行われたあと、これ以上他の RewriteRule ディレクティブとマッチするかどうか調べないようにするためのフラグとして [L] が用意されているのですが、 .htaccess ではフラグ [L] が動作しません。
+
+RewriteEngine on
+RewriteRule ^index_A\.html$ /blog/index_B.html [R=301,L]
+RewriteRule ^index_B\.html$ /blog/index_C.html [R=301,L]
+そのため、ブラウザから http://www.example.com/blog/index_A.html へアクセスすると、 [L] フラグが記述されていても複数回のリダイレクトが実行されて /blog/index_C.html へリダイレクトされます。
+
+
+
+8. フラグを設定する
+RewriteRule ディレクティブではフラグを設定することでリライトを行う挙動を変更することができます。
+
+RewriteRule 正規表現パターン 置換URL [フラグ]
+複数のフラグを設定する場合はカンマ(,)で区切って記述します。空白などをいれないようにご注意ください。
+
+[フラグA,フラグB]
+数多くのフラグが用意されていますが、ここではよく使用するフラグに限定して開設します。
+
+Lフラグ
+これ以上のリライトを行いません。(ただし先に解説したように実際には適用されない場合があります)。
+
+RewriteRule 正規表現パターン 置換URL [L]
+Nフラグ
+最後にリライトが行われた URL を対象として .htaccess (やその他の設定)の先頭から RewriteRule ディレクティブの正規表現パターンとマッチするものがないか調べます。
+
+RewriteRule 正規表現パターン 置換URL [N]
+R[=code]フラグ
+リライトではなくリダイレクトを行います。 code には HTTP ステータスコードを指定できます。例えば永続的なリダイレクトを表す 301 リダイレクトを行いたい場合は R=301 、一時的なリダイレクトを表す 302 リダイレクトを行いたい場合は R=302 を指定します。 code を省略した場合は 302 でリダイレクトが行われます。
+
+RewriteRule 正規表現パターン 置換URL [R=301]
+NEフラグ
+& や # などの特殊な文字を 16 進数のコードにエスケープしないようにします。例えば置換 URL にハッシュ(#)が含まれている場合、 NE フラグを設定していないと # が %23 にエスケープされてしまいリライトが正常に行われません。
+
+RewriteRule 正規表現パターン 置換URL [NE]
+例えば /blog ディレクトリに .htaccess を設置し次のように記述します。
+
+RewriteEngine on
+RewriteRule ^index_A\.html$ /blog/index_C.html#section1 [R=301]
+RewriteRule ^index_B\.html$ /blog/index_C.html#section2 [R=301,NE]
+ブラウザから /blog/index_A.html へアクセスすると /blog/index_C.html#section1 へリダイレクトされるのですが、 NE フラグが記述されていないためハッシュ(#)が %23 にエスケープされてしまいリダイレクト先が見つからなくなります。
+
+
+ブラウザから /blog/index_B.html へアクセスすると /blog/index_C.html#section2 へリダイレクトされるのですが、 NE フラグが記述されているためハッシュ(#)がエスケープされず目的の URL へリダイレクトされます。
+
+
+NCフラグ
+[NC] フラグは正規表現パターンがマッチするかどうかを評価するときに大文字と小文字を区別しません。
+
+RewriteRule 正規表現パターン 置換URL [NC]
+[F] フラグを記述した場合はクライアントには 403 Forbidden が返されます。 [G] フラグを記述した場合はクライアントには 410 Gone が返されます。
+
+Fフラグ、Gフラグ
+[F] フラグと [G] フラグはリライトを実行する代わりにエラーを返す場合に使用します。置換 URL として - を記述します。
+
+RewriteRule 正規表現パターン - [F]
+RewriteRule 正規表現パターン - [G]
+[F] フラグを記述した場合はクライアントには 403 Forbidden が返されます。 [G] フラグを記述した場合はクライアントには 410 Gone が返されます。
+
+例えば /blog ディレクトリに .htaccess を設置し次のように記述します。
+
+RewriteEngine on
+RewriteRule ^index_A\.html$ - [F]
+RewriteRule ^index_B\.html$ - [G]
+ブラウザから /blog/index_A.html へアクセスすると 403 Forbidden が返されます
+
+
+ブラウザから /blog/index_B.html へアクセスすると 410 Gone が返されます。
+
+
+QSA
+[QSA] フラグとリクエストに付けられていたクエリー文字列と置換 URL に指定したクエリー文字列をまとめてリライトまたはリダイレクト先に付加する場合に使用します。
+
+RewriteRule 正規表現パターン - [QSA]
+詳しい使い方はこのあとのクエリー文字列の扱いの箇所をご覧ください。
+
+E=[!環境変数名][:値]
+[E=環境変数名] フラグは正規表現パターンがマッチした場合に環境変数名に対して値を設定します。
+
+RewriteRule 正規表現パターン 置換URL [E=環境変数名]
+例えば次のような使い方をすることができます。
+
+RewriteEngine on
+RewriteCond AAA ^BBB(CCC)$
+RewriteRule ^(.*)$ - [E=TEST:%1]
+RewriteCond %{ENV:TEST} DDD
+RewriteRule EEE FFF [L]
+最初の RewriteCond ディレクティブでリクエストの一部の値を取得し、次の RewriteRule ディレクティブで後方参照を使って環境変数 TEST に取得した値を設定します。続いて次の RewriteCond ディレクティブで環境変数 TEST の値が DDD とマッチした場合、その次の記述された RewriteRule ディレクティブを評価します。
+
+
+
+9. 正規表現パターンで後方参照を使用する
+
+
+
+10. クエリー文字列の扱いについて
+
+
+
+RewriteRuleディレクティブ：URLのリライト/リダイレクトを行う
+https://www.javadrive.jp/apache/htaccess/index4.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ Redirectディレクティブ：URLのリダイレクトを行う ]
+
+0. Redirect ディレクティブは、古い URL から 新しい URL へのリダイレクトを実行します。
+
+    ここでは Apache の Redirect ディレクティブの使い方について解説します。
+
+
+1. Redirectディレクティブの使い方
+
+    Redirect ディレクティブは古い URL から新しい URL へのリダイレクトを行います。書式は次のとおりです。
+
+        Redirect [ステータス] URLパス URL
+
+
+    記述できる場所は httpd.conf, VirtualHost, Directory, .htaccess です。
+    
+    .htaccess で設定する場合は AllowOverride FileInfo が設定されている必要があります。
+
+    古い URL を指定するための Redirect ディレクティブの URL パスは必ずドキュメントルートからの絶対パスで指定する必要があります。
+    
+
+    またステータスを省略した場合は 302 リダイレクトを行います。
+    
+    他の方式を使用する場合はスタータスへ HTTP スタータスコードを指定するか、次のいずれかの値を指定してください。
+
+        permanent  301
+        temp       302
+        seeother   303
+        gone       410
+
+
+    HTTP スタータスコードを直接指定する場合、 300 番台の値を指定する場合はリダイレクト先の URL を指定する必要があります。 
+    
+    
+    400 番台の値を指定する場合は URL を指定しないでください。
+
+
+    例えばファイル単位で 301 リダイレクトを行う場合は次のように記述します。
+    
+    ( 301 の部分は permanent と記述しても同じです)。
+
+        Redirect 301 /blog/hello.html http://www.example.jp/myblog/hey.html
+
+
+    この場合、 /blog/hello.html へのアクセスは http://www.example.jp/myblog/hey.html へリダイレクトされます。
+
+
+    ディレクトリ単位で 301 リダイレクトを行う場合は次のように記述します。
+
+
+        Redirect 301 /blog http://www.example.jp/myblog
+
+
+    この場合、 /blog に含まれるファイルやサブディレクトリへのアクセスは http://www.example.jp/myblog/ ディレクトリ内の同じファイル名やサブディレクトリへリダイレクトされます。
+
+
+    サイト単位で 301 リダイレクトを行う場合は次のように記述します。
+
+        Redirect 301 / http://www.example.jp
+
+
+    この場合、現在のサイトに含まれるすべてのアクセスは http://www.example.jp サイトの同じファイル名やディレクトリへリダイレクトされます。
+
+
+    では実際に試してみます。 
+    
+    http://www.example.com/ のドキュメントルートに設置した .htaccess に次のように記述しました。
+
+
+        Redirect 301 /blog http://www.example.jp/myblog
+
+
+    http://www.example.com/blog/hello.html へアクセスします。
+
+
+    http://www.example.jp/myblog/hello.html へリダイレクトされました。
+
+
+
+Redirectディレクティブ：URLのリダイレクトを行う
+https://www.javadrive.jp/apache/htaccess/index10.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ .htaccessサンプル：拡張子の省略 ]
+
+.htaccessサンプル：拡張子の省略
+https://www.javadrive.jp/apache/htaccess/index9.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ .htaccessサンプル：色々なリダイレクト ]
+
+.htaccessサンプル：色々なリダイレクト
+https://www.javadrive.jp/apache/htaccess/index7.html#section2
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+[ .htaccessサンプル：URLの正規化 ]
+
+.htaccessサンプル：URLの正規化
+https://www.javadrive.jp/apache/htaccess/index8.html
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+[ .htaccessでリダイレクトする方法6選 ]
+
+
+
+
+.htaccessでリダイレクトする方法6選
+https://egatech.net/htaccess-redirect/
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+[Apache] mod_rewriteの使い方・.htaccessでリダイレクトする
+https://agohack.com/mod_rewrite_rule_cond_base/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
