@@ -1,0 +1,66 @@
+
+
+<h1> aタグのtarget属性の使い方とセキュリティ上の注意点「target="_self"」と「target="_blank"」</h1>
+
+
+<h2>1. target="_self": 同じタブで開く</h2>
+<a href="https://masanyon.com/" target="_self">『No Change No Life I/O』</a>
+
+<br>
+
+<a href="https://masanyon.com/">『No Change No Life I/O』</a>
+
+<p>target="_self"はHTMLリンクにおいてはデフォルトの値なので、省略しても問題ありません。</p>
+
+
+<h2>2. target="_blank": 新規タブで開く</h2>
+<a href="https://masanyon.com/" target="_blank">『No Change No Life I/O』</a>
+
+
+
+<h2>3. target="_blank"の問題点</h2>
+
+<p>target="_blank" のセキュリティ上の脆弱性（セキュリティ上のリスク）</p>
+
+<p>window.openerを使用することで、親ウィンドウのオブジェクトにアクセスを行ったり、window.opener.location = newURL によって親ページのURLを書き換えることができる問題がある。</p>
+
+<p>
+    target="_blank"のリンクは別タブ（別ウィンドウ）で開かれるため、リンク元のページとリンク先のページの両方が一つのブラウザ内に存在していることになります。
+    <br>
+    そのように開かれたリンク先のページに、もし悪意をもったJavaScriptが記載されていたら、リンク元であるページを好き勝手に改ざんできてしまう可能性が考えられるのです。
+</p>
+
+
+<h3>3-2. パフォーマンスについての問題点</h3>
+
+<p>target="_blank" を使って別のページにリンクを貼っている場合、リンク元のページとリンク先のページは全く同じプロセスを通して実行され、
+    <br>
+    リンク先のページで高い負荷を与えるJavaScriptが実行されていると、リンク元のページにも悪影響を及ぼしパフォーマンスが低下する問題が指摘されています
+</p>
+
+
+<h2>4. target="_blank"の問題への対処法</h2>
+
+<h3>4-1. noopenerの指定</h3>
+
+<p>noopener を指定することで、リンク先からwindow.openerを使ってリンク元が参照できなくなります。さらに、リンク先とリンク元が別のものとして扱われるためパフォーマンスに対しての対策にもなっているのです。</p>
+
+
+<h3>4-2. noreffererの指定</h3>
+
+<p>ブラウザによっては、noopenerがサポートされていないため、noopenerと合わせてnoreffererを指定するのが好ましいと言えるでしょう。
+
+    noreffererを指定することで、リンク先にリンク元のリンク情報が送られないようになるため、 noopenerと同じくリンク先からの参照ができなくなります。</p>
+
+<!-- target="_blank" を使用する際は、セキュリティにも考慮して、 rel="noopener noreferrer" をSetしておく🔥 -->
+<a href="https://masanyon.com/" target="_blank" rel="noopener noreferrer">『No Change No Life I/O』</a>
+
+
+
+
+<h3>参考・引用</h3>
+<ol>
+    <li>
+        <a href="https://wwg.co.jp/blog/3807" target="_blank" rel="noopener noreferrer" >実はヤバい？aタグと別タブで開く（target=”_blank”）の使い方</a>
+    </li>
+</ol>
