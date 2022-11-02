@@ -11,7 +11,7 @@ RewriteBase /
 ### ここから IP アドレス制限、アクセス許可するのIPの設定 ###
 
 # 接続元IPを判定する => ロードバランサーを考慮して、X-Forwarded-For をCheckします
-RewriteCond ,%{REMOTE_ADDR},%{HTTP:X-Forwarded-For}, ,!153\.151\.3\.177,
+RewriteCond ,%{REMOTE_ADDR},%{HTTP:X-Forwarded-For}, ,!155\.155\.3\.177,
 RewriteCond ,%{REMOTE_ADDR},%{HTTP:X-Forwarded-For}, ,!220\.148\.222\.155,
 
 # dashboard & manual にAccessできるIPは制限します
