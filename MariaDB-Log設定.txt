@@ -1,0 +1,315 @@
+
+< MariaDB(MySQL) での各種ログ出力設定 >
+
+
+[ MariaDBの設定ファイルはどこ？ ]
+
+
+    MariaDB(MySQL)の設定ファイルは「 my.ini 」or「 my.cnf 」に設定することになります。
+
+    WindowsOSなら設定ファイルは「 my.ini 」で、
+
+    Linux系統のOSなら設定ファイルは「 my.cnf 」になります。
+
+
+
+    今回のプロジェクトでは、WindowsOSなので「 my.ini 」に設定していきます。
+
+
+
+[ ファイルまでのPath ]
+C:\Program Files\MariaDB 10.6\data\my.ini
+
+[ ログ名： 説明 ]
+
+1. errorログ： サーバーから出力されるエラーメッセージを記録するログになります。
+
+2. slow queryログ： 処理に時間のかかったクエリを記録するログになります。
+
+3. queryログ： 実行されたすべてのSQLを記録するログになります。
+
+4. バイナリログ： データの登録/更新のSQL文だけをバイナリ形式で記録するログになります。（※データ復旧やレプリケーション設定時に使用されます。）
+
+
+それでは、1つずつ設定内容を見ていきます。
+
+
+
+[ 1. errorログ設定 ]
+
+    サーバの起動や停止の情報に加え、発生したエラーや警告が出力されるログファイルとなります。
+
+
+
+    基本的にはデフォルトで常に有効となってますので、設定が入っている事を確認します。
+
+
+
+    < 実際の設定 >
+
+
+
+    　　# [ errorログ設定 ]
+
+    　　log-error = error.log
+
+
+
+    「error.log 」と言うファイル名で errorログのファイルが出力されます。
+
+    ※log-warningsを設定することで、警告レベルのログも出力することができます。
+
+
+
+
+[ 2. slow queryログ設定 ]
+
+
+設定した処理時間を超えたクエリを出力したログとなります。
+
+
+
+[ 設定： 設定内容 ]
+
+slow_query_log： 出力設定。0で無効、1で有効
+slow_query_log_file： ログの出力先ファイル名
+long_query_time： 何秒以上のクエリをログに出力するか
+
+（※１秒以下も設定する事ができます。例）0.3）
+log_queries_not_using_indexes： インデックスが使用されなかったログも出力。
+
+
+設定が完了したら再起動を行い、設定を反映させます。
+
+
+
+< 実際の設定 >
+    
+　　# [ slow queryログ設定 ]
+　　slow_query_log = 1
+　　slow_query_log_file = slow.log
+　　long_query_time = 1
+　　log_queries_not_using_indexes = 1
+
+
+
+slow.log と言うファイル名で errorログのファイルが出力されます。
+
+
+
+[ 3. queryログ ]
+
+
+・実行されたすべてのSQLを記録するログになりますので、アクセス数が多かったり、発行されるSQLが多いサイトの場合には、ファイル容量が膨大になる事もあります。
+
+
+
+・そのため、注意が必要で、開発時のデバック用であったり、本番運用時に一時的に調査をする場合に、設定するぐらいでの利用の方がいいかもしれません。
+
+
+
+・もし、運用上出力設定を入れた状態で利用する場合には、ログローテーションの設定を入れる事をおすすめします。
+
+
+
+・ただし、Windowsには、Linuxのようなlogrotate機能は存在しないので、batファイルで定期実行するような仕組みを作る必要があります。
+
+
+
+< 実際の設定 >
+
+
+
+　　# [ queryログ設定 ]
+
+　　# Debug用 => 本番環境での運用で、ONにする場合は、ログローテーションのbatファイルを作る必要がある
+
+　　general_log = 1
+　　general_log_file = query.log
+
+
+
+query.log と言うファイル名で queryログのファイルが出力されます。
+
+
+
+
+
+[ 4. バイナリログ ]
+
+
+・データの登録/更新のクエリだけをバイナリ形式で記録し、データ復旧やレプリケーション設定時に使用されます。
+
+
+
+・データ復旧の際には、データのフルバックアップを１日単位で取得しているシステムに障害が発生し、
+
+データの復旧を行う場合に、フルバックアップ取得から障害発生時までの差分データを復旧する場合に使用します。
+
+
+
+・レプリケーションの際には、マスターとスレーブが同期をとるための情報として使用されます。
+
+
+他にもオプションはありますが、今回はシンプルに出力先と保持期間のみ設定します。
+
+
+
+[ 設定： 設定内容 ]
+
+log-bin： ログの出力先ファイル名を指定します。
+
+
+
+expire_logs_days： バイナリログの保持期間となります。
+
+今回の設定のように7を設定すると、7日間分のバイナリログが保存されます。
+
+
+
+< 実際の設定 >
+
+
+　　# [ バイナリログ設定 ] 
+　　log-bin=mysql-bin
+　　expire_logs_days = 7
+　　binlog_cache_size=32M
+
+
+
+mysql-bin.XXX のようなファイル名でバイナリログのファイルが出力されます。
+
+
+
+
+< my.ini or my.cnf に設定する >
+
+[ ファイルまでのPath ]
+C:\Program Files\MariaDB 10.6\data\my.ini
+
+
+# [ バイナリログ設定 ] => mysql-bin.XXX のようなファイル名でバイナリログのファイルが出力される
+log-bin=mysql-bin
+expire_logs_days = 7
+binlog_cache_size=32M
+
+# [ errorログ設定 ] => error.log と言うファイル名で errorログのファイルが出力される
+log-error = error.log
+
+# [ slow queryログ設定 ] => slow.log と言うファイル名で slow queryのログがファイルに出力される
+slow_query_log = 1
+slow_query_log_file = slow.log
+long_query_time = 1
+log_queries_not_using_indexes = 1
+
+
+# [ queryログ設定 ] => query.log と言うファイル名で queryログのファイルが出力される
+
+# Debug用 => 本番環境での運用で、ONにする場合は、ログローテーションのbatファイルを作る必要がある
+
+# => Windowsには、Linuxのようなlogrotate機能は存在しないので、batファイルで定期実行する
+
+# general_log = 1
+# general_log_file = query.log
+
+
+
+
+[ 参考・引用🔥 ]
+
+MariaDB(MySQL) での各種ログ出力設定
+https://blog.pokechoi.com/archives/114
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< my.ini >
+
+[mysqld]
+datadir=C:/Program Files/MariaDB 10.6/data
+port=3306
+
+# スレッドの最大接続数
+#　100->150
+max_connections=150
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+# 今日するパケットサイズデフォルト1MB
+max_allowed_packet=16MB
+
+# スレッド毎に作成される一時的なテーブルの最大サイズ。スレッドバッファ
+tmp_table_size=16M
+
+# [ バイナリログ設定 ]
+log-bin=mysql-bin
+expire_logs_days = 7
+binlog_cache_size=32M
+
+# [ errorログ設定 ]
+log-error = error.log
+
+# [ slow queryログ設定 ]
+slow_query_log = 1
+slow_query_log_file = slow.log
+long_query_time = 1
+log_queries_not_using_indexes = 1
+
+
+# [ queryログ設定 ] 
+# Debug用 => 本番環境での運用で、ONにする場合は、ログローテーションのbatファイルを作る必要がある
+# => Windowsには、Linuxのようなlogrotate機能は存在しないので、batファイルで定期実行する
+
+# general_log = 1
+# general_log_file = query.log
+
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+#二重書き込みの無効化
+# skip-innodb_doublewrite
+
+# [ InnoDBログ設定 ]
+innodb_log_file_size=3G
+innodb_flush_log_at_trx_commit=2
+innodb_max_dirty_pages_pct=90
+innodb_log_buffer_size=32M
+innodb_log_files_in_group=2
+
+#テーブルごとに書き込み
+innodb_file_per_table=ON
+
+key_buffer_size = 256M
+
+# スレッドバッファ
+read_buffer_size = 1M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 4M
+
+# クエリキャッシュ最大サイズ
+query_cache_limit=32M
+
+# クエリキャッシュで使用するメモリサイズ
+query_cache_size=512M
+
+# クエリキャッシュのタイプ(0:off, 1:ON SELECT SQL_NO_CACHE以外, 2:DEMAND SELECT SQL_CACHEのみ)
+query_cache_type=1
+
+
+# 文字コード
+character-set-server=utf8
+
+# 名前解決関連
+skip-name-resolve
+
+[client]
+port=3306
+plugin-dir=C:\Program Files\MariaDB 10.6/lib/plugin
+
+
+
+
+
+
