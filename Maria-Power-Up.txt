@@ -1,0 +1,1356 @@
+
+< MariaDB (MySQL) のパフォーマンスチューニング設定まとめ🔥 >
+
+
+[ MariaDBの設定ファイルはどこ？ ]
+
+
+    MariaDB(MySQL)の設定ファイルは「 my.ini 」or「 my.cnf 」に設定することになります。
+
+    WindowsOSなら設定ファイルは「 my.ini 」で、
+
+    Linux系統のOSなら設定ファイルは「 my.cnf 」になります。
+
+
+
+    今回のプロジェクトでは、WindowsOSなので「 my.ini 」に設定していきます。
+
+
+
+[ MySQL-パフォーマンス・チューニング🔥 ]
+
+
+0. MariaDBのパフォーマンスチューニングとは？
+
+
+    MariaDB (MySQL) のパフォーマンスチューニングには「DBそのものの設定(Config)の最適化」と「Queryの最適化」の2系統があります。
+
+
+1.DBそのものの設定(Config)の最適化
+
+
+
+    「DBそのものの設定を最適化する」アプローチでは、設定ファイルを操作 or CLI にて設定値を最適化していきます。
+
+    このパフォーマンスチューニングのアプローチは、後述するQueryの最適化が部分的なものであるのに対して、全体最適化するアプローチだと言えます。
+
+
+
+    また設定がDBすべてに影響を及ぼすので「どの設定値をいじるのか？」
+
+    を計画的に決めた方がいいです。
+
+
+
+    まずは、Server全体のメモリ容量を把握して、
+
+    その次にMariaDBに割り当てることのできるメモリ容量を書き出し、
+
+    そこから、どの オプションにどれだけ、割り当てるかなどを決めていけば間違いないはずです。
+
+
+2. Queryの最適化
+
+
+
+    今回は、取り扱いませんが、Queryを最適化すると言うパフォーマンスチューニングのアプローチもあります。
+
+    これは、SQLを最適化するアプローチであり、時間のかかっているSQLを分析していわゆる「Slow-Query」を改善する手法です。
+
+
+
+    ちなみに、先述したとおり、全体最適化する「DBそのものの設定を最適化する」アプローチに対して、「Queryの最適化」部分最適化するアプローチだと言えます。
+
+
+
+    Slow-Queryを改善するためには、Slow-Query を測定して、Queryの最適化をする必要があります。
+
+
+
+    前置きが長くなりましたが、この章では「DBそのものの設定を最適化するアプローチ」(全体最適化するアプローチ) について、まとめていきます。
+
+
+< 現時点(2022/11/14)でのMariaDBのパフォーマンスチューニング関連の設定値 >
+
+ 
+
+# 注意: パフォーマンスチューニング​​​​​​​関連の設定値だけ記載しています。
+
+# 実際のすべての設定値は『MariaDBのインストール/セットアップ』をご確認ください。
+
+
+[mysqld]
+datadir=C:/Program Files/MariaDB 10.6/data
+port=3306
+
+ 
+
+# スレッドの最大接続数
+max_connections=150
+
+ 
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+ 
+
+# 今日するパケットサイズデフォルト1MB
+max_allowed_packet=16MB
+
+ 
+
+# スレッド毎に作成される一時的なテーブルの最大サイズ。スレッドバッファ
+tmp_table_size=16M
+
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+ 
+
+# [ InnoDBログ設定 ]
+innodb_log_file_size=3G
+innodb_flush_log_at_trx_commit=2
+innodb_max_dirty_pages_pct=90
+innodb_log_buffer_size=32M
+innodb_log_files_in_group=2
+
+ 
+
+#テーブルごとに書き込み
+innodb_file_per_table=ON
+
+key_buffer_size = 256M
+
+ 
+
+# スレッドバッファ
+read_buffer_size = 1M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 4M
+
+ 
+
+# クエリキャッシュ最大サイズ
+query_cache_limit=32M
+
+ 
+
+# クエリキャッシュで使用するメモリサイズ
+query_cache_size=512M
+
+ 
+
+# クエリキャッシュのタイプ
+
+# (0:off, 1:ON SELECT SQL_NO_CACHE以外, 2:DEMAND SELECT SQL_CACHEのみ)
+query_cache_type=1
+
+ 
+
+# 名前解決関連
+skip-name-resolve
+
+ 
+
+[client]
+port=3306
+plugin-dir=C:\Program Files\MariaDB 10.6/lib/plugin
+ 
+
+以上が、パフォーマンスチューニング後の設定値です。
+
+ 
+
+特筆すべき点について、解説していきます。
+
+
+[ InnoDB のバッファー・プール・サイズの拡張: innodb_buffer_pool_size の拡張 ]
+
+ 
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+ 
+
+MariaDB (MySQL)のパフォーマンスとメモリー使用に関わる代表的な設定項目であるバッファー・プール・サイズ（InnoDBがテーブルとインデックスのデータをキャッシュするメモリ領域）
+
+について解説します。
+
+ 
+
+    MariaDB (MySQL)のストレージ書き込みエンジンである「InnoDB」(イノデービー)は、
+
+乱暴に言うと、ほぼすべてのデータを「 innodb_buffer_pool_size 」指定されたメモリ内に保存します。
+
+ 
+
+なので「 innnodb_buffer_pool_size 」の値を最適化することが一番重要です！
+
+ 
+
+「 innnodb_buffer_pool_size 」には、通常でも搭載メモリーの50~80%ほどを割り当てますが、DB専用のServerなら、搭載メモリーの80%を割りあてる位でもOKです！
+
+ 
+
+今回は、16Gの搭載メモリーの内、10Gをこの「 innodb_buffer_pool_size 」に割りあてています。
+
+ 
+
+[ Thread の最大接続数とキャッシュサイズの拡張​​​​​​​ ]
+
+ => 「max_connections」と「thread_cache_size」の拡張
+
+
+# スレッドの最大接続数
+max_connections=150
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+ 
+
+MariaDBは、クライアントからの接続要求ごとに、
+
+同要求を処理するための接続スレッドを作成します。
+
+ 
+
+DBサーバへ接続するクライアント数が多い場合は、最大接続数を増やします。
+
+今回のようなWebサイトでは、クライアント数が多いので最大接続数を増やした方がパフォーマンスが上がります。
+
+ 
+
+また、最大接続数の拡張と合わせて、スレッドキャッシュ保持最大数も拡張しておくと、パフォーマンスがさらに上がります。
+
+ 
+
+なおスレッドが増えるごとにメモリ消費量も増えていくので、
+
+接続数があまりにも多い場合は、スレッドを増やすのではなく、
+
+読み取り専用のレプリケーションサーバを用意して負荷分散することも検討する必要があります。
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+< MySQLデータベースのパフォーマンスチューニング >
+
+
+    [ データベースにおけるパフォーマンスとは？ ]
+
+        実際にパフォーマンスの向上方法を解説する前にデータベースにおけるパフォーマンスとは一体何を指し示しているかを整理する必要があります。
+
+        下記が主にデータベースのパフォーマンスを測定するための指標となっている。
+
+
+        1. スループット (throughput) => 時間単位の処理能力🔥
+
+            時間単位あたりの処理能力
+
+            並列処理数を増やせば、あたりまえですが、処理能力は高くなります！
+
+            => 並列処理が出来る件数が増えるほどこのスループットの値が向上する
+
+
+        2. レスポンスタイム(レイテンシー) => Response速度, 処理速度🔥
+
+                response time: 反応までの速度
+
+                latency: 潜在時間(裏側の処理でかかっている時間のこと)
+
+            処理を実行してからの結果が帰ってくるまでの時間
+
+            1処理自体にどのくらい時間がかかるか
+
+
+        3. スケーラビリティ (Scalability) => 拡張性🔥
+
+            データベースをはじめとするサービスのパフォーマンスは必ずハードウェアのスペックに依存するため、
+            
+            メモリ や CPU の追加、ディスクの SSD化などに柔軟に対応できる必要がある。
+
+
+
+        4. キューイング (Queuing) => 待ち行列🔥
+
+            パフォーマンス測定の指標ではないが、パフォーマンスチューニングに当たって非常に重要な仕組みなので解説していく。
+
+            キューイングとは複数のリクエストが発生したときに順番通り処理が実行されるように管理される「待ち行列」のことである。
+            
+            レスポンスタイムは、この「待ち時間 ＋ 実行時間」で計算される。
+
+            実処理が実行される前のプロセスの準備時間にもキューに含まれるが、
+            
+            大量ののリクエストが発生した場合など、現環境のスループットでは一度に処理できない際に待ち時間として増加される。
+            
+            当然、レスポンスタイムも増加する。
+
+            このキューイングの仕組みを理解した上で、どの指標が低いのか、
+
+            そしてネットワーク、処理、I/O、テーブルロックなどどこにボトルネックがあるかによって効果的な方法が違います。
+            
+            なので、どの指標でパフォーマンスがでないのか、しっかりと判別することが、パフォーマンスチューニングには重要です。
+
+
+
+    [ パフォーマンスチューニングにおいて大事なこと ]
+
+
+        以上のことをまとめるとパフォーマンスチューニングには実対応の前に次のようなことを検討・実施していく必要がある。
+
+
+            1. パフォーマンスの測定(パフォーマンス状況の確認)
+
+            2. パフォーマンス低下のボトルネックのピックアップ (スループット？レスポンスタイム？ I/O？)
+
+            3. 上記に対するチューニングは必要か、コストに見合ったビジネスメリットがあるかなどの検討
+
+
+        これらを踏まえた上で実際にどのようなことを確認していく必要があるのか見ていく。
+
+
+    [ チューニングのアプローチ ]
+
+        では実際にパフォーマンスチューニングを行っていく。
+
+        DBのパフォーマンスチューニングでは大きく分けて2種類のアプローチがある。
+
+        ・DBチューニング(全体最適化)
+
+            主にスループットを向上させる
+
+            MySQLの設定ファイルのパラメータ等を環境に適した形に操作する
+
+
+        ・SQLチューニング(個別最適化)
+
+            主にレスポンスタイムを向上させる
+
+            テーブルの構成やクエリの最適化によってクエリ実行速度の向上を目指す
+
+
+
+    [ DBチューニング(全体最適化) ]
+
+        MySQLサーバの設定はシステム変数で定義されている。
+
+        まずはどのような設定がされているのか確認が必要。
+
+        システム変数はmy.cnfやmy.iniにて参照・編集可能になっている
+
+
+        またMySQLのコマンドにても参照・編集が可能。
+
+            /*全システム変数を表示*/
+            SHOW VARIABLES ;
+
+
+            /*システム変数を設定*/
+            SET [GLOBAL] @variable = @value ;
+
+
+
+
+        今回はパフォーマンスに焦点を置いているため、性能統計情報分析のために用意されているパフォーマンススキーマ/sysスキーマにフォーカスする。
+
+        ・パフォーマンス・スキーマ
+        性能統計情報の仕組み
+        MySQLサーバ内の「イベント」ごとの処理時間を記録
+        ・処理時間
+        ・処理データ量
+        ・ソースコードでの位置
+        ・各種メタデータ
+
+        ・sysスキーマ => パフォーマンススキーマをより便利に使うためのビュー、プロシージャ、ファンクションのセット
+        ・I/O量の多いファイルや処理、コストの高いSQL文、ロック情報
+        ・テーブル、インデックス、スキーマの統計、レイテンシ、待ち時間
+
+        
+
+    < 参考・引用 >
+
+    1. MySQLデータベースのパフォーマンスチューニング
+    https://qiita.com/mm-Genqiita/items/3ef91f6df6c15c620ec6
+
+
+
+
+
+[ my.ini or my.cnf ]
+
+    MariaDB に関する設定を行うファイルをオプションファイルと呼び、 Linux 系の OS では my.cnf 、 Windows では my.ini というファイルが使用されます。
+
+    [mysqld]
+    datadir=C:/Program Files/MariaDB 10.6/data
+    port=3306
+    innodb_buffer_pool_size=12G
+    innodb_log_file_size = 64M
+    key_buffer_size = 256M
+    read_buffer_size = 1M
+    sort_buffer_size = 2M
+    read_rnd_buffer_size = 4M
+    character-set-server=utf8
+    [client]
+    port=3306
+    plugin-dir=C:\Program Files\MariaDB 10.6/lib/plugin
+
+
+
+
+[ my.iniファイルの記述方法 ]
+
+    MariaDB のサーバやクライアントに設定を行いたい場合、オプションファイルである my.ini または my.cnf に記述します。 
+
+    MariaDB のサーバやクライアントは起動時にオプションファイルを読み込んで設定を反映させます。
+    
+    ここでは my.ini ファイルにどのように設定を記述するのかについて解説します。
+
+
+    1. オプションファイルの記述方法
+    
+        オプションファイルである my.ini ファイルはテキストファイルです。
+        
+        作成する場合はテキストエディタで作成します。 my.ini ファイルは次のような構成になっています。
+
+            #コメント
+            [グループ名]
+            オプション名=値
+            オプション名=値
+            オプション名=値
+
+            [グループ名]
+            オプション名=値
+            オプション名
+
+
+    ファイルの中にはいくつかのグループがあり、何に対して設定を適用するのかをグループ名で指定します。
+    
+    設定項目は オプション名 だけか、 オプション名=値 の形式で記述します。
+    
+    またコメントを記述する場合は # または ; のあとに記述してください。
+
+    実際に作成済みの my.ini ファイルをテキストエディタで開いてください。
+    ( my.ini の場所については「設定ファイル(my.ini)の設置場所」を参照されてください)。
+    
+    次のような内容になっています。
+
+        [mysqld]
+        datadir=C:/Program Files/MariaDB 10.6/data
+        port=3306
+        innodb_buffer_pool_size=2035M
+        character-set-server=utf8
+        [client]
+        port=3306
+        plugin-dir=C:/Program Files/MariaDB 10.6/lib/plugin
+
+
+    この my.ini ファイルには mysqld グループと client グループの 2 つのグループが記述されています。
+    
+    それではもう少し細かく記述方法を見ていきます。
+
+    ※ 以前は MariaDB のサーバプログラムは mysqld.exe 、コマンドラインツールは mysql.exe を使用していましたが、現在は代わりにサーバは mariadbd.exe 、
+    
+    コマンドラインツールは mariadb.exe を使用しているため [mysqld] の代わりに [mariadbd] 、 [mysql] の代わりに [mariadb-client] を使用します。
+
+
+< 参考・引用 >
+
+1. my.iniファイルの記述方法
+https://www.javadrive.jp/mariadb/myini/index2.html
+
+
+
+
+
+[ InnoDB(イノデービー)とは？ ]
+
+    InnoDB(イノデービー)はデータベース管理システムであるMySQLとMariaDBのためのデータベースエンジンである。
+
+    ストレージエンジンとはデータを実際に読み書きする処理を担当する部分で、「MyISAM」と「InnoDB」が特に良く利用されます。 
+
+
+    < 参考・引用 >
+
+    WordPressにはMyISAMとInnoDBどちらが良いのか？ - 有限工房
+    https://ygkb.jp/6901
+
+
+
+
+    
+< MySQLのストレージエンジンについて >
+
+    [ ストレージエンジン(Storag-Engine)とは? ]
+
+        1. SQL文を受け取って結果を返すデータベースエンジン部分　=> つまり、テーブルにデータを書き込んだり読みだしたりするプログラム
+
+        2. 複数の種類があり、データの取得方法、保存方法、処理方法がストレージエンジンによって異なる
+
+        3. MySQLの場合、テーブル毎にストレージエンジンを分けられる
+
+
+    [ ストレージエンジンの種類 ]
+
+        ストレージエンジン	概要
+        MyISAM	MySQL標準のストレージエンジンとして使用される(旧標準)
+        InnoDB	行ロックとトランザクションをサポートする(現在の標準)
+        Memory	メモリ上にテーブルを配置する
+        Merge	複数のMyISAMテーブルを統合する
+        Archive	圧縮したデータベースを使用する
+        Federated	リモートのデータベースを参照する
+        NDB	クラスター構成にて使用される
+        CSV	データファイルにCSVを使用する
+        Blackhole	ダミーテーブルを使用する
+
+
+    [ 対応エンジン確認方法 ]
+
+        SHOW ENGINES;
+
+        MariaDB [concrete8]> SHOW ENGINES;
+        +--------------------+---------+-------------------------------------------------------------------------------------------------+--------------+------+------------+
+        | Engine             | Support | Comment                                                                                         | Transactions | XA   | Savepoints |
+        +--------------------+---------+-------------------------------------------------------------------------------------------------+--------------+------+------------+
+        | CSV                | YES     | Stores tables as CSV files                                                                      | NO           | NO   | NO         |
+        | MRG_MyISAM         | YES     | Collection of identical MyISAM tables                                                           | NO           | NO   | NO         |
+        | MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables                                       | NO           | NO   | NO         |
+        | Aria               | YES     | Crash-safe tables with MyISAM heritage. Used for internal temporary tables and privilege tables | NO           | NO   | NO         |
+        | MyISAM             | YES     | Non-transactional engine with good performance and small data footprint                         | NO           | NO   | NO         |
+        | SEQUENCE           | YES     | Generated tables filled with sequential values                                                  | YES          | NO   | YES        |
+        | InnoDB             | DEFAULT | Supports transactions, row-level locking, foreign keys and encryption for tables                | YES          | YES  | YES        |
+        | PERFORMANCE_SCHEMA | YES     | Performance Schema                                                                              | NO           | NO   | NO         |
+        +--------------------+---------+-------------------------------------------------------------------------------------------------+--------------+------+------------+
+        8 rows in set (0.000 sec)
+
+
+    [ ストレージエンジン確認方法 ]
+
+        SHOW TABLE STAUS WHERE NAME = [テーブル名] \G;
+
+
+
+    < 参考・引用 >
+
+    1.  MySQLのストレージエンジンについて
+    https://qiita.com/ishishow/items/280a9d049b8f7bcbc14a
+
+
+
+
+
+< MySQL最低限のメモリ設定 >
+
+
+MySQLのメモリ割り当て拡張🔥
+
+
+    環境にもよりますが、MySQLのデフォルトのメモリ関連の設定は控えめな感じになっています
+    
+    （私のCentOS環境では、key_buffer_sizeが8M,innodb_buffer_pool_sizeも8Mとなっています）ので、適切な状態への変更が必要です。
+
+
+[ グローバルバッファとスレッドバッファ ]
+
+    MySQLでは、mysqldが共通に使うグローバルバッファと、スレッド（コネクション）毎に割り振られるスレッドバッファがあります。MySQLのメモリ使用量は、
+
+        メモリ使用量 = グローバルバッファ + （スレッドバッファ x スレッド数）
+
+    の関係で表すことができるとされています。
+
+
+[ MyISAMとInnoDB ]
+
+    MySQLの代表的なストレージエンジンはMyISAMとInnoDBですが、利用するエンジンによりメモリ（グローバルバッファ）の使い方は異なります（スレッドバッファは共通）。
+    
+    5.5からは、デフォルトのエンジンがInnoDBになったので、基本、InnoDBのことだけ考えておけばいいのですが、システムDBはMyISAMということなので、MyISAMのことも最低限考えておく必要があります。
+
+
+[ InnoDB（グローバル）]
+
+    InnoDBは、乱暴に言うと、全てのデータをinnodb_buffer_pool_sizeで指定されたメモリ内に保存するので、
+    innnodb_buffer_pool_sizeの値を適切に設定する必要があります。
+
+    DB専用のサーバであれば搭載メモリの80%程度とも言われています。
+
+        1. innodb_buffer_pool_size
+
+        2. innodb_log_file_size
+
+    log_file_sizeは、innodb_buffer_pool_sizeの25%程度すればよいらしい。が、大きくても64MB程度とも。
+
+
+        innodb_buffer_pool_size = 256M
+
+        innodb_log_file_size = 64M
+
+
+[ MyISAM（グローバル）]
+
+    MyISAMでは、一部のデータのみをkey_buffer_sizeで指定されたメモリに保存し、それ以外は、OSのメモリに保存するため、
+    key_buffer_sizeを搭載メモリの25%程度に留めて設定し、OSのメモリにデータ等が保存されるよう（OSのメモリを圧迫しないよう）設定します。
+
+    key_buffer_sizeを大きくし過ぎると、OSのメモリを圧迫し、むしろパフォーマンスが低下することがあるようです。
+
+    1. key_buffer_size
+
+        key_buffer_size = 256M
+
+
+[ スレッドバッファ ]
+
+    スレッドバッファは、メモリ割りて自体のオーバーヘッドやスレッド（コネクション）毎に利用されるため、あまり大きくし過ぎないことが重要なようです（128K ~ 1M程度）。
+
+        1. read_buffer_size（index無しの全体スキャン時に利用される）
+        2. sort_buffer_size（ソート処理に利用される）
+        3. read_rnd_buffer_size（indexを利用したソート処理に利用される）
+       
+            read_buffer_size = 1M
+            sort_buffer_size = 1M
+            read_rnd_buffer_size = 4M
+
+
+
+< 参考・引用 >
+
+1. MySQL最低限のメモリ設定
+https://qiita.com/zaburo/items/65bac3b8e0a635ada68c
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+< MariaDB 性能対策設定(システムチューニング) >
+
+
+    MariaDBのパフォーマンスに関するチューニングは、大きく分けて以下の通りです。
+
+        1. SQLチューニング
+
+        2. テーブルチューニング
+
+        3. システムチューニング
+
+    本ページでは、上記のうちMariaDB自体の動作に関するシステムチューニングについて説明します。
+
+    システムチューニングの肝は、以下の図中ファイルシステムに存在するファイルへのI/Oを出来る限り減らすことです。
+
+    高速にアクセスできるメモリ領域を増やし、ディスクへのアクセス回数を減らすことで、パフォーマンスの向上を目指します。
+
+
+
+[ 設定パラメータの確認 ]
+
+    動作中のシステムの設定パラメータを確認するには、DBに接続した状態で SHOW GLOBAL VARIABLES; を実行します。
+    
+    末尾にLIKE '<文字列>'を付与することで、任意の文字列を含む設定に限定してパラメータを確認できます。
+    
+    文字列中の%は、ワイルドカードを示します。
+    
+    以下は、innodb_logを先頭に含む設定パラメータの情報を表示しています。
+
+    MariaDB [(none)]> SHOW GLOBAL VARIABLES LIKE 'innodb_log%';
+    +-----------------------------+----------+
+    | Variable_name               | Value    |
+    +-----------------------------+----------+
+    | innodb_log_buffer_size      | 16777216 |
+    | innodb_log_checksums        | ON       |
+    | innodb_log_compressed_pages | ON       |
+    | innodb_log_file_size        | 50331648 |
+    | innodb_log_files_in_group   | 2        |
+    | innodb_log_group_home_dir   | ./       |
+    | innodb_log_optimize_ddl     | ON       |
+    | innodb_log_write_ahead_size | 8192     |
+    +-----------------------------+----------+
+    8 rows in set (0.001 sec)
+
+
+
+[ 設定項目 ]
+
+
+1. 接続スレッド関連
+
+    設定概要
+
+    MariaDBは、クライアントからの接続要求ごとに、同要求を処理するための接続スレッドを作成します。
+
+    DBサーバへ接続するクライアント数が多い場合は、最大接続数を増やします。
+
+    なお、スレッドが増えるごとにメモリ消費量も増えていくので、接続数があまりにも多い場合は、スレッドを増やすのではなく読み取り専用のレプリケーションサーバを用意して負荷分散することも検討する必要があります。
+
+
+[ 設定ファイルの記載例 ]
+
+    物理メモリ8GBのサーバを想定した/etc/my.cnf.d/mariadb-server.cnfの記載例です。
+
+        [mysqld]
+        (略)
+        # スレッド関連
+        max_connections=50
+        thread_cache_size=50
+
+        # バイナリログ関連
+        log-bin=mysql-bin
+        binlog_cache_size=32M
+
+        # テーブルスペース関連
+        innodb_buffer_pool_size=6G
+        skip-innodb_doublewrite
+
+        # InnoDBログ関連
+        innodb_flush_log_at_trx_commit=2
+        innodb_max_dirty_pages_pct=90
+        innodb_log_buffer_size=32M
+        innodb_log_files_in_group=2
+        innodb_log_file_size=3G
+
+        # 名前解決関連
+        skip-name-resolve
+
+
+
+< 参考・引用 >
+
+MariaDB 性能対策設定(システムチューニング)
+https://densan-hoshigumi.com/server/mariadb/system-tuning
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+< MySQLパフォーマンスチューニング -my.cnfの見直し- >
+
+
+
+    [mysqld]
+
+    # #################
+    # innodb
+    # #################
+
+    # InnoDBのデータとインデックスをキャッシュするバッファのサイズ(推奨は物理メモリの8割)
+    innodb_buffer_pool_size=6G
+
+    # InnoDBのデータ・ディクショナリーや内部データ構造情報を持つバッファのサイズ
+    innodb_additional_mem_pool_size=20M
+
+    # コミットされていないトランザクションのためのバッファのサイズ
+    innodb_log_buffer_size=64M
+
+    # InnoDBの更新ログを記録するディスク上のファイルサイズ(innodb_buffer_pool_sizeの4分の1程度)
+    innodb_log_file_size=1G
+
+    # データやインデックスを共有ではなくテーブル個別に保存する
+    innodb_file_per_table=1
+
+    # #################
+    # query cache
+    # #################
+
+    # クエリキャッシュ最大サイズ
+    query_cache_limit=16M
+
+    # クエリキャッシュで使用するメモリサイズ
+    query_cache_size=512M
+
+    # クエリキャッシュのタイプ(0:off, 1:ON SELECT SQL_NO_CACHE以外, 2:DEMAND SELECT SQL_CACHEのみ)
+    query_cache_type=1
+
+    # #################
+    # slow query log
+    # #################
+
+    # スロークエリの出力設定
+    slow_query_log=ON
+
+    # スロークエリと判定する秒数
+    long_query_time=3
+
+    # スロークエリログの場所(あらかじめ作成しておく必要あり)
+    log-slow-queries=/var/log/slow.log
+
+    # #################
+    # etc
+    # #################
+
+    # インデックス未使用でのJOIN時に使用するバッファ
+    join_buffer_size=256K
+
+    # クライアントからサーバーに送信できるパケットの最大長
+    max_allowed_packet=8M
+
+    # フルスキャンのレコードバッファ
+    read_buffer_size=1M
+
+    # キーを使用したソートで読み込まれた行がキャッシュされるバッファ
+    read_rnd_buffer_size=2M
+
+    # ソート時に使用されるバッファ
+    sort_buffer_size=4M
+
+    # MEMORYテーブルの最大サイズ。このサイズを超えたMEMORYテーブルはディスク上に作成
+    max_heap_table_size=16M
+
+    # スレッド毎に作成される一時的なテーブルの最大サイズ。スレッドバッファ
+    tmp_table_size=16M
+
+    # スレッドキャッシュ保持最大数
+    thread_cache_size=100
+
+    # コネクションタイムアウト時間
+    wait_timeout=30
+
+
+
+    < 参考・引用 >
+
+    MySQLパフォーマンスチューニング -my.cnfの見直し-
+    https://qiita.com/mamy1326/items/9c5eaee3c986cff65a55
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+< MySQLメモリのチューニング手順と、手軽に実施する方法を解説 >
+
+
+
+    2．バッファプールのサイズの確認
+
+    ここでは、MySQLのパフォーマンスとメモリ使用に関わる代表的な設定項目であるバッファプール（InnoDBがテーブルとインデックスのデータをキャッシュするメモリ領域）のチューニングについて解説します。
+
+    バッファプールは、MySQLの設定ファイルである「my.cnf」（Linux）または「my.ini」（Windows）の中に記載されている「innodb_buffer_pool_size」を変更または追記することでチューニングします。
+
+    「innodb_buffer_pool_size」は、バッファプールのサイズを定義するものです。この値のデフォルトは128Mとなっています。
+
+    ※my.cnfはデフォルトで「/etc」配下、my.iniはデフォルトで「C:\ProgramData\MySQL\MySQL Server x.x\」（x.xはバージョン）に配置されています。
+
+    例：innodb_buffer_pool_sizeを1G に設定する場合
+
+    innodb_buffer_pool_size = 1G;
+
+
+    一般的に、データアクセスの際に都度データベースにアクセスするよりも、キャッシュから読み込む方が早いため、バッファプールを用意することがパフォーマンスの向上に繋がります。 
+
+    しかし、この値を大きく設定しすぎると、サーバー本体の空きメモリが不足してパフォーマンスに問題が発生する可能性があるため、一概に大きい値に設定すれば良いというわけではありません。
+
+    MySQLのみが稼働する専用のサーバーでInnoDBのみを利用している場合、メインメモリの50～75%程度を割り当てると言われていたり、
+
+    また、AWS RDSでMySQLを使用する場合のデフォルト値はメインメモリの3/4に設定されています。
+
+    しかし、アプリケーションのデータ使用傾向や利用頻度により、バッファプールを大きくしてもパフォーマンスが向上しないケースもあります。
+
+    データベースのデータサイズのうち、アプリケーションが頻繁に利用するデータ量の割合が高い場合は、キャッシュを多く設定する方がパフォーマンスが向上します。 
+
+    しかし、データサイズのうちアプリケーションが頻繁にアクセスするデータ量の割合が低い場合については、キャッシュの利用頻度が低いため効果が高くありません。
+
+    管理するアプリケーションがどれくらいバッファプールを使用しているかは、以下のクエリで確認できます。
+
+    show engine innodb status \G;
+
+
+1. MySQLメモリのチューニング手順と、手軽に実施する方法を解説
+https://www.manageengine.jp/products/Applications_Manager/solution_mysql-memory-tuning.html
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+< 実際に実装している my.ini のパフォーマンスチューニング系統の設定部分 & 設定内容の解説🔥 >
+
+
+
+< 現時点(2022/11/14)でのMariaDBのパフォーマンスチューニング​​​​​​​関連の設定値 >
+
+
+注意: パフォーマンスチューニング​​​​​​​関連の設定値だけ記載しています。
+
+
+[ 1. 実際の設定内容🔥 ] => 注意: パフォーマンスチューニング​​​​​​​関連の設定値だけ記載しています。
+
+
+[mysqld]
+datadir=C:/Program Files/MariaDB 10.6/data
+port=3306
+
+# スレッドの最大接続数
+#　100->150
+max_connections=150
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+# 今日するパケットサイズデフォルト1MB
+max_allowed_packet=16MB
+
+# スレッド毎に作成される一時的なテーブルの最大サイズ。スレッドバッファ
+tmp_table_size=16M
+
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+#二重書き込みの無効化
+# skip-innodb_doublewrite
+
+# [ InnoDBログ設定 ]
+innodb_log_file_size=3G
+innodb_flush_log_at_trx_commit=2
+innodb_max_dirty_pages_pct=90
+innodb_log_buffer_size=32M
+innodb_log_files_in_group=2
+
+#テーブルごとに書き込み
+innodb_file_per_table=ON
+
+key_buffer_size = 256M
+
+# スレッドバッファ
+read_buffer_size = 1M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 4M
+
+# クエリキャッシュ最大サイズ
+query_cache_limit=32M
+
+# クエリキャッシュで使用するメモリサイズ
+query_cache_size=512M
+
+# クエリキャッシュのタイプ(0:off, 1:ON SELECT SQL_NO_CACHE以外, 2:DEMAND SELECT SQL_CACHEのみ)
+query_cache_type=1
+
+
+
+# 名前解決関連
+skip-name-resolve
+
+[client]
+port=3306
+plugin-dir=C:\Program Files\MariaDB 10.6/lib/plugin
+
+
+
+[ 2. 実際の設定内容に基づく、部分的な解説🔥 ]
+
+
+2-1. InnoDB のバッファー・プール・サイズの拡張: innodb_buffer_pool_size の拡張
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+
+    MySQLのパフォーマンスとメモリ使用に関わる代表的な設定項目であるバッファプール（InnoDBがテーブルとインデックスのデータをキャッシュするメモリ領域）のチューニング
+
+    MariaDB (MySQL)のストレージ書き込みエンジンである「InnoDB」(イノデービー)は、乱暴に言うと、ほぼすべてのデータを「 innodb_buffer_pool_size 」指定されたメモリ内に保存するので、
+    innnodb_buffer_pool_size の値を最適化することが一番重要です！
+
+    搭載メモリーの50~80%を割り当てるものですが、DB専用のServerなら、搭載メモリーの80%を割りあてる位でもOKです！
+
+
+    今回は、16Gの搭載メモリーの内、10Gをこの「 innodb_buffer_pool_size 」に割りあてています。
+
+
+
+2-2. Thread の最大接続数とキャッシュサイズの拡張
+
+
+# スレッドの最大接続数
+max_connections=150
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+
+    MariaDBは、クライアントからの接続要求ごとに、同要求を処理するための接続スレッドを作成します。
+
+    DBサーバへ接続するクライアント数が多い場合は、最大接続数を増やします。
+
+    なお、スレッドが増えるごとにメモリ消費量も増えていくので、接続数があまりにも多い場合は、スレッドを増やすのではなく読み取り専用のレプリケーションサーバを用意して負荷分散することも検討する必要があります。
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< 番外編: CLIからパフォーマンスチューニングのための設定をする場合🔥 >
+
+
+< 番外編: CLIからパフォーマンスチューニングのための設定をする場合 >
+
+
+< MySQL-CLI から設定する🔥 >
+
+
+
+< MySQL-DB-Server の 設定値を最適化する🔥 >
+
+
+[ ストレージエンジンの種類を確認する ]
+
+    SHOW ENGINES;
+
+    SHOW TABLE STATUS FROM データベース名;
+
+    SHOW TABLE STAUS WHERE NAME = [テーブル名] \G;
+
+    などで確認できる🔥
+
+
+SHOW ENGINES;
+
+MySQL [RobotamaDB]> show engines;
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| InnoDB             | DEFAULT | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
+| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
+| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
+| BLACKHOLE          | YES     | /dev/null storage engine (anything you write to it disappears) | NO           | NO   | NO         |
+| MyISAM             | YES     | MyISAM storage engine                                          | NO           | NO   | NO         |
+| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
+| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
+| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
+| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+9 rows in set (0.018 sec)
+
+
+
+
+MySQL [RobotamaDB]> show table status from robotamadb;
++-------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------------+----------+----------------+---------+
+| Name  | Engine | Version | Row_format | Rows | Avg_row_length | Data_length | Max_data_length | Index_length | Data_free | Auto_increment | Create_time         | Update_time         | Check_time | Collation       | Checksum | Create_options | Comment |
++-------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------------+----------+----------------+---------+
+| users | InnoDB |      10 | Dynamic    |    3 |           5461 |       16384 |               0 |            0 |         0 |              4 | 2022-11-14 10:24:11 | 2022-11-14 10:44:39 | NULL       | utf8_general_ci |     NULL |                |         |
++-------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+-----------------+----------+----------------+---------+
+1 row in set (0.001 sec)
+
+MySQL [RobotamaDB]>
+
+
+
+[ 各種パラメータ値(設定値)の確認をする🔥 ]
+
+    MySQLの現状がどのような設定なのかを確認するには、以下のコマンドを利用します。
+
+    show variables;
+
+
+MySQL [RobotamaDB]> show variables;
++----------------------------------------------------------+---------------------------------------------------+
+| Variable_name                                            | Value                                                                                                                                                                                                                                                                                                                                                                                                                                     |
++----------------------------------------------------------+---------------------------------------------------+
+| auto_generate_certs                                      | ON                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| auto_increment_increment                                 | 1                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| auto_increment_offset                                    | 1                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| autocommit                                               | ON                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| automatic_sp_privileges                                  | ON                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| avoid_temporal_upgrade                                   | OFF                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| back_log                                                 | 80                                                                                                                                                       
+
+
+長いので割愛・・・
+
+
+
+[ InnoDB（グローバル）]
+
+    InnoDBは、乱暴に言うと、全てのデータを innodb_buffer_pool_size で指定されたメモリ内に保存するので、
+
+    innnodb_buffer_pool_size の値を適切に設定する必要があります。
+
+    DB専用のサーバであれば搭載メモリの80%程度とも言われています。
+
+
+メモリ: 16GB
+
+
+# DB専用のサーバであれば搭載メモリの80%程度とも言われています
+
+=> 16GB 搭載のServerだったので、 12GBぐらいで設定する🔥
+
+
+[ 今回、設定したMySQL-Serverの環境変数 ]
+
+    innodb_buffer_pool_size = 12G
+    innodb_log_file_size = 64M
+    key_buffer_size = 256M
+    read_buffer_size = 1M
+    sort_buffer_size = 2M
+    read_rnd_buffer_size = 4M
+
+
+
+< Memory-Sizeの確認をする🔥 >
+
+1. InnoDB（グローバル）のメモリのサイズを確認する: innodb_buffer_pool_size
+
+    GB単位 と MB単位で確認する🔥
+
+    innodb_buffer_pool_size は、一番メモリーを割り当てるべき設定値です🔥
+
+        
+    この 「INNODB_BUFFER_POOL_SIZE」 の値がMySQL全体で使用できるメモリ量です。
+
+    INNODB_BUFFER_POOL_SIZE の値は単位がバイトになっているので、そのまま取得すると分かりづらいため、1024で割って調整するといいです。
+
+    例は MB（メガバイト）ですが、さらに /1024 を付け足せばGB（ギガバイト）に変換できます。
+
+
+    # GB単位
+    select @@global.innodb_buffer_pool_size/1024/1024/1024;
+
+    # GB単位でCheckする => 「 SELECT @@GLOBAL.INNODB_BUFFER_POOL_SIZE/1024/1024/1024; 」
+
+    # MB単位
+    select @@global.innodb_buffer_pool_size/1024/1024;
+
+    # MB単位でCheckする => 「 SELECT @@GLOBAL.INNODB_BUFFER_POOL_SIZE/1024/1024; 」
+
+
+    # 12GB を割り当てている🔥
+
+    MariaDB [(none)]> select @@global.innodb_buffer_pool_size/1024/1024/1024;
+    +-------------------------------------------------+
+    | @@global.innodb_buffer_pool_size/1024/1024/1024 |
+    +-------------------------------------------------+
+    |                                 12.000000000000 |
+    +-------------------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+
+2. InnoDB（グローバル）のログファイルのサイズを確認する: innodb_log_file_size
+
+    select @@global.innodb_log_file_size /1024/1024/1024;
+
+
+    select @@global.innodb_log_file_size /1024/1024;
+
+
+    # 64MB を割り当てている🔥
+
+
+    MariaDB [(none)]> select @@global.innodb_log_file_size /1024/1024;
+    +------------------------------------------+
+    | @@global.innodb_log_file_size /1024/1024 |
+    +------------------------------------------+
+    |                              64.00000000 |
+    +------------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+
+
+3. MyISAM（グローバル）のバッファーメモリ領域のサイズ: key_buffer_size
+
+    select @@global.key_buffer_size/1024/1024;
+
+
+    # 256MB を割り当てている🔥
+
+
+    MariaDB [(none)]> select @@global.key_buffer_size/1024/1024;
+    +------------------------------------+
+    | @@global.key_buffer_size/1024/1024 |
+    +------------------------------------+
+    |                       256.00000000 |
+    +------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+4. スレッドバッファ: read_buffer_size（index無しの全体スキャン時に利用される
+
+    # 1MB を割り当てている🔥
+
+    select @@global.read_buffer_size/1024/1024;
+
+    MariaDB [(none)]> select @@global.read_buffer_size/1024/1024;
+    +-------------------------------------+
+    | @@global.read_buffer_size/1024/1024 |
+    +-------------------------------------+
+    |                          1.00000000 |
+    +-------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+5. スレッドバッファ: sort_buffer_size（ソート処理に利用される
+
+    # 2MB を割り当てている🔥
+
+    select @@global.sort_buffer_size/1024/1024;
+
+    MariaDB [(none)]> select @@global.sort_buffer_size/1024/1024;
+    +-------------------------------------+
+    | @@global.sort_buffer_size/1024/1024 |
+    +-------------------------------------+
+    |                          2.00000000 |
+    +-------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+6. スレッドバッファ: read_rnd_buffer_size（indexを利用したソート処理に利用される
+
+    # 4MB を割り当てている🔥
+
+    select @@global.read_rnd_buffer_size/1024/1024;
+
+    MariaDB [(none)]> select @@global.read_rnd_buffer_size/1024/1024;
+    +-----------------------------------------+
+    | @@global.read_rnd_buffer_size/1024/1024 |
+    +-----------------------------------------+
+    |                              4.00000000 |
+    +-----------------------------------------+
+    1 row in set (0.000 sec)
+
+
+
+
+
+[ パラメータの設定 ]
+
+    MySQL関連の設定は、my.cnf または my.ini (設定ファイル)で行いますが、SET GLOBALコマンドでも設定可能です。
+
+    msyql> set global key_buffer_size = 128 * 1024 * 1024;
+
+
+    
+
+    SET GLOBAL innodb_buffer_pool_size = 2415919104;
+
+
+    show variables;
+
+    # 該当データを確認する🔥
+
+    Variable_name           | Value      |
+    +-------------------------+------------+
+    | innodb_buffer_pool_size | 2147483648
+
+
+
+
+< 参考・引用 >
+
+1. MySQL最低限のメモリ設定
+https://qiita.com/zaburo/items/65bac3b8e0a635ada68c
+
+
+2. 「MySQLに割り当てられているメモリ量を確認して」と言われたときに見る記事
+https://zenn.dev/magavel/articles/how-to-check-mysql-memory-size
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< my.ini すべての設定内容🔥 >
+
+[mysqld]
+datadir=C:/Program Files/MariaDB 10.6/data
+port=3306
+
+# スレッドの最大接続数
+#　100->150
+max_connections=150
+
+# スレッドキャッシュ保持最大数
+thread_cache_size=100
+
+# 今日するパケットサイズデフォルト1MB
+max_allowed_packet=16MB
+
+# スレッド毎に作成される一時的なテーブルの最大サイズ。スレッドバッファ
+tmp_table_size=16M
+
+# [ バイナリログ設定 ]
+log-bin=mysql-bin
+expire_logs_days = 7
+binlog_cache_size=32M
+
+# [ errorログ設定 ]
+log-error = error.log
+
+# [ slow queryログ設定 ]
+slow_query_log = 1
+slow_query_log_file = slow.log
+long_query_time = 1
+log_queries_not_using_indexes = 1
+
+
+# [ queryログ設定 ] 
+# Debug用 => 本番環境での運用で、ONにする場合は、ログローテーションのbatファイルを作る必要がある
+# => Windowsには、Linuxのようなlogrotate機能は存在しないので、batファイルで定期実行する
+
+# general_log = 1
+# general_log_file = query.log
+
+
+# テーブルスペース関連
+innodb_buffer_pool_size=10G
+
+#二重書き込みの無効化
+# skip-innodb_doublewrite
+
+# [ InnoDBログ設定 ]
+innodb_log_file_size=3G
+innodb_flush_log_at_trx_commit=2
+innodb_max_dirty_pages_pct=90
+innodb_log_buffer_size=32M
+innodb_log_files_in_group=2
+
+#テーブルごとに書き込み
+innodb_file_per_table=ON
+
+key_buffer_size = 256M
+
+# スレッドバッファ
+read_buffer_size = 1M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 4M
+
+# クエリキャッシュ最大サイズ
+query_cache_limit=32M
+
+# クエリキャッシュで使用するメモリサイズ
+query_cache_size=512M
+
+# クエリキャッシュのタイプ(0:off, 1:ON SELECT SQL_NO_CACHE以外, 2:DEMAND SELECT SQL_CACHEのみ)
+query_cache_type=1
+
+
+# 文字コード
+character-set-server=utf8
+
+# 名前解決関連
+skip-name-resolve
+
+[client]
+port=3306
+plugin-dir=C:\Program Files\MariaDB 10.6/lib/plugin
+
+
+
+
