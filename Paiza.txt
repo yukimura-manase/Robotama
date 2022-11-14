@@ -1,0 +1,146 @@
+
+< Paizaをフル活用する🔥 >
+
+Paizaをフル活用する🔥
+
+
+[ 1. Paizaの Online-Editor🔥 ]
+
+Web上で実行できる環境🔥
+
+
+Paizaの Online-Editorは、実行環境の構築をせずとも実行できるのでかなり楽です！
+
+    => 1. ちょっと試したいCodeを実行するのにちょうどいい！
+
+    => 2. 機能のTestをするのにちょうどいい！
+
+    => 3. 新しい言語の学習にちょうどいい！
+
+
+Paiza.IO
+https://paiza.io/projects/featured
+
+
+Paiza.IO Online-Editor
+https://paiza.io/projects/IZ5kTW4ejdGbCmKqrKyxvw
+
+
+[ 2. PaizaCloudが熱い🔥 ]
+
+ブラウザを開くだけでエディタ、Webサーバ、DB等の開発環境が整う クラウド開発環境PaizaCloudクラウドIDE
+
+学習に最適！クラウド型開発環境の決定版。
+
+    Ruby on Rails, Node.js, Django, MySQL, 
+    WordPress, Java(Tomcat), PHP(LAMP), 
+    Laravel, Go, Jupyter notebook... 
+
+    など主要開発環境に対応。
+
+PaizaCloud
+https://paiza.cloud/ja/
+
+
+[ 3. Paiza-Learning🔥 ]
+
+paizaラーニングは、オンラインでプログラミングしながらスキルアップできる、プログラミング入門学習コンテンツです。
+
+無料と有料のコースがあるようです。
+
+Paizaラーニング
+https://paiza.jp/works/
+
+
+講座一覧
+https://paiza.jp/works/courses
+
+
+[ 4. Level-Up-問題集🔥 ]
+
+レベルアップ問題集
+https://paiza.jp/works/mondai
+
+
+[ 5. プログラミングスキルチェック🔥 ]
+
+    paiza（パイザ）のプログラミングスキルチェックは、
+    スキルがあると認められれば企業からスカウトが届く、
+    IT/Webエンジニア、プログラマのための新しいカタチの転職サービスです。
+
+    プログラミングスキルチェックを受けるだけなら、
+
+    匿名で誰にも知られず”こっそり”と 「自分のスキルが他社で通用するのか」を判定。
+
+    適正年収を査定します。
+
+    対応言語は Java、PHP、Ruby、Python2、Python3、Perl、C、C++、C#、
+
+    JavaScript、Objective-C、Scala、Go、Swift、Kotlin 。
+
+
+
+
+プログラミングスキルチェック
+https://paiza.jp/challenges/info
+
+
+[ 6. プログラミング × エンタメ ]
+
+
+    「楽しみながらプログラミングを」とpaizaが考える理由
+
+    paizaでは「異能をのばせ」というミッションを掲げ、世界をアップデートしていくITエンジニアやIT人材を一人でも増やしたい、という思いでサービスを運営しています。
+
+    そのため、マンガやゲームのようなコンテンツをつかい、間口を広くし、多くの人がプログラミングにふれる機会を提供しています。
+
+
+
+    プログラミング筋トレ
+        
+        動画学習と連動、プログラミングに初めて挑戦する方でも安心。
+        ゲーム感覚で楽しみながら、プログラミングのスキルアップを目指そう！
+
+
+    
+    プログラミング腕試し
+            
+        誰でも気軽に挑戦できる問題から、アルゴリズムに触れられる
+        高難易度の問題まで幅広いラインナップ
+
+
+
+プログラミング × エンタメ
+https://paiza.jp/entertainment
+
+
+[ 7. EN:TRY🔥 ]
+
+    EN:TRYは、コードを書いて実力を示せたらスカウトが届く まったく新しい形のコーディング転職サービスです。
+
+    開発実務未経験でもチャレンジできる求人を中心に掲載しており、 たとえば「未経験だけどこれからITエンジニアを目指したい！」
+
+    「もっと本格的に開発経験を積みたい！」という思いをかなえます。
+
+    プログラミングスキルチェックの対応言語は、
+
+        Java、PHP、Ruby、Python2、Python3、Perl、C、C++、C#、
+        
+        JavaScript、Objective-C、Scala、Go、Swift、Kotlin に対応しており、
+        
+        問題では実務に近いプログラムを書いていただきます。
+        
+
+    プログラミングスキルチェックで書いたコードは面接時に企業にも渡されるため、
+    どういった点を考えて書いたかなどを話すだけでも自己PRになります。
+
+    また、プログラミングスキルチェックを受けるだけでも、現在の自分の実力を知ることができます。
+
+
+EN:TRYとは
+https://paiza.jp/guide/en_try
+
+
+
+
+
