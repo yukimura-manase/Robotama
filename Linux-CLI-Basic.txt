@@ -5,7 +5,7 @@
 
 ### ファイル・ディレクトリ操作の基本コマンド
 
-### 最後に、OHTI は、 Company に置換する🔥🔥
+### 最後に、Company は、 Company に置換する🔥🔥
 
 
 
@@ -18,14 +18,20 @@
 
 # 4. ターミナル(MacOSのCUI実行環境)やコマンドプロンプト(WindowsOSのCUI実行環境)で、右Click => ペースト(貼り付ける)🔥
 
-clear
+# 5. VSCode の 置換機能は、めっちゃ使える！
+
+# 6. VSCode の検索機能を使いこなす！
+
+# 7. Debug力を育成する🔥
+
+
 
 
 ## [ 1. pwd：現在のディレクトリ（カレントディレクトリ）を確認する ]
 
 # pwd => print working directoryの略 => 今いる作業ディレクトリのルートからのPathを出力する
 
-robotama@OHTI20180115-1:~$ pwd
+robotama@Company20180115-1:~$ pwd
 /home/robotama
 
 
@@ -41,7 +47,7 @@ robotama@OHTI20180115-1:~$ pwd
 # lsとだけ打つと、現在のディレクトリの内容を表示します。
 
 
-robotama@OHTI20180115-1:~$ ls
+robotama@Company20180115-1:~$ ls
 Gunma.txt         Robotama.sh
 Robotama-Project  Robotama.txt
 
@@ -54,13 +60,13 @@ Robotama-Project  Robotama.txt
 
 
 # ls -l => -l：ファイルの詳細情報も同時に表示
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 20
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 2 robotama robotama 4096 11月 15 11:03 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 # ls -al => a と l オプションを同時に実行する => すべてのファイルを詳細付きで表示できます。
@@ -69,7 +75,7 @@ robotama@OHTI20180115-1:~$
 
 # これを使って、確認するのが間違いない！
 
-robotama@OHTI20180115-1:~$ ls -al
+robotama@Company20180115-1:~$ ls -al
 合計 72
 drwxr-xr-x 8 robotama robotama  4096 11月 15 11:03 .
 drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
@@ -87,7 +93,7 @@ drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
 drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
 -rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 
@@ -109,35 +115,35 @@ robotama@OHTI20180115-1:~$
     # cd ../.. => ２つ上のディレクトリに移動
 
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 20
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 2 robotama robotama 4096 11月 15 11:03 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
 # Robotama-Projectディレクトリに移動する
-robotama@OHTI20180115-1:~$ cd Robotama-Project
-robotama@OHTI20180115-1:~/Robotama-Project$
+robotama@Company20180115-1:~$ cd Robotama-Project
+robotama@Company20180115-1:~/Robotama-Project$
 
 # １つ上のディレクトリに移動する
-robotama@OHTI20180115-1:~/Robotama-Project$ cd ../
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~/Robotama-Project$ cd ../
+robotama@Company20180115-1:~$
 
 # １つ上のディレクトリに移動する
-robotama@OHTI20180115-1:~/Robotama-Project$ cd ..
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~/Robotama-Project$ cd ..
+robotama@Company20180115-1:~$
 
 # 2つ上のディレクトリに移動する
-robotama@OHTI20180115-1:~/Robotama-Project$ cd ..
-robotama@OHTI20180115-1:~$ cd Robotama-Project
-robotama@OHTI20180115-1:~/Robotama-Project$ mkdir Robotama-ProtoType-1
-robotama@OHTI20180115-1:~/Robotama-Project$ cd Robotama-ProtoType-1
-robotama@OHTI20180115-1:~/Robotama-Project/Robotama-ProtoType-1$ cd ../../
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~/Robotama-Project$ cd ..
+robotama@Company20180115-1:~$ cd Robotama-Project
+robotama@Company20180115-1:~/Robotama-Project$ mkdir Robotama-ProtoType-1
+robotama@Company20180115-1:~/Robotama-Project$ cd Robotama-ProtoType-1
+robotama@Company20180115-1:~/Robotama-Project/Robotama-ProtoType-1$ cd ../../
+robotama@Company20180115-1:~$
 
 # # cd / => ルートディレクトリへ移動
-robotama@OHTI20180115-1:~$ cd /
-robotama@OHTI20180115-1:/$ ls -l
+robotama@Company20180115-1:~$ cd /
+robotama@Company20180115-1:/$ ls -l
 合計 416
 drwxr-xr-x   2 root root   4096  1月 17  2022 bin
 drwxr-xr-x   2 root root   4096  5月 21  2019 boot
@@ -161,7 +167,7 @@ dr-xr-xr-x  11 root root      0 11月 15 11:01 sys
 drwxrwxrwt   3 root root   4096  7月 11 14:43 tmp
 drwxr-xr-x  11 root root   4096  1月 17  2022 usr
 drwxr-xr-x  13 root root   4096  5月 21  2019 var
-robotama@OHTI20180115-1:/$
+robotama@Company20180115-1:/$
 
 
 # cd /home/ => ユーザ名	ホームディレクトリに移動
@@ -169,17 +175,17 @@ robotama@OHTI20180115-1:/$
 # ルートからのPathを指定(絶対Path)することで、指定したディレクトリに移動する
 # => どのディレクトリにいても、絶対パス指定の cd ならそのディレクトリまで移動できるので、重宝します！
 
-robotama@OHTI20180115-1:~$ cd /usr/
-robotama@OHTI20180115-1:/usr$ cd /home/
-robotama@OHTI20180115-1:/home$
-robotama@OHTI20180115-1:/home$ cd /home/robotama
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ cd /usr/
+robotama@Company20180115-1:/usr$ cd /home/
+robotama@Company20180115-1:/home$
+robotama@Company20180115-1:/home$ cd /home/robotama
+robotama@Company20180115-1:~$ ls -l
 合計 20
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 
@@ -190,9 +196,9 @@ robotama@OHTI20180115-1:~$
 
 
 # mkdir でディレクトリを作成する
-robotama@OHTI20180115-1:~$ mkdir Gunmar-Banzai
+robotama@Company20180115-1:~$ mkdir Gunmar-Banzai
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 24
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
@@ -201,15 +207,15 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
 # rmdir で指定したディレクトリを削除する
-robotama@OHTI20180115-1:~$ rmdir Gunmar-Banzai
+robotama@Company20180115-1:~$ rmdir Gunmar-Banzai
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 20
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 
@@ -223,9 +229,9 @@ robotama@OHTI20180115-1:~$
 # => ディレクトリをコピー先にコピー
 
 
-robotama@OHTI20180115-1:~$ mkdir Gunma-Project
+robotama@Company20180115-1:~$ mkdir Gunma-Project
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 24
 drwxr-xr-x 2 robotama robotama 4096 11月 15 13:27 Gunma-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
@@ -234,21 +240,21 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
 # ファイルをCopy
-robotama@OHTI20180115-1:~$ cp Gunma.txt ./Gunma-Project
+robotama@Company20180115-1:~$ cp Gunma.txt ./Gunma-Project
 
-robotama@OHTI20180115-1:~$ cd Gunma-Project
+robotama@Company20180115-1:~$ cd Gunma-Project
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 4
 -rw-r--r-- 1 robotama robotama 62 11月 15 13:32 Gunma.txt
 
 
 # cp -a ディレクトリ名 コピー先
-robotama@OHTI20180115-1:~$ cp -a Robotama-Project ./Gunma-Project
+robotama@Company20180115-1:~$ cp -a Robotama-Project ./Gunma-Project
 
-robotama@OHTI20180115-1:~$ cd Gunma-Project
+robotama@Company20180115-1:~$ cd Gunma-Project
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 8
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
@@ -263,32 +269,32 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 
 # mv ディレクトリ名 変更後の名称
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 8
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 
 # mv ディレクトリ名 変更後のディレクトリ名
-robotama@OHTI20180115-1:~/Gunma-Project$ mv Robotama-Project Gunma-Robotama-Project
+robotama@Company20180115-1:~/Gunma-Project$ mv Robotama-Project Gunma-Robotama-Project
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 8
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
 
 # mv ファイル名 変更後のファイル名 (拡張子も変更可能)
-robotama@OHTI20180115-1:~/Gunma-Project$ mv Gunma.txt GunmarTeikoku.html
+robotama@Company20180115-1:~/Gunma-Project$ mv Gunma.txt GunmarTeikoku.html
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 8
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
 
 
 # Robotama-Gunma.js ファイルを作成する
-robotama@OHTI20180115-1:~$ touch Robotama-Gunma.js
+robotama@Company20180115-1:~$ touch Robotama-Gunma.js
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 24
 drwxr-xr-x 3 robotama robotama 4096 11月 15 13:38 Gunma-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
@@ -298,9 +304,9 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
 # mv ファイル名 移動先のPath
-robotama@OHTI20180115-1:~$ mv Robotama-Gunma.js ./Gunma-Project
+robotama@Company20180115-1:~$ mv Robotama-Gunma.js ./Gunma-Project
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 24
 drwxr-xr-x 3 robotama robotama 4096 11月 15 13:41 Gunma-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
@@ -308,21 +314,21 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
-robotama@OHTI20180115-1:~$ cd Gunma-Project
+robotama@Company20180115-1:~$ cd Gunma-Project
 
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 8
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
 -rw-r--r-- 1 robotama robotama    0 11月 15 13:40 Robotama-Gunma.js
-robotama@OHTI20180115-1:~/Gunma-Project$
+robotama@Company20180115-1:~/Gunma-Project$
 
 
 
 # PuruPuru-Robotama ディレクトリを作成する！
-robotama@OHTI20180115-1:~$ mkdir PuruPuru-Robotama
+robotama@Company20180115-1:~$ mkdir PuruPuru-Robotama
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 28
 drwxr-xr-x 3 robotama robotama 4096 11月 15 13:41 Gunma-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
@@ -333,10 +339,10 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 
 
 # mv ディレクトリ名 移動先のPath
-robotama@OHTI20180115-1:~$ mv PuruPuru-Robotama ./Gunma-Project
+robotama@Company20180115-1:~$ mv PuruPuru-Robotama ./Gunma-Project
 
 # PuruPuru-Robotama が消えている => 移動した！
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 24
 drwxr-xr-x 4 robotama robotama 4096 11月 15 13:43 Gunma-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
@@ -344,16 +350,16 @@ drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
 
-robotama@OHTI20180115-1:~$ cd Gunma-Project
+robotama@Company20180115-1:~$ cd Gunma-Project
 
 # PuruPuru-Robotama がいる！
-robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+robotama@Company20180115-1:~/Gunma-Project$ ls -l
 合計 12
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
 -rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
 drwxr-xr-x 2 robotama robotama 4096 11月 15 13:43 PuruPuru-Robotama
 -rw-r--r-- 1 robotama robotama    0 11月 15 13:40 Robotama-Gunma.js
-robotama@OHTI20180115-1:~/Gunma-Project$
+robotama@Company20180115-1:~/Gunma-Project$
 
 
 
@@ -372,7 +378,7 @@ robotama@OHTI20180115-1:~/Gunma-Project$
 
 
 # 削除前
-robotama@OHTI20180115-1:~$ ls -al
+robotama@Company20180115-1:~$ ls -al
 合計 72
 drwxr-xr-x 8 robotama robotama  4096 11月 15 11:03 .
 drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
@@ -390,13 +396,13 @@ drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
 drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
 -rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh      # 削除-Target
 -rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 # 削除実行する
-robotama@OHTI20180115-1:~$ rm Robotama.sh
+robotama@Company20180115-1:~$ rm Robotama.sh
 
 # 削除後
-robotama@OHTI20180115-1:~$ ls -al
+robotama@Company20180115-1:~$ ls -al
 合計 72
 drwxr-xr-x 8 robotama robotama  4096 11月 15 11:16 .
 drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
@@ -413,7 +419,7 @@ drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
 -rw-r--r-- 1 robotama robotama    15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
 -rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 
@@ -430,15 +436,15 @@ robotama@OHTI20180115-1:~$
 # ファイルの作成は、touchコマンド
 
 # touchファイル名で、ファイルを作成する
-robotama@OHTI20180115-1:~$ touch Gunma.txt
+robotama@Company20180115-1:~$ touch Gunma.txt
 
-robotama@OHTI20180115-1:~$ ls -l
+robotama@Company20180115-1:~$ ls -l
 合計 20
 -rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
 drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
 -rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
 -rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
-robotama@OHTI20180115-1:~$
+robotama@Company20180115-1:~$
 
 
 # echoでファイルに書き込む
@@ -454,17 +460,17 @@ echo 'Gunma-Robotama' >> Gunma.txt;
 cat Gunma.txt
 
 
-robotama@OHTI20180115-1:~$ cat Gunma.txt
+robotama@Company20180115-1:~$ cat Gunma.txt
 Gunma-Robotama
 
-robotama@OHTI20180115-1:~$ echo 'ぷるぷるロボ玉' > Gunma.txt;
+robotama@Company20180115-1:~$ echo 'ぷるぷるロボ玉' > Gunma.txt;
 
-robotama@OHTI20180115-1:~$ cat Gunma.txt
+robotama@Company20180115-1:~$ cat Gunma.txt
 ぷるぷるロボ玉
 
-robotama@OHTI20180115-1:~$ echo 'Gunma-Robotama' >> Gunma.txt;
+robotama@Company20180115-1:~$ echo 'Gunma-Robotama' >> Gunma.txt;
 
-robotama@OHTI20180115-1:~$ cat Gunma.txt
+robotama@Company20180115-1:~$ cat Gunma.txt
 ぷるぷるロボ玉
 Gunma-Robotama
 
@@ -473,7 +479,7 @@ Gunma-Robotama
 echo 'ロボ玉なのだ！！' >> Gunma.txt; cat Gunma.txt
 
 
-robotama@OHTI20180115-1:~$ echo 'ロボ玉なのだ！！' >> Gunma.txt; cat Gunma.txt
+robotama@Company20180115-1:~$ echo 'ロボ玉なのだ！！' >> Gunma.txt; cat Gunma.txt
 ぷるぷるロボ玉
 Gunma-Robotama
 ロボ玉なのだ！！
