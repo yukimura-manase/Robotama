@@ -1,0 +1,512 @@
+
+### 基本的な Linux系コマンドまとめ🔥 ###
+
+### Linuxコマンドで開発効率をUp => CUI と GUI は、両方とも適切に使用するのが効率を上げてくれます。
+
+### ファイル・ディレクトリ操作の基本コマンド
+
+### 最後に、OHTI は、 Company に置換する🔥🔥
+
+
+
+# 1. command / でコメントアウト
+
+# 2. ターミナル(MacOSのCUI実行環境)やコマンドプロンプト(WindowsOSのCUI実行環境)では、上下矢印でコマンドの使用履歴をたどれる🔥
+
+
+# 3. clear コマンド => Console を Clearする => CUI操作をしていると、ターミナルに出力結果が溢れてくるので、適度に Clear する必要があります。
+
+# 4. ターミナル(MacOSのCUI実行環境)やコマンドプロンプト(WindowsOSのCUI実行環境)で、右Click => ペースト(貼り付ける)🔥
+
+clear
+
+
+## [ 1. pwd：現在のディレクトリ（カレントディレクトリ）を確認する ]
+
+# pwd => print working directoryの略 => 今いる作業ディレクトリのルートからのPathを出力する
+
+robotama@OHTI20180115-1:~$ pwd
+/home/robotama
+
+
+## [ 2. ls：ディレクトリの内容を表示 ]
+
+# ls => list segments の略
+
+# segments: 断片・かけら・部分
+
+
+## ls
+
+# lsとだけ打つと、現在のディレクトリの内容を表示します。
+
+
+robotama@OHTI20180115-1:~$ ls
+Gunma.txt         Robotama.sh
+Robotama-Project  Robotama.txt
+
+
+# lsの後ろに半角スペースをはさみ、以下のオプションをつけることで、より詳細な情報を表示したりすることができます。
+
+# ＜オプション＞
+# -l：ファイルの詳細情報も同時に表示する
+# -a：隠しファイル／フォルダを含む、すべてのファイルを表示する
+
+
+# ls -l => -l：ファイルの詳細情報も同時に表示
+robotama@OHTI20180115-1:~$ ls -l
+合計 20
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama 4096 11月 15 11:03 Robotama-Project
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+# ls -al => a と l オプションを同時に実行する => すべてのファイルを詳細付きで表示できます。
+
+# Linux-CLI => オプションは合わせ技が可能 => オプションは重ねて表記する
+
+# これを使って、確認するのが間違いない！
+
+robotama@OHTI20180115-1:~$ ls -al
+合計 72
+drwxr-xr-x 8 robotama robotama  4096 11月 15 11:03 .
+drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
+drwxr-xr-x 2 root     root      4096  7月 11 14:35 .aws
+-rw------- 1 robotama robotama 11606 11月 14 16:22 .bash_history
+-rw-r--r-- 1 robotama robotama   220  1月 17  2022 .bash_logout
+-rw-r--r-- 1 robotama robotama  3795  1月 17  2022 .bashrc
+drwxr-xr-x 4 robotama robotama  4096  1月 18  2022 .cache
+drwx------ 4 robotama robotama  4096  1月 18  2022 .config
+drwxr-xr-x 5 robotama robotama  4096  7月 11 14:25 .local
+-rw-r--r-- 1 robotama robotama   807  1月 17  2022 .profile
+drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
+-rw-r--r-- 1 robotama robotama     0  1月 17  2022 .sudo_as_admin_successful
+-rw-r--r-- 1 robotama robotama    15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
+-rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+
+## [ 3. cd：ディレクトリを移動する ]
+
+# Linuxのファイルシステムは階層構造になっていて、最上部の「/（ルート）」の下に各ディレクトリが配置されています。
+
+# ディレクトリを移動するには「cd」コマンドを利用します。
+
+
+    # cd 「移動先のディレクトリ」 => 「移動先のディレクトリ」へ移動
+
+    # cd / => ルートディレクトリへ移動
+
+    # cd /home/ => ユーザ名	ホームディレクトリに移動
+
+    # cd .. => １つ上のディレクトリに移動
+
+    # cd ../.. => ２つ上のディレクトリに移動
+
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 20
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama 4096 11月 15 11:03 Robotama-Project
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+# Robotama-Projectディレクトリに移動する
+robotama@OHTI20180115-1:~$ cd Robotama-Project
+robotama@OHTI20180115-1:~/Robotama-Project$
+
+# １つ上のディレクトリに移動する
+robotama@OHTI20180115-1:~/Robotama-Project$ cd ../
+robotama@OHTI20180115-1:~$
+
+# １つ上のディレクトリに移動する
+robotama@OHTI20180115-1:~/Robotama-Project$ cd ..
+robotama@OHTI20180115-1:~$
+
+# 2つ上のディレクトリに移動する
+robotama@OHTI20180115-1:~/Robotama-Project$ cd ..
+robotama@OHTI20180115-1:~$ cd Robotama-Project
+robotama@OHTI20180115-1:~/Robotama-Project$ mkdir Robotama-ProtoType-1
+robotama@OHTI20180115-1:~/Robotama-Project$ cd Robotama-ProtoType-1
+robotama@OHTI20180115-1:~/Robotama-Project/Robotama-ProtoType-1$ cd ../../
+robotama@OHTI20180115-1:~$
+
+# # cd / => ルートディレクトリへ移動
+robotama@OHTI20180115-1:~$ cd /
+robotama@OHTI20180115-1:/$ ls -l
+合計 416
+drwxr-xr-x   2 root root   4096  1月 17  2022 bin
+drwxr-xr-x   2 root root   4096  5月 21  2019 boot
+drwxr-xr-x   8 root root   2740 11月 15 11:01 dev
+drwxr-xr-x 102 root root   4096 11月 15 11:01 etc
+drwxr-xr-x   3 root root   4096  1月 17  2022 home
+-rwxr-xr-x   3 root root 632096  2月 11  2022 init
+drwxr-xr-x  20 root root   4096  7月 11 14:17 lib
+drwxr-xr-x   2 root root   4096  7月 11 14:15 lib64
+drwx------   2 root root  16384  4月 11  2019 lost+found
+drwxr-xr-x   2 root root   4096  5月 21  2019 media
+drwxr-xr-x   7 root root   4096  1月 20  2022 mnt
+drwxr-xr-x   2 root root   4096  5月 21  2019 opt
+dr-xr-xr-x 163 root root      0 11月 15 11:01 proc
+drwx------   2 root root   4096  5月 21  2019 root
+drwxr-xr-x   8 root root    160 11月 15 11:01 run
+drwxr-xr-x   2 root root  12288  1月 17  2022 sbin
+drwxr-xr-x   2 root root   4096  3月 21  2019 snap
+drwxr-xr-x   2 root root   4096  5月 21  2019 srv
+dr-xr-xr-x  11 root root      0 11月 15 11:01 sys
+drwxrwxrwt   3 root root   4096  7月 11 14:43 tmp
+drwxr-xr-x  11 root root   4096  1月 17  2022 usr
+drwxr-xr-x  13 root root   4096  5月 21  2019 var
+robotama@OHTI20180115-1:/$
+
+
+# cd /home/ => ユーザ名	ホームディレクトリに移動
+
+# ルートからのPathを指定(絶対Path)することで、指定したディレクトリに移動する
+# => どのディレクトリにいても、絶対パス指定の cd ならそのディレクトリまで移動できるので、重宝します！
+
+robotama@OHTI20180115-1:~$ cd /usr/
+robotama@OHTI20180115-1:/usr$ cd /home/
+robotama@OHTI20180115-1:/home$
+robotama@OHTI20180115-1:/home$ cd /home/robotama
+robotama@OHTI20180115-1:~$ ls -l
+合計 20
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+
+## [ 4. mkdir・rmdir：ディレクトリの作成・削除 ]
+
+# mkdir ディレクトリ名: ディレクトリを作成 => make directory の略です。
+# rmdir ディレクトリ名: ディレクトリを削除 => remove directory の略です。
+
+
+# mkdir でディレクトリを作成する
+robotama@OHTI20180115-1:~$ mkdir Gunmar-Banzai
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 24
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama 4096 11月 15 11:46 Gunmar-Banzai
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+# rmdir で指定したディレクトリを削除する
+robotama@OHTI20180115-1:~$ rmdir Gunmar-Banzai
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 20
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+
+## [ 5. cp：ファイル、ディレクトリのコピー ]
+
+# cp ファイル名 コピー先
+# => ファイルを、コピー先にコピー
+
+
+# cp -a ディレクトリ名 コピー先
+# => ディレクトリをコピー先にコピー
+
+
+robotama@OHTI20180115-1:~$ mkdir Gunma-Project
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 24
+drwxr-xr-x 2 robotama robotama 4096 11月 15 13:27 Gunma-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+# ファイルをCopy
+robotama@OHTI20180115-1:~$ cp Gunma.txt ./Gunma-Project
+
+robotama@OHTI20180115-1:~$ cd Gunma-Project
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 4
+-rw-r--r-- 1 robotama robotama 62 11月 15 13:32 Gunma.txt
+
+
+# cp -a ディレクトリ名 コピー先
+robotama@OHTI20180115-1:~$ cp -a Robotama-Project ./Gunma-Project
+
+robotama@OHTI20180115-1:~$ cd Gunma-Project
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 8
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+
+
+## [ 6. mv：ファイル、ディレクトリ名の変更 ]
+
+# mvコマンドでファイル名、ディレクトリ名を変更します。
+
+# mv ファイル／ディレクトリ名 変更後の名称 => ファイル／ディレクトリ名を変更後の名称に変更
+
+
+# mv ディレクトリ名 変更後の名称
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 8
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+
+# mv ディレクトリ名 変更後のディレクトリ名
+robotama@OHTI20180115-1:~/Gunma-Project$ mv Robotama-Project Gunma-Robotama-Project
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 8
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 Gunma.txt
+
+# mv ファイル名 変更後のファイル名 (拡張子も変更可能)
+robotama@OHTI20180115-1:~/Gunma-Project$ mv Gunma.txt GunmarTeikoku.html
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 8
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
+
+
+# Robotama-Gunma.js ファイルを作成する
+robotama@OHTI20180115-1:~$ touch Robotama-Gunma.js
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 24
+drwxr-xr-x 3 robotama robotama 4096 11月 15 13:38 Gunma-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
+-rw-r--r-- 1 robotama robotama    0 11月 15 13:40 Robotama-Gunma.js
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+# mv ファイル名 移動先のPath
+robotama@OHTI20180115-1:~$ mv Robotama-Gunma.js ./Gunma-Project
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 24
+drwxr-xr-x 3 robotama robotama 4096 11月 15 13:41 Gunma-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+robotama@OHTI20180115-1:~$ cd Gunma-Project
+
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 8
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
+-rw-r--r-- 1 robotama robotama    0 11月 15 13:40 Robotama-Gunma.js
+robotama@OHTI20180115-1:~/Gunma-Project$
+
+
+
+# PuruPuru-Robotama ディレクトリを作成する！
+robotama@OHTI20180115-1:~$ mkdir PuruPuru-Robotama
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 28
+drwxr-xr-x 3 robotama robotama 4096 11月 15 13:41 Gunma-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
+drwxr-xr-x 2 robotama robotama 4096 11月 15 13:43 PuruPuru-Robotama
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+
+# mv ディレクトリ名 移動先のPath
+robotama@OHTI20180115-1:~$ mv PuruPuru-Robotama ./Gunma-Project
+
+# PuruPuru-Robotama が消えている => 移動した！
+robotama@OHTI20180115-1:~$ ls -l
+合計 24
+drwxr-xr-x 4 robotama robotama 4096 11月 15 13:43 Gunma-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 11:56 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+
+robotama@OHTI20180115-1:~$ cd Gunma-Project
+
+# PuruPuru-Robotama がいる！
+robotama@OHTI20180115-1:~/Gunma-Project$ ls -l
+合計 12
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Gunma-Robotama-Project
+-rw-r--r-- 1 robotama robotama   62 11月 15 13:32 GunmarTeikoku.html
+drwxr-xr-x 2 robotama robotama 4096 11月 15 13:43 PuruPuru-Robotama
+-rw-r--r-- 1 robotama robotama    0 11月 15 13:40 Robotama-Gunma.js
+robotama@OHTI20180115-1:~/Gunma-Project$
+
+
+
+## [ 7. rm: ファイルを含むディレクトリの削除 ]
+
+# rm ファイル名
+# ファイルの削除
+
+
+# rmコマンドで、ファイルを削除することができます。
+# これに「-r」オプションを付けることで、ディレクトリ全体を一気に削除する事も可能。
+
+
+# rm ファイル名 => ファイルを削除
+
+
+
+# 削除前
+robotama@OHTI20180115-1:~$ ls -al
+合計 72
+drwxr-xr-x 8 robotama robotama  4096 11月 15 11:03 .
+drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
+drwxr-xr-x 2 root     root      4096  7月 11 14:35 .aws
+-rw------- 1 robotama robotama 11606 11月 14 16:22 .bash_history
+-rw-r--r-- 1 robotama robotama   220  1月 17  2022 .bash_logout
+-rw-r--r-- 1 robotama robotama  3795  1月 17  2022 .bashrc
+drwxr-xr-x 4 robotama robotama  4096  1月 18  2022 .cache
+drwx------ 4 robotama robotama  4096  1月 18  2022 .config
+drwxr-xr-x 5 robotama robotama  4096  7月 11 14:25 .local
+-rw-r--r-- 1 robotama robotama   807  1月 17  2022 .profile
+drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
+-rw-r--r-- 1 robotama robotama     0  1月 17  2022 .sudo_as_admin_successful
+-rw-r--r-- 1 robotama robotama    15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
+-rw-r--r-- 1 robotama robotama     0 10月 11 11:03 Robotama.sh      # 削除-Target
+-rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+# 削除実行する
+robotama@OHTI20180115-1:~$ rm Robotama.sh
+
+# 削除後
+robotama@OHTI20180115-1:~$ ls -al
+合計 72
+drwxr-xr-x 8 robotama robotama  4096 11月 15 11:16 .
+drwxr-xr-x 3 root     root      4096  1月 17  2022 ..
+drwxr-xr-x 2 root     root      4096  7月 11 14:35 .aws
+-rw------- 1 robotama robotama 11606 11月 14 16:22 .bash_history
+-rw-r--r-- 1 robotama robotama   220  1月 17  2022 .bash_logout
+-rw-r--r-- 1 robotama robotama  3795  1月 17  2022 .bashrc
+drwxr-xr-x 4 robotama robotama  4096  1月 18  2022 .cache
+drwx------ 4 robotama robotama  4096  1月 18  2022 .config
+drwxr-xr-x 5 robotama robotama  4096  7月 11 14:25 .local
+-rw-r--r-- 1 robotama robotama   807  1月 17  2022 .profile
+drwxr-xr-x 2 root     root      4096  1月 17  2022 .rpmdb
+-rw-r--r-- 1 robotama robotama     0  1月 17  2022 .sudo_as_admin_successful
+-rw-r--r-- 1 robotama robotama    15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 2 robotama robotama  4096 11月 15 11:03 Robotama-Project
+-rw-r--r-- 1 robotama robotama    31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+
+
+# rmdir でディレクトリを削除しようとしても、中にファイルが存在するとエラーになります。
+
+# rm -r ディレクトリ	ディレクトリを中身ごとすべて削除する
+
+
+
+
+### touch & cat コマンド ### 
+
+# ファイルの作成は、touchコマンド
+
+# touchファイル名で、ファイルを作成する
+robotama@OHTI20180115-1:~$ touch Gunma.txt
+
+robotama@OHTI20180115-1:~$ ls -l
+合計 20
+-rw-r--r-- 1 robotama robotama   15 10月 11 10:44 Gunma.txt
+drwxr-xr-x 3 robotama robotama 4096 11月 15 11:34 Robotama-Project
+-rw-r--r-- 1 robotama robotama    0 11月 15 11:49 Robotama.sh
+-rw-r--r-- 1 robotama robotama   31 10月 11 10:27 Robotama.txt
+robotama@OHTI20180115-1:~$
+
+
+# echoでファイルに書き込む
+
+# ファイル内容を上書きする
+echo 'ぷるぷるロボ玉' > Gunma.txt;
+
+# ファイル内容に追記する
+echo 'Gunma-Robotama' >> Gunma.txt;
+
+
+# ファイルの中身を確認する catコマンド
+cat Gunma.txt
+
+
+robotama@OHTI20180115-1:~$ cat Gunma.txt
+Gunma-Robotama
+
+robotama@OHTI20180115-1:~$ echo 'ぷるぷるロボ玉' > Gunma.txt;
+
+robotama@OHTI20180115-1:~$ cat Gunma.txt
+ぷるぷるロボ玉
+
+robotama@OHTI20180115-1:~$ echo 'Gunma-Robotama' >> Gunma.txt;
+
+robotama@OHTI20180115-1:~$ cat Gunma.txt
+ぷるぷるロボ玉
+Gunma-Robotama
+
+
+# 文字列をファイルに出力(書き込み)して、catで確認する
+echo 'ロボ玉なのだ！！' >> Gunma.txt; cat Gunma.txt
+
+
+robotama@OHTI20180115-1:~$ echo 'ロボ玉なのだ！！' >> Gunma.txt; cat Gunma.txt
+ぷるぷるロボ玉
+Gunma-Robotama
+ロボ玉なのだ！！
+
+
+
+
+## shutdown: ターミナルから端末をシャットダウン
+
+# シャットダウンするには、次のコマンドをターミナルから実行します。
+
+# 今すぐシャットダウン
+shutdown -h now
+
+# 今すぐ再起動
+shutdown -r now
+
+
+
+### 参考・引用 ###
+
+
+# 1.【超初心者Linux】第2夜：基本コマンドを使いながら覚えるのれす！(pwd,cd,ls,mkdir,rmdir,cp,mv,rm)
+# https://dogandrun.hatenablog.jp/entry/2013/11/30/181606
+
+
+
+
+
+
+
+
+
+
+
+
