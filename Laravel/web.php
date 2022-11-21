@@ -89,6 +89,47 @@ Route::get('/request/dump', 'RobotamaController@dump_request_data');
 
 
 
+// < DB-接続編 >
+
+
+// 1. DB接続 & Selectでデータ取得するエンドポイント
+
+Route::get('/robotama/list', 'MySQLController@robotama_list_select');
+
+// [{"id":1,"robotama_name":"robotama-1","country":"gunmar"},{"id":2,"robotama_name":"robotama-2","country":"tokyo"},{"id":3,"robotama_name":"robotama-3","country":"saitama"}]
+
+
+
+// 2. DB接続 & データを新規追加 (Insert into)するエンドポイント
+
+Route::get('/robotama/insert/{robotama_name}/{country}', 'MySQLController@robotama_insert_select');
+
+
+
+
+
+// 3. DB接続 & データを更新 (Update)するエンドポイント
+
+Route::post('/robotama/update', 'MySQLController@robotama_update_select');
+
+
+
+
+// 4. DB接続 & データを削除 (Delete)するエンドポイント
+
+Route::get('/robotama/delete/{delete_id}', 'MySQLController@robotama_delete_select');
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
