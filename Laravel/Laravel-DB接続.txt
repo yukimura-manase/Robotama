@@ -1,0 +1,77 @@
+
+< Laravel-API の DB接続テスト🔥 >
+
+
+1. Tableの作成
+
+ create table `robotama` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "ID",
+    `robotama_name` VARCHAR(100) NOT NULL COMMENT "ロボ玉の名前",
+    `country` VARCHAR(200) NOT NULL COMMENT "出身地");
+
+    
+
+MySQL [robotamadb]> create table `robotama` (
+    ->     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "ID",
+    ->     `robotama_name` VARCHAR(100) NOT NULL COMMENT "ロボ玉の名前",
+    ->     `country` VARCHAR(200) NOT NULL COMMENT "出身地");
+Query OK, 0 rows affected (0.500 sec)
+
+
+MySQL [robotamadb]> show tables;
++----------------------+
+| Tables_in_robotamadb |
++----------------------+
+| rename_robotama      |
+| robotama             |
+| users                |
++----------------------+
+3 rows in set (0.000 sec)
+
+
+MySQL [robotamadb]> show full columns from robotama;
++---------------+--------------+-------------------+------+-----+---------+----------------+---------------------------------+--------------+
+| Field         | Type         | Collation         | Null | Key | Default | Extra          | Privileges                      | Comment      |
++---------------+--------------+-------------------+------+-----+---------+----------------+---------------------------------+--------------+
+| id            | int(11)      | NULL              | NO   | PRI | NULL    | auto_increment | select,insert,update,references | ID           |
+| robotama_name | varchar(100) | latin1_swedish_ci | NO   |     | NULL    |                | select,insert,update,references | ロボ玉の名前 |
+| country       | varchar(200) | latin1_swedish_ci | NO   |     | NULL    |                | select,insert,update,references | 出身地       |
++---------------+--------------+-------------------+------+-----+---------+----------------+---------------------------------+--------------+
+3 rows in set (0.002 sec)
+
+
+MySQL [robotamadb]> desc robotama;
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| id            | int(11)      | NO   | PRI | NULL    | auto_increment |
+| robotama_name | varchar(100) | NO   |     | NULL    |                |
+| country       | varchar(200) | NO   |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+3 rows in set (0.015 sec)
+
+
+
+2. Recodeの追加
+
+
+insert into robotama (robotama_name, country) values ("robotama-1", "gunmar");
+
+insert into robotama (robotama_name, country) values ("robotama-2", "tokyo");
+
+insert into robotama (robotama_name, country) values ("robotama-3", "saitama");
+
+
+
+MySQL [robotamadb]> select * from robotama;
++----+---------------+---------+
+| id | robotama_name | country |
++----+---------------+---------+
+|  1 | robotama-1    | gunmar  |
+|  2 | robotama-2    | tokyo   |
+|  3 | robotama-3    | saitama |
++----+---------------+---------+
+3 rows in set (0.000 sec)
+
+
+
