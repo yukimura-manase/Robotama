@@ -1,0 +1,504 @@
+
+< React-Hooksについて解説🔥 >
+
+いたって普通ですが、
+
+    ・React
+    ・Redux
+    ・React-Router
+
+
+    それぞれのhooksにどんなものがあるのか？
+
+    特徴と簡単な使い方をまとめて報告する形がみんなにとっていいのかと考えています。
+
+
+
+<React Hooks>
+
+hooks代表的なもの。
+
+    React Hooks(version 16.8以降)
+
+        useState
+        useEffect
+        useContext
+        useReducer
+        useCallBack
+        useMemo
+        useRef
+            
+    Redux Hooks(version 7.1以降)
+
+        useDispatch
+        useSelector
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+< テーマ：3.React Hooks 調べてみた > => 発表時間10~15分
+
+    それぞれのHooksにどんなものがあるのか？
+    特徴と簡単な使い方をまとめて報告 => オーディエンス目線 => 聞く人にとっていいものを届ける。
+
+< React Hooks(version 16.8以降) >
+
+< 前提 >　React Hooksとは？
+
+    ・フック (hook)は、「React 16.8」で追加された新機能です。
+    ・state などの React の機能を、クラスを書かずに使えるようになります。
+    ・フックとは、「関数コンポーネント」に state やライフサイクルといった React の機能を “接続する (hook into)” ための関数です。
+    ・フックは React をクラスなしに使うための機能ですので、クラス内では機能しません。 
+
+----------------------------------------------------------------------------------------------------------------------------
+
+[ 1. useState ]
+
+< 特徴・1行 >
+  Stateを定義・保持して、さらに変更機能も設定できるHook！
+
+  useState: 「動的に値を変化」させられるようにするための状態管理のHooks
+  
+    => Stateを定義・保持して、さらに変更機能も設定できるHook！
+
+< 使い方・構文 >
+ const [ 現在のstateの値, state更新関数 ] = useState( state初期値 ); 
+
+< ポイント > 
+
+    0. 現在のstateは、まずは初期値を代入している。
+
+    1. 現在のstateの値は、常に最新状態にある！ => 更新関数の引数が現在のstateとして更新される。
+
+    2. stateの値は、更新関数でのみ直接、変更可能！ 更新関数以外での直接変更はNG 
+    
+        => コピーして加工したものを最終的に更新関数の引数に渡して間接的に変更する。
+
+
+< 例文 >
+import * as React from 'react';
+const { useState } = React;
+
+export const UseStateSample = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <p>
+      <button onClick={() => setCount(count - 1)}>-</button>
+      <b>{count}</b>
+      <button onClick={() => setCount(count + 1)}>+</button>
+    </p>
+  );
+};
+
+----------------------------------------------------------------------------------------------------------------------------
+
+[ 2. useEffect ]
+
+
+< 特徴・1行 > 
+
+    Componentの生成の際(created-timing)や、stateやpropsの更新時に、自動で実行する処理を設定できるHook
+
+< 使い方・構文 >
+
+    useEffect( コールバック関数, [値の配列] );
+
+
+< ポイント > 
+
+    0. 画面生成後の自動処理を設定できる！ => 処理をする関数(コールバック関数)を第1引数に渡す。
+
+    1. 設定した処理が、画面が描写された後に実行される => stateの更新による再レンダリングでも実行される。
+
+        => すなわち、発動タイミングは、「最初の画面create後」と「state・props 変更等による再レンダリング後」の2パターン
+
+    2. 第2引数を任意で設定することができ、第2引数で、コールバック関数を呼ぶタイミングを制御できます。
+    
+        => 第2引数の値 (監視対象の値)が、更新されたら関数実行するような設定になります。
+
+    3. 第2引数を[] (空配列) にすることで、コンポーネントの更新によるuseEffectの停止をすることができる！
+    
+        => 最初の画面作成タイミング(Component の create時)の後だけコールバック関数を実行する useEffectとなる => Vueのcreatedフックと同様の効果
+
+    4. useEffect内で、state-更新関数を実行してしまうと、「無限useEffect祭り」(無限更新 & 無限Effect)が発生する！
+
+    5. 外部との通信、API通信などで活躍する。 => 第二引数に[]を設定しないと、データを受け取る度にuseEffectが発生する。useEffect祭りになる！
+
+
+< 例文・構文 > 
+import React from 'react';
+const { useState ,useEffect } = React;
+
+export const UseEffectSample = ()=>{
+
+  const [count, setCount] = useState(0)
+  const [count2, setCount2] = useState(0)
+
+  useEffect(()=>{
+    console.log('useEffectが実行されました')
+  },[count])
+
+  return (
+    <div className="App">
+      <h1>Learn useEffect</h1>
+      <h2>Count: { count }</h2>
+      <h2>Count2: { count2 }</h2>
+      <button onClick={() => setCount(count+1)}>+</button>
+      <button onClick={() => setCount2(count2+1)}>+</button>
+    </div>
+  );
+}
+
+
+    useEffectの役割は「関数の実行タイミングをReactのレンダリング後まで遅らせる事」です。
+
+    関数がレンダリングを行って画面に反映された後に実行されるので、DOMの書き換え、変数の代入、API通信などの副作用を扱うのに適しています。
+
+
+< useEffect()ざっくりまとめ >
+
+    1. 第2引数なし　→　Componetn の生成後 & 更新するたびに実行！（クラスだとrender）
+
+    2. 第2引数空配列　→　Componetn の生成後に1度だけ実行！（クラスだとDidMount）=> Vueだとcreated
+
+    3. useEffectの戻り値に関数(クリーンアップ関数)設定　→　最後に実行（クラスだとWillUnmount）
+
+    4. 第2引数に依存関係あり(監視対象あり)　→　対象のstateなどが変更された場合に実行される
+
+    5. 引数なしで、stateの値などを変更したり、依存関係の設定を間違える（依存関係先で変数を再定義など）すると無限ループに突入。
+
+
+
+【React Hooks】useEffectの基本的な動きを理解して使いこなそう
+https://tyotto-good.com/blog/basic-useeffect
+
+
+
+
+< 注意事項🔥 >
+
+    React 18 から、厳密モードが有効になっている開発モードでのみ useEffect が 2 回実行されるようになっています。
+
+    StrictModeが有効な場合は、コンポーネントが2回レンダリングされるので、useEffect が 2回実行されてしまいます。
+
+        => index.js の <React.StrictMode> タグを消して解決🔥
+
+
+    React18の、StrictModeの追加機能によるものだった。
+
+    StrictModeが有効な場合は、コンポーネントが2回レンダリングされる。
+
+    そのため、useEffectが2回実行されてしまうので、StrictModeを無効にする。
+
+
+useEffect がマウント時に2回実行される
+https://qiita.com/asahina820/items/665c55594cfd55e6f14a
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+3.useContext
+
+context => 文脈, 環境, 属性,
+
+Provid => 提供する。
+
+< 特徴・1行 >
+
+コンポーネント間でのデータの受け渡しを簡単にするHook
+
+< 使い方・構文 >
+
+① export const 変数A = createContext(); => Contextオブジェクトを作成して格納
+② <変数A.Provider props名={渡す値}><変数A.Provider>タグで「子コンポーネント」を囲む！
+=> 囲まれた子コンポーネントの子コンポーネントすべてに伝搬する体制ができる。
+③ propsを受け取りたい「子コンポーネント」で、「useContext」を使用する！
+=> const 変数B = useContext(変数A) => 変数Aが保持するpropsを変数Bが受け取る。
+
+親コンポーネントでの設定
+まずApp.jsでContextの作成を行います。Contextの作成はcreateContextで行います。
+
+< ポイント >
+
+0.propsを利用しなくても、「親」から「子」や「孫」など上の階層から下の階層にデータを送れる！
+
+1.通常親コンポーネントから子コンポーネントにデータを渡す際は、propsを介して行います。
+    => しかし親から子、そのまた子といったように複数のコンポーネントを介してデータを渡すのはpropsでは煩雑になってきます。
+    => そんな時に活躍するのがuseContext
+
+2.指定したコンテキストの現在の値を得られる。
+    => createContextで作成したコンテキストオブジェクトをuseContextに渡すことで、そのコンテキストの現在の値を返り値で得ることができます。
+
+< 例文 >
+
+『OyaContext』(親コンポーネント) => 子・孫・ひ孫(A・B・C)を持つ！
+import React,{createContext} from 'react';
+import {ComponentA} from './ContextA'
+
+export const UserCount = createContext()
+
+export const OyaContext = ()=> {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <h1>Learn useContext</h1>
+
+      <UserCount.Provider value={100}>
+       <ComponentA/>
+      </UserCount.Provider>
+
+    </div>
+  );
+}
+
+
+『ComponentC』(ひ孫コンポーネント)
+import React,{useContext} from 'react'
+import {UserCount} from './OyaContext'
+
+export const ComponentC = () => {
+
+    const count = useContext(UserCount)
+
+    return (
+        <div>
+            <p>ComponetC</p>
+            <h3>Context{count}</h3>
+        </div>
+    )
+}
+
+
+---------------------------------------------------------------------------------------------------------------------------
+4.useReducer
+
+< 英単語の意味理解 >
+dispatch => 発信する,遣わす,派遣する
+reduce => 減らす,削減する,引き締める,まとめる
+
+< 特徴・1行 >
+useStateとReduxのreducer機能、両方を詰め込んだ夢のハッピーセットHook！？
+
+< 使い方・構文 >
+
+① const initialState = { 初期State }
+② const [ 現在のstate, dispatch ] = useReducer( dispatchを派遣する更新関数, initialState(初期State) );
+③ const reducer = (state, action) => { dispatchで送られてきたactionに応じたstate更新処理 }
+
+< ポイント > 
+
+0.ReactのHookでありながら、Reduxのreducerと同じような処理が実現できる。
+=> 基本的な処理の流れや考え方は、Reduxのreducerに似ている！
+
+1.useReducerは自身で、state(状態)を新しく作成・保持することができる => useStateに似た要素
+=> useReducerによって作られたstateを更新する場合は、dispatch関数の引数にactionを渡す。
+
+2.まずは、useReducer(  更新関数, stateの初期値 )を設定する。
+
+3.次に、現在のstateに加えて、dispatch 関数を定義する。
+
+4.別途、initialState(初期State)の設定が必要
+
+5.別途、reducerの設定が必要 => dispatchされたactionごとにStateの更新処理をする。
+=> dispatch関数に入れる引数には「更新関数」で設定したactionを指定する必要があります。
+
+< 例文 >
+
+const initialState = {
+    count: 0
+}
+
+export const UseReducerSample2 =()=> {
+
+    const [state, dispatch] = useReducer(reducer, initialState) //useReducerを呼び出し。
+
+    return (
+        <div className="">
+
+            <h1>ロボ玉Counter</h1>
+            <h2>ロボ玉を数えよう！: { state.count }</h2>
+            <button onClick={() => dispatch('INCREMENT')}>+</button>
+            <button onClick={() => dispatch('DECREMENT')}>-</button>
+            <button onClick={() => dispatch('RESET')}>0</button>
+            
+        </div>
+  );
+}
+
+const reducer = (state, action) => {
+  switch(action){
+      case 'INCREMENT':
+          return {count: state.count + 1}
+      case 'DECREMENT':
+          return {count: state.count - 1}
+      case 'RESET':
+          return {count: 0}
+      default:
+          return state
+  }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+
+< 再レンダリングを抑制するHooks+α >
+
+Reactではstate、propsが更新されるとすべてのコンポーネントが再描写(Re-render)されます。
+パフォーマンスを向上させるため不必要な再描写を行わせたくない場合にuseCallback, useMemo, React.memoを利用することができます。
+
+React.memo => コンポーネントの再レンダリング抑制
+useCallBack => 関数に対する再レンダリング抑制
+useMemo => 値に対する再レンダリング抑制
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+5.useCallBack
+
+useCallbackは関数特化のuseMemoで、
+useMemo(() => func, [])と書かなければいけないところをuseCallback(func, [])まで省略できます。
+
+Reactでは再描写を抑える方法がいくつか準備されています。まずReact.memoを利用してTodo, TodoListの再描写を抑える方法を確認していきます。
+
+再描写を行わない設定を行った方が必ずしもパフォーマンスが優れているものではありません。これらの機能を使うためにも別途処理が必要となるためどちらが効率的なのかを確認する必要があります。
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ex.React.memo
+
+memoではコンポーネントに対して設定を行い、useCallbackでは関数に対して設定を行っていましたがuseMemoでは値に対して設定をおこないます。
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+6.useMemo
+useMemoは、その名の通り値のメモ化に使えるフックです。
+
+第1引数に値を計算する関数を、第2引数に計算される値が依存する値の一覧を渡します。
+
+
+const Calculator = () => {
+  const calcResult = useMemo(() => expensiveFunc(), []);
+
+  return <div>{calcResult}</div>
+};
+
+React開発においては、不要なレンダリングを防ぐためにReactで用意されたHooksを使用してメモ化を意識した開発を行う必要があります。
+特に実際の開発においては以下の3つのAPIをたびたび使用します。
+
+React.memo
+useMemo
+useCallback
+
+
+メモ化とは？
+まず初めにここでいうメモ化についてちゃんと定義しておきます。
+メモ化はプログラミングでよく知られた概念であり、関数呼び出しの結果をキャッシュし、キャッシュを再利用することによってプログラムを高速化することを目指しています。
+Reactにおいては、コンポーネントのレンダリングやプロセスを高速化させることを目的としたパフォーマンス機能を指します。
+
+実際にReact内部ではrenderメソッドが返したコンポーネントの結果、JSXなどをキャッシュしています。
+
+
+< useMemo or useCallback? >
+useMemoとuseCallbackについて掘り下げる前に両者の違いについて理解しましょう。
+まず基本としてuseMemoは値を返す、useCallbackは関数を返す
+ということを抑えてください。
+
+基本構文は以下
+
+useCallback(fn, deps)
+useMemo(() => fn, deps) 
+useMemoもuseCallbackも第二引数で渡すdepsの値が変更された時に中身を再評価します。
+この二つのHooksは同等の処理として扱われます。
+これらの関数を差別化するポイントとしては最初に書いたようにAPIの返す結果の違いです。
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+7.useRef
+
+< 特徴・1行 >
+DOMにアクセスして、値を参照(reference)するHook
+
+< 使い方・構文 >
+① const 変数 = useRef(初期値)
+② ref = { 変数 }をDOMのデータを参照したいタグに埋め込む！
+
+< ポイント >
+0.useRefの利用方法することでDOMノード(例：input要素)にアクセスする
+1.useRefは「refオブジェクト」を作って返す！
+2.useRefはuseStateのように変数に値を保持させることも可能です。 => currentプロパティに値を保持する！
+3.useStateと違って、値が更新されても再レンダリングを自動ではしない。
+
+< 例文 >
+useRefの利用方法することでDOMノード(例：input要素)にアクセスすることが可能です。
+
+export const UseRefSample = ()=>{
+
+const [name, setName] = useState('')
+
+  const handleOnChange = (e) => setName(e.target.value) 
+
+  const inputEl = useRef(null)
+
+  const handleOnClick = () => console.log(inputEl.current)
+
+  return (
+    <div>
+      <input type="text" value={name} onChange={handleOnChange} ref={inputEl} />
+      <p>名前：{name}</p>
+      <button onClick={handleOnClick}>対象のDOM情報を確認するボタン</button>
+    </div>
+  );
+}
+
+------------------------------------------------------------------------------------------------------------------------------
+<Redux Hooks(version 7.1以降)>
+Redux Hooks によって、connect() を利用しなくても、各コンポーネントはdispatch, stateを簡単に使えるようになりました。
+① useDispatch
+② useSelector
+------------------------------------------------------------------------------------------------------------------------------
+8.useDispatch
+< 特徴・1行 >
+
+<dispatch> => // dispatch => 遣わす。派遣する。発信する。
+const dispatch = useDispatch()
+useDispatch で store に紐付いた dispatch が取得できます。
+----------------------------------------------------------------------------------------
+9.useSelector
+store から state を取得する場合、useSelector() を呼びます。
+useSelector の引数には state を引数にとる selector 関数を指定します。
+useSelectorでstoreのstateが取得できます。
+① Storeから使いたいデータを変数に格納 const todoSelecotor = state => { return state.todolist}
+② 
+
+-----------------------------------------------------------------------------------------------------
+< React-RouterのHooks >
+
+10.useHistory
+
+11.useParams
+
+12.useRouteMatch
+
+------------------------------------------------------------------------------------------------------------------------------
+< 調べてみて気づいたこと >
+1.HooksはHooksを組み合わせて使用する。 => カスタムフック
+
+------------------------------------------------------------------------------------------------------------------------------
+< 参照 >
+0. React公式リファレンス：「フック早わかり」 => https://ja.reactjs.org/docs/hooks-overview.html
+1. Qiita記事：「React 16.8: 正式版となったReact Hooksを今さら総ざらいする」 => https://qiita.com/uhyo/items/246fb1f30acfeb7699da
+2.「初心者でも簡単にわかるReact useEffectの使い方」 => https://reffect.co.jp/react/react-useeffect-understanding
+3.「こんなに簡単なの？React Hook useContextでデータ共有」 => https://reffect.co.jp/react/react-usecontext-understanding
+4.「React Hook useReducerを理解する」 => https://reffect.co.jp/react/react-hook-reducer-understanding
+5.「Reactの再描写(re-render)って何??useCallback, useMemo, memoと一緒に理解。」 => https://reffect.co.jp/react/react-memo
+6.「初心者にもわかるReact HookのuseRefの使い方」 => https://reffect.co.jp/react/react-hook-useref
+7. 「最近Reactを始めた人向けのReact Hooks入門」 => https://sbfl.net/blog/2019/11/12/react-hooks-introduction/
+8. 「React.memo/useMemo/useCallbackを使ってサイトを最適化」 => https://ryotarch.com/javascript/react/react-memo-usememo-usecallback-improve-performance/
+9.「React Hooksのチートシート：例を含むベストプラクティス」
+https://blog.logrocket.com/react-hooks-cheat-sheet-unlock-solutions-to-common-problems-af4caf699e70/
+
+
+
+
+
