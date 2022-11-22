@@ -1,0 +1,27 @@
+
+.HeaderNav {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    text-align: right;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.HeaderNav li {
+    margin-right: 20px;
+}
+
+.HeaderNav button {
+    /* Button-Style-無効化-Start */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    appearance: none;
+    /* Button-Style-無効化-End */
+
+    font-size: 20px;
+    color: #61dafb;
+}
