@@ -7,15 +7,9 @@
  create table `robotama` (
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "ID",
     `robotama_name` VARCHAR(100) NOT NULL COMMENT "ロボ玉の名前",
-    `country` VARCHAR(200) NOT NULL COMMENT "出身地");
+    `country` VARCHAR(200) NOT NULL COMMENT "出身地"
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-    
-
-MySQL [robotamadb]> create table `robotama` (
-    ->     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT "ID",
-    ->     `robotama_name` VARCHAR(100) NOT NULL COMMENT "ロボ玉の名前",
-    ->     `country` VARCHAR(200) NOT NULL COMMENT "出身地");
-Query OK, 0 rows affected (0.500 sec)
 
 
 MySQL [robotamadb]> show tables;
@@ -60,6 +54,9 @@ insert into robotama (robotama_name, country) values ("robotama-1", "gunmar");
 insert into robotama (robotama_name, country) values ("robotama-2", "tokyo");
 
 insert into robotama (robotama_name, country) values ("robotama-3", "saitama");
+
+
+insert into robotama (robotama_name, country) values ("ロボ玉", "神聖グンマー帝国");
 
 
 
