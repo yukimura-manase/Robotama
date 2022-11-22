@@ -1,0 +1,122 @@
+
+< MySQL (MariaDB)の設定ファイルの解説🔥 >
+
+
+1. 設定ファイル
+    
+    MySQLに対する設定は、my.cnf or my.ini というファイルに対して実施する
+
+
+
+2. my.cnf or my.ini に設定できる値
+
+    「 key=value 」の形で設定値を設定します。この「 key=value 」の設定値のことをオプションと呼びます。
+
+    設定値(オプション)は「セクション」（グループ）ごとに分けて、設定していきます。
+
+    「セクション」（グループ）には、client グループ、 mysql グループ、そして mysqld グループ などがあります。
+
+    オプションを適用したい、プログラム・グループ名を [グループ名] で記述して、その後に設定値(オプション)を記述します。
+
+        [mysqld]
+        ・・・・
+        ・・・・
+
+        [client]
+        ・・・・
+        ・・・・
+
+        [mysql]
+        ・・・・
+        ・・・・
+
+        [mysqldump]
+        ・・・・
+        ・・・・
+
+
+    例えば MySQL のサーバーである mysqld.exe を対象とする場合、グループ名は mysqld となり [mysqld] を記述して、その後に設定値(オプション)を記述します。
+    
+    同じく MySQL のコマンドラインツールである mysql.exe を対象とする場合は [mysql] と記述して、その後に設定値(オプション)を記述します。
+
+    またすべてのクライアントに適用される設定は特別なグループである [client] に記述します。
+    
+    [client] グループに記述した設定はコマンドラインツールなどクライアントアプリケーションすべてに適用されますが、サーバである mysqld には適用されません。
+
+    [client] を使用する場合は [mysql] など特定のクライアントを対象としたグループよりも先に記述してください。
+    
+    同じ設定が記述されていた場合、あとから記述した内容で上書きされます。
+
+
+
+[ グループ ]
+
+    my.ini ファイルにはグループを記述することができます。
+
+    グループは [グループ] のように記述し、グループの記述のあと、
+
+    別のグループが記述されるかまたは my.ini ファイルの最後までの設定がそのグループに適用されます。
+
+
+        [グループ1]
+        オプション名=値  # グループ1に適用
+        オプション名=値  # グループ1に適用
+
+        [グループ名2]
+        オプション名=値  # グループ2に適用
+        オプション名=値  # グループ2に適用
+
+
+    グループ名には設定の対象となるプログラム名を記述します。
+
+
+
+[client]                           # clientセクション: mysqlクライアントツールへの設定
+port=3306
+socket=/tmp/mysql.sock
+
+[mysqld]                           # mysqldセクション: mysqlサーバーへの設定
+port=3306
+socket=/tmp/mysql.sock
+key_buffer_size=16M
+max_allowed_packet=8M
+
+[mysqldump]                        # mysqldumpセクション:　バックアップコマンドへの設定
+quick
+
+[mysqld_safe]                      # mysqld_safeセクション: 起動ファイル設定
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+
+
+
+デフォルトの mysqld の設定状況を確認
+
+    # MySQL システム変数の値を表示します。
+    SHOW GLOBAL VARIABLES;
+
+
+LIKE文で特定の項目のみに絞れる
+
+
+    Global な設定値を確認する🔥
+
+    SHOW GLOBAL VARIABLES LIKE '%「検索項目」%';
+
+
+    現在の databaseの設定値を確認する🔥
+
+    show variables like 'character%';
+
+
+
+my.iniファイルの記述方法
+https://www.javadrive.jp/mysql/myini/index2.html
+
+
+基礎MySQL ~その２~ my.cnf (設定ファイル)
+https://qiita.com/yoheiW@github/items/bcbcd11e89bfc7d7f3ff
+
+
+
