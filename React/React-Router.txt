@@ -1,0 +1,137 @@
+
+< React-Router の導入 Version.6 >
+
+
+react routerとは？
+
+    React Routerは複数のページを持つReactアプリケーションを構築する際に利用されるライブラリです。
+    
+    複数のページが存在するということはブラウザからアクセスするためのURLが複数存在することになります。
+    
+    レイアウトなどの共通部分もありますがページ毎に異なるコンポーネントで構成されているためURLとコンポーネントを紐づける仕組みが必要となります。
+    
+    その役割を担うのがReact Routerです。
+    
+    React Routerを利用することで例えばブラウザからURLの/aboutにアクセスするとAboutコンポーネントの内容を表示、
+    
+    別のURLである/contactにアクセスするとContactコンポーネントの内容を表示させるといったことが可能になります。
+
+    また通常のHTMLでのページ間の移動ではページを移動する度にブラウザからサーバにリクエストを送り、サーバからHTMLを受け取りページ全体を描写するためページ全体のリロードが必要となります。
+    
+    React Routerを利用した場合はページ間の移動毎にページ全体のリロードを行うのではなくJavaScriptを使ってページ内の更新が必要な箇所のみ更新を行うため
+    
+    ページ全体のリロードを行う必要がなくなりSPA(シングルページアプリケーション）としてスムーズにページ移動を行うことができます。
+
+
+    ReactのSPAでページ遷移を可能にするライブラリです。
+
+    urlに応じてcomponentを出し分けることで、あたかも複数のページが存在しているように見せることができます。
+
+    昨年末に最新のv6がリリースされました。
+    破壊的変更が多く、versionを上げる際は少し大変です。
+
+    公式documentにもアップデートの手引きが乗っています
+
+
+
+2. React-Router の Install
+
+    npm install react-router-dom
+
+
+
+3. ルーティングの設定
+
+    ユーザがアクセスしたURLによってどのような内容を戻すのかといった処理を行うことをルーティングといいまさす。
+ 
+
+
+4. Componentのルーティング登録
+
+
+Reactのアプリケーションの中でReact Routerによるルーティングの設定が行えるように[ src/index.js ]ファイルにBrowserRouterを設定します。
+
+
+[ index.js ]
+
+import ReactDOM from 'react-dom';
+import App from './App';
+
+import { BrowserRouter } from 'react-router-dom';
+
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+
+BrowerRouterを設定後App.jsファイルでRoutes, Route を importしてブラウザから(ルート)に対してアクセスがあった場合にHomeコンポーネントの内容を表示するように設定を行います。
+
+
+[ App.js ]
+
+import { Routes, Route } from 'react-router-dom';
+import Home from './routes/home';
+// import About from './routes/about';
+// import Contact from './routes/contact';
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Hello React Router v6</h1>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+5. Linkコンポーネントの設定 (静的なルーティング: aタグと同様の効果)
+
+<ul>
+  <li>
+    <Link to="/">Home</Link>
+  </li>
+  <li>
+    <Link to="/about">About</Link>
+  </li>
+  <li>
+    <Link to="/contact">Contact</Link>
+  </li>
+</ul>
+
+
+
+
+6. useNavigateによるページ遷移・画面移動 (動的なルーティング・Event駆動のJavaScriptによるページ遷移のような効果)
+
+
+
+
+
+7. useParams
+
+
+
+< 参考・引用🔥 >
+
+React Router v6 はじめでもわかるルーティングの設定方法の基礎
+https://reffect.co.jp/react/react-router-6
+
+
+入門者でもわかるReact Routerを利用したルーティング設定の基礎
+https://reffect.co.jp/react/react-router#React_Router
+
+
+
+react reduxでReact Router V6を導入する
+https://developer.so-tech.co.jp/entry/2022/06/20/100229
+
+
