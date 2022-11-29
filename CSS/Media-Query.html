@@ -1,0 +1,162 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media-Query-Test🔥</title>
+
+    
+<style>
+
+/* Media-Sizeに関係なく適用させるCSS */
+.box1 {
+    width:200px;
+    height:100px;
+}
+
+.box2 {
+    width:200px;
+    height:100px;
+}
+
+.box3 {
+    width:200px;
+    height:100px;
+}
+
+
+/* メディアクエリの範囲指定で、比較演算子を使用できる */
+
+
+/* 旧Version */
+@media (min-width: 400px) {
+  /* 幅が400ピクセル以上のスタイル */
+}
+
+/* New-Version: 比較演算子を使用できます。 */
+@media (width >= 400px) {
+  /* 幅が400ピクセル以上のスタイル */
+}
+
+
+@media (max-width: 30em) {
+  /* 幅が30em以上のスタイル */
+}
+
+
+@media (width <= 30em) {
+  /* 幅が30em以上のスタイル */
+}
+
+
+
+/* 
+    比較演算子は、2つの幅を定義する時により効率化されます。
+    たとえば、最小幅400px、最大幅600pxのビューポートの場合、今までは下記のように記述していました。
+*/
+
+@media (min-width: 400px) and (max-width: 600px) {
+  /* 400px〜600pxのスタイル */
+}
+
+
+@media (400px <= width <= 600px )  {
+  /* 400px〜600pxのスタイル */
+}
+
+
+/* 
+    メディアクエリの冗長性を減らすだけでなく、この新しい構文には正確さという利点もあります。
+    min-とmax-クエリには、定義された値が含まれます。
+    つまり、min-width: 400pxは、400pxを含む以上ということです。
+    新しい構文の比較演算子を使用すると、意味をより明確にし、クエリの衝突する可能性を回避することもできます。
+
+*/
+
+
+
+/* PC-Size */
+@media (1201px <= width) {
+    .box1 {
+        background-color: red;
+    }
+
+    .box2 {
+        background-color: blue;
+    }
+
+    .box3 {
+        background-color: chartreuse;
+    }
+        
+}
+
+/* Middle-Size */
+@media (768px <= width <= 1200px) {
+    .box1 {
+        background-color: rgb(255, 0, 119);
+    }
+
+    .box2 {
+        background-color: skyblue;
+    }
+
+    .box3 {
+        background-color: rgb(0, 255, 174);
+    }
+        
+}
+
+    
+/* SmartPhone-Size */
+@media (width <= 767px) {
+
+    .box1 {
+        background-color: orange;
+    }
+
+    .box2 {
+        background-color: aquamarine;
+    }
+
+    .box3 {
+        background-color: gray;
+    }
+
+}
+
+
+
+</style>
+</head>
+<body>
+    <h1>CSSのメディアクエリで最小値と最大値の範囲指定の方法(比較演算子)</h1>
+
+
+    <div class="box1"></div>
+    <div class="box2"></div>
+    <div class="box3"></div>
+
+
+
+    <p>ついに、メディアクエリで比較演算子（>=, <=）を使用できるようになりました！</p>
+
+    <p>幅が400px以上の場合、@media (min-width: 400px){}と定義していましたが、@media (width >= 400px){}と記述できます。</p>
+
+    <p>比較演算子だと、400pxを含む「以上」というのも分かりやすいですね。</p>
+
+
+    <p>メディアクエリの範囲指定で、比較演算子を使用できる！</p>
+
+
+
+    <h3>参考・引用</h3>
+    <ol>
+        <li>
+            <a href="https://coliss.com/articles/build-websites/operation/css/media-query-range-syntax.html" target="_blank">
+                これは朗報！ CSSのメディアクエリの範囲指定で、比較演算子を使用できるようになります
+            </a>
+        </li>
+    </ol>
+    
+</body>
+</html>
