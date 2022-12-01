@@ -1,0 +1,176 @@
+
+<style>
+/* Media-Sizeに関係なく適用させるCSS */
+.box1 {
+    width:200px;
+    height:100px;
+    background-color: red;
+}
+
+.box2 {
+    width:200px;
+    height:100px;
+    background-color: green;
+}
+
+.box3 {
+    width:200px;
+    height:100px;
+    background-color: blue;
+}
+
+.box4 {
+    width:700px;
+    height:100px;
+    background-color: orange;
+}
+
+.box5 {
+    width:700px;
+    height:100px;
+    background-color: yellowgreen;
+}
+
+.box6 {
+    width:700px;
+    height:100px;
+    background-color: skyblue;
+}
+
+
+.box7 {
+    width:700px;
+    height:100px;
+    background-color: gray;
+}
+
+
+
+.container {
+    /* 子要素が、Flexbox の対象になる */
+    display: flex;
+}
+
+.container-2 {
+    display: flex;
+
+    /* 水平方向(横方向)のどの位置に配置するかを指定するプロパティ */
+    justify-content: center;
+}
+
+.container-3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.container-4 {
+    display: flex;
+
+    /* 子要素をどの方向に配置していくかを指定するプロパティ */
+    flex-direction: column;
+
+    /* 子要素を垂直方向(縦方向)のどの位置に配置するかを指定するプロパティ */
+    align-items: center;
+}
+
+
+.container-5 {
+    display: flex;
+
+    /* 1行目は、 justify-content: space-between; で横方向に並んでいく🔥*/
+    justify-content: space-between;
+
+    /* 子要素の折り返し設定を指定するプロパティ */
+    flex-wrap: wrap;
+    /* 
+        子要素を一行、または複数行に並べるかを指定します。
+        複数行にする場合は子要素が親要素の幅を超えてしまった場合、折り返して複数行に配置されていきます。
+    */
+
+
+    /* 2行目以降は、 align-content: center; で横方向に並んでいく🔥*/
+
+    /* 複数行にした時の垂直方向(縦方向)の揃え方を設定するプロパティ */
+    align-content: center;
+
+    /* 
+        子要素が複数行に渡った場合の垂直方向の揃えを指定します。
+        flex-wrap: nowrap; が適応されていると子要素が一行になるので、align-content は無効になります。
+    */
+
+    
+}
+
+</style>
+
+<body>
+    <h1 style="text-align: center;">Flexbox-Test をするロボ玉🔥</h1>
+
+
+    <h2 style="text-align: center;">1. display: flex; のみ => 横並びになる🔥</h2>
+
+    <div class="container">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+
+
+
+    <h2 style="text-align: center;">2. display: flex; & justify-content: center; => 横並び & 中央配置🔥</h2>
+
+    <div class="container-2">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+
+
+
+    <h2 style="text-align: center;">3. display: flex; & justify-content: space-between; => 横並び & 等間隔でStart から End まで配置される🔥</h2>
+
+    <div class="container-3">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+
+
+    <h2 style="text-align: center;">4. flex-direction: column; & align-items: center; => 縦並び & 垂直方向の並びを中央に配置する🔥</h2>
+
+    <div class="container-4">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+
+
+    <h2 style="text-align: center;">5. flex-wrap: wrap; & align-content: center; => 折り返し設定 & 2行目以降の横方向の並び方を設定する🔥</h2>
+
+
+    
+    <div class="container-5">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <div class="box3"></div>
+    </div>
+
+
+
+
+
+</body>
+
