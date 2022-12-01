@@ -1,0 +1,245 @@
+
+< Flexbox >
+
+1. Flexboxとは？
+
+    Flexbox（FlexibleBoxLayoutModule）とは、CSSレイアウトを簡単に作れるモードのこと
+
+
+
+2. Flexboxの基本的な書き方
+
+    まずはFlexboxレイアウトの基本的な書き方をマスターしましょう。
+    
+    Flexコンテナーと呼ばれる親要素の中に、Flexアイテムと呼ばれる子要素を入れてHTMLは完了です。
+
+    以下の例では親要素である「container」というクラスのついた div の中に、子要素である「item」というクラスのついた div が入っています。
+
+
+        <div class="container">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+        </div>
+
+        .container {
+            display: flex;
+        }
+
+
+    子要素が縦に並んでいる状態です。
+
+    Flexboxを使って子要素を横並びにするには、親要素に display: flex; を指定するだけOK。
+
+
+
+
+3. 親要素（Flexコンテナー）に指定するプロパティ🔥
+
+    Flexboxで親要素に指定するプロパティと子要素に指定するプロパティが存在します。
+    
+    指定する要素を間違えないように注意しましょう。まずは親要素のものをまとめました。
+
+    
+3-1. flex-direction … 子要素の並ぶ向き
+
+    ・子要素をどの方向に配置していくかを指定するプロパティー。横または縦に配置できます。
+
+
+    [ flex-direction の使用例 ]
+
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+
+
+
+    [ flex-direction で使える値 ]
+        
+
+        1. row（初期値・Default値）… 子要素を左から右に配置
+
+        2. row-reverse … 子要素を右から左に配置
+
+        3. column … 子要素を上から下に配置
+
+        4. column-reverse … 子要素を下から上に配置
+
+
+
+3-2. flex-wrap … 子要素の折り返し
+
+    ・子要素を一行、または複数行に並べるかを指定します。
+    
+        複数行にする場合は子要素が親要素の幅を超えてしまった場合、折り返して複数行に配置されていきます。
+
+
+    [ flex-wrap の使用例 ]
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+
+    [ flex-wrap で使える値 ]
+
+
+        1. nowrap（初期値）… 子要素を折り返しせず、一行に並べる
+
+        2. wrap … 子要素を折り返し、複数行に上から下へ並べる
+
+        3. wrap-reverse … 子要素を折り返し、複数行に下から上へ並べる
+
+
+
+3-3. flex-flow … flex-directionとflex-wrapをまとめて指定
+
+    ・flex-direction と flex-wrap を一行で指定できるプロパティー。初期値は row nowrap。
+
+    [ flex-flowの使用例 ]
+    
+        .container {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+
+
+3-4. justify-content … 水平方向の揃え
+
+    ・親要素に空きスペースがあった場合、子要素を水平方向のどの位置に配置するかを指定します。
+
+
+    [ justify-content の使用例 ] 
+
+        .container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+
+    [ justify-content で使える値 ]
+
+        1. flex-start（初期値）… 行の開始位置から配置。左揃え。
+                
+        2. flex-end … 行末から配置。右揃え。
+
+        3. center … 中央揃え
+
+        4. space-between … 最初と最後の子要素を両端に配置し、残りの要素は均等に間隔をあけて配置
+
+        5. space-around … 両端の子要素も含め、均等に間隔をあけて配置
+
+
+
+3-5. align-items … 垂直方向の揃え
+
+    ・親要素に空きスペースがあった場合、子要素を垂直方向のどの位置に配置するかを指定します。
+
+
+    [ align-itemsの使用例 ]
+
+        .container {
+            display: flex;
+            align-items: center;
+        }
+
+
+    [ align-itemsで使える値 ]
+
+
+    stretch（初期値）… 親要素の高さ、またはコンテンツの一番多い子要素の高さに合わせて広げて配置
+
+    flex-start … 親要素の開始位置から配置。上揃え。
+    
+    flex-end … 親要素の終点から配置。下揃え。
+    
+    center … 中央揃え
+    
+    baseline … ベースラインで揃える
+
+
+
+3-6. align-content … 複数行にした時の揃え
+
+    ・子要素が複数行に渡った場合の垂直方向の揃えを指定します。
+    
+        flex-wrap: nowrap; が適応されていると子要素が一行になるので、align-content は無効になります。
+
+
+    [ align-contentの使用例 ]
+
+        .container {
+            display: flex;
+            align-content: space-between;
+        }
+
+
+    [ align-contentで使える値 ]
+
+    stretch（初期値）… 親要素の高さに合わせて広げて配置
+
+    flex-start … 親要素の開始位置から配置。上揃え。
+    
+    flex-end … 親要素の終点から配置。下揃え。
+    
+    center … 中央揃え
+    
+    space-between … 最初と最後の子要素を上下の端に配置し、残りの要素は均等に間隔をあけて配置
+    
+    space-around … 上下端にある子要素も含め、均等に間隔をあけて配置
+
+
+
+
+
+4. Flexboxのメリット
+
+    Flexboxを使うと、以下のようなメリットがあります。
+
+        複雑な内容を上下左右に簡単にレイアウト可能
+
+        高さが消えず、floatの場合は必要なclearfixが不要
+
+        HTMLソースはそのままに、CSSのみで順序を入れ替え可能
+
+        中央寄せ、均等分布などのような整列をHTML上で簡単に実現可能
+
+        親や子の箱のサイズが拡大縮小しても、それに応じて柔軟性高くレイアウトが可変する
+
+
+5. Flexboxの適用範囲🔥
+
+    「display: flex;」で指定すれば、その範囲が Flexbox の対象になります。
+
+
+
+
+6. Flexboxのおすすめチートシート🔥
+
+チートシートを参照しながら、実際に使って覚えていきましょう。
+
+
+1. Flexbox Cheat Site
+https://flexbox-cheat.site/
+
+
+
+2. 日本語対応！CSS Flexboxのチートシートを作ったので配布
+https://www.webcreatorbox.com/tech/css-flexbox-cheat-sheet
+
+
+3. 2021年版、Flexboxでどのように配置されるかをまとめたチートシート
+https://coliss.com/articles/build-websites/operation/css/flexbox-cheat-sheets.html
+
+
+4. CSS Flexbox エンジニアのためのWebチートシート
+https://web-cheatsheet.com/css-flexbox
+
+
+
+
+
