@@ -1,9 +1,12 @@
 <?php
 setlocale(LC_ALL, 'ja_JP.UTF-8');
 
-$DataDir = dirname(__FILE__) . '/recoding/';
+$DataDir = dirname(__FILE__) . '/uwe/sender/';
 
 chdir($DataDir);
+
+// 呼び出すPython-Program
+define('Python_Path', '/usr/share/zabbix/connection/Robotama.py');
 
 // $files = scandir($DataDir);
 
@@ -11,6 +14,8 @@ chdir($DataDir);
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
+
+$mid = $_REQUEST['mid'];
 
 try {
 
@@ -72,7 +77,8 @@ try {
             $proc_path_list = glob($DataDir. '*.sender_proc');
             $rec_path_list = glob($DataDir. '*.rec');
 
-            if ($proc_path_list == false || $rec_path_list == false) {
+            // PHP では、空配列は false な値なので注意！
+            if ( (!is_array($proc_path_list) && $proc_path_list == false) || (!is_array($rec_path_list) && $rec_path_list == false) ) {
                 throw new Exception("glob error. {$DataDir}");
             }
 
@@ -186,7 +192,8 @@ try {
             $proc_path_list = glob($DataDir. '*.sender_proc');
             $rec_path_list = glob($DataDir. '*.rec');
 
-            if ($proc_path_list == false || $rec_path_list == false) {
+            // PHP では、空配列は false な値なので注意！
+            if ( (!is_array($proc_path_list) && $proc_path_list == false) || (!is_array($rec_path_list) && $rec_path_list == false) ) {
                 throw new Exception("glob error. {$DataDir}");
             }
 
@@ -205,6 +212,7 @@ try {
 
             // [ Status ごとの処理 ]
             // 1. status: 0 => 接続停止する (収録中なら、収録停止する)
+
             if ($status == 0)  {
 
                 // 収録中の判定ファイルを削除する
@@ -219,6 +227,46 @@ try {
                     if (!$delete_process_result) { throw new Exception("Error when deleting files. Failed to delete {$target_process_path}."); }
                 }
 
+                // 接続停止する => Process-Killの処理を実行する
+
+                // $mid 関連のファイルをListで取得する
+                $mid_list = glob($DataDir. "{$mid}*");
+
+                $command_file = "{$mid}.command";
+
+                // $mid.processID のファイル
+                $kill_target_file = null;
+
+                foreach ($mid_list as $file_path) {
+                    $file = basename($file_path); // ファイル名を取得
+                    if ($file == $target_process_file) continue;
+                    else if ($file == $target_rec_file) continue;
+                    else if ($file == $command_file) continue;
+                    else $kill_target_file = $file;
+                }
+
+                // // echo $kill_target_file . "\n";
+
+                // if (is_null($kill_target_file)) throw new Exception("{$mid} process file does not exist.");
+
+                // $pid = substr($kill_target_file, strrpos($kill_target_file, '.') + 1); // 拡張子を取得
+
+                // // Process-Kill コマンドを作成する
+                // $kill_command = "kill {$pid}";
+
+                // // echo $kill_command . "\n";
+
+                // $last_line = system($kill_command, $status_code);
+
+                // // kill コマンドの返り値(status_code) => (1: 正常終了, 0: 異常終了)
+                // if ($status_code == 0) {
+                //     throw new Exception("Process kill failed. The process id is {$pid}.");
+                // } else {
+                //     // ProcessをKill が成功したら、pidファイルの削除
+                //     $delete_pid_result = unlink($kill_target_file);
+
+                //     if (!$delete_pid_result) throw new Exception("Error when deleting files. Failed to delete {$DataDir}{$kill_target_file}.");
+                // }
 
             // 2. status: 1 => 接続開始する or 接続済み & 収録中の場合は、収録停止して、ただの接続状態にする
             } else if ($status == 1) {
@@ -235,16 +283,17 @@ try {
                     if (!$create_process_result) { throw new Exception("Error when creating files. Failed to create file {$target_process_path}."); }
                 }
 
-                // 新規の接続なので、Python-Script を呼び出す
+                // 新規の接続なので、Python-Script を呼び出す => Pythonの実行プログラムを呼び出す: 引数は、$mid
+                $command = 'python3 '. Python_Path ." {$mid}";
 
-                // $command = "export LANG=ja_JP.UTF-8; ls -al";
+                // echo $command . "\n";
 
-                // Pythonの実行プログラムを呼び出す
-                // $command = "export LANG=ja_JP.UTF-8; python /usr/share/zabbix/connection/DataRegister.py {$mid}";
-                
-                // $command_result = exec($command, $output);
+                $command_result = exec($command, $py_return);
 
-                // foreach ($output as $val) {
+                // Python は $midを受け取ったら、/usr/share/zabbix/uwe/sender の sender_procファイルにデータを出力する
+
+                // Python の標準出力をPHP側で出力する
+                // foreach ($py_return as $val) {
                 //     echo $val . "\n";
                 // }
 
@@ -275,8 +324,17 @@ try {
                 }
 
                 // Pythonの実行プログラムを呼び出す
-                // $command = "export LANG=ja_JP.UTF-8; python /usr/share/zabbix/connection/DataRegister.py {$mid}";
-                // $command_result = exec($command, $output);
+                // 新規の接続なので、Python-Script を呼び出す => Pythonの実行プログラムを呼び出す: 引数は、$mid
+                $command = 'python3 '. Python_Path ." {$mid}";
+
+                // echo $command . "\n";
+
+                $command_result = exec($command, $py_return);
+
+                // Python の標準出力をPHP側で出力する
+                // foreach ($py_return as $val) {
+                //     echo $val . "\n";
+                // }
             }
 
             // action: change の正常系-レスポンス
