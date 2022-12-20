@@ -1,0 +1,187 @@
+@charset "UTF-8";
+
+/* --------------------------------------
+  1. 全体に適用する基本のStyle
+-------------------------------------- */
+html {
+  font-size: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: #383e45;
+  font-size: 0.9rem;
+}
+a {
+  text-decoration: none;
+}
+img {
+  max-width: 100%;
+}
+li {
+  list-style: none;
+}
+
+
+/* --------------------------------------
+  2. コンテンツの表示幅を調整する Wrapper
+-------------------------------------- */
+
+.wrapper {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 4%;
+}
+
+
+/* --------------------------------------
+  Header
+-------------------------------------- */
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+a.link-btn {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+#header nav ul {
+  display: flex;
+  align-items: center;
+}
+
+#header li {
+  margin-left: 30px;
+  text-align: center;
+}
+
+/* 疑似クラス: hover でホバー時に透過させる */
+#header nav li a:hover {
+  opacity: 0.7;
+}
+
+
+/* --------------------------------------
+  MainVisual
+-------------------------------------- */
+#main-visual {
+    width: 100%;
+    max-width: 1920px;
+    height: 600px;
+    object-fit: cover;
+}
+
+/* 
+object-fit: contain => アスペクト比を維持したまま、
+画像全体がボックス内に収まるように拡大縮小されます。
+
+【CSS】object-fitで画像の中央配置もトリミングも自由自在
+https://codeisle.info/blog/209/
+*/
+
+
+/* --------------------------------------
+  Main-Section
+-------------------------------------- */
+
+.section-title {
+  display: inline-block; /* 下線の長さをテキスト幅にする */
+  border-bottom: solid 1px #383e45;
+  font-size: 2rem;
+}
+
+
+/* --------------------------------------
+  About
+-------------------------------------- */
+
+
+#about .contents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#about img {
+  border-radius: 50%; /* 写真を丸くする */
+  width: 100px;
+  height: 100px;
+}
+
+
+#about .text {
+  text-align: left;
+  margin-left: 20px;
+}
+
+
+/* --------------------------------------
+  Bicycle
+-------------------------------------- */
+
+#bicycle .contents {
+  display: flex;
+  justify-content: space-between;
+}
+
+#bicycle li {
+  width: 32%;
+}
+
+
+/* --------------------------------------
+  Footer
+-------------------------------------- */
+
+#footer {
+  margin-top: 100px;
+  text-align: center;
+}
+
+
+/* --------------------------------------
+  SmartPhone
+-------------------------------------- */
+
+/* ブレイクポイント: width: 600px */
+@media (width <= 600px) {
+
+  /*-------------------------------------------
+  Mainvisual
+  -------------------------------------------*/
+  #mainvisual img {
+    height: calc(100vh - 60px);
+  }
+
+  /*-------------------------------------------
+  About
+  -------------------------------------------*/
+  #about .contents {
+    flex-direction: column;
+  }
+  
+  
+  /*-------------------------------------------
+  Bicycle
+  -------------------------------------------*/
+  #bicycle .contents {
+    flex-direction: column;
+  }
+
+  #bicycle li {
+    width: 90%
+  }
+
+
+
+}
+
+
+
+
