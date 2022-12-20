@@ -1,0 +1,212 @@
+@charset "UTF-8";
+
+/* 
+
+[ CSSの記述基本ルール(コーティング規約的なもの) ]
+
+1. 全体に適用するStyleから記述する => 上流思考・CSSの詳細度による
+
+2. Pageの上から下に向けて、記述する => 構成・構造の順に記述する
+
+*/
+
+/* 1. サイト全体に適用するStyle */
+
+html {
+	/* Webサイト全体のDefault-Style設定 */
+  font-size: 100%;
+}
+body {
+  /* bodyにDefault font-color & font-size  */
+  color: #383e45;
+  font-size: 0.9rem;
+}
+a {
+  text-decoration: none;
+}
+img {
+  max-width: 100%;
+}
+li {
+  list-style: none;
+}
+
+/* 2. サイト・タイトルに対するStyle */
+
+.site-title {
+  width: 120px;
+  line-height: 1px;
+  padding: 10px 0;
+}
+.site-title a {
+  display: block;
+}
+
+
+/* 3. 共通項目(Generics・Components) */
+
+.section-title {
+	/* inline-block でテキスト幅 & ブロック状態にしている */
+  display: inline-block;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 60px;
+  border-bottom: solid 1px #383e45;
+}
+
+/*
+	emは大文字のMを基準としたサイズ表記が由来となっており、Mの高さを基準とする意味で用います。
+	またemは何かの略と思ってしまいますが、そうではなく単純にMの読み方そのものを指します。
+
+	emとremの関係は？
+
+	em(エム) は、親要素を基準としたフォントサイズ指定
+
+
+	rem は、ルート要素のフォントサイズを基準とします。
+	rem は、Root em の略 => 1em = 16px 
+	
+	m値では親要素の設定値により影響を受けてしまいます。rem値はルート要素を基準としていますので影響がありません。
+	そのため親子関係が複雑な文書ではルート要素を基準としたremで指定するのも効率的です。
+
+	CSSのemとは？フォントサイズ指定方法の違いを比較解説！
+	https://and-engineer.com/articles/YRXMLBAAACEA1xAf
+
+	CSSの単位px、em、remはどれをどこで使用するのがよいか、ピクセルとアクセシビリティにおける意外な真相
+	https://coliss.com/articles/build-websites/operation/css/about-pixels-and-accessibility.html
+
+*/
+
+.content-title {
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+/* 
+	4. header, section にて適用する Wrapper => サイト全体のレイアウト調整
+*/
+
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto 100px auto;
+  padding: 0 4%;
+  text-align: center;
+}
+
+/*-------------------------------------------
+ヘッダー
+-------------------------------------------*/
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+}
+#header ul {
+  display: flex;
+  padding: 10px 0;
+}
+#header li {
+  margin-left: 30px;
+}
+#header li a {
+  color: #24292e;
+}
+#header li a:hover {
+  opacity: 0.7;
+}
+
+/*-------------------------------------------
+Mainvisual
+-------------------------------------------*/
+#mainvisual {
+  margin-bottom: 80px;
+}
+#mainvisual img {
+  width: 100%;
+  max-width: 1920px;
+  height: 600px;
+  object-fit: cover;
+
+/* 
+    object-fit: contain => アスペクト比を維持したまま、画像全体がボックス内に収まるように拡大縮小されます。
+
+    【CSS】object-fitで画像の中央配置もトリミングも自由自在
+    https://codeisle.info/blog/209/
+*/
+}
+
+/*-------------------------------------------
+About
+-------------------------------------------*/
+#about .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#about img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 30px;
+}
+#about .text {
+  text-align: left;
+}
+
+/*-------------------------------------------
+Bicycle
+-------------------------------------------*/
+#bicycle ul {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 32 × 3 = 96% 残りの4% が、2%ずつの幅になる！ */
+#bicycle li {
+  width: 32%;
+}
+
+/*-------------------------------------------
+footer
+-------------------------------------------*/
+#footer {
+  font-size: 0.5rem;
+  padding: 10px 0;
+  text-align: center;
+}
+
+
+/*-------------------------------------------
+SmartPhone
+-------------------------------------------*/
+@media screen and (max-width: 600px) {
+
+  /*-------------------------------------------
+  Mainvisual
+  -------------------------------------------*/
+  #mainvisual img {
+    height: calc(100vh - 60px);
+  }
+
+  /*-------------------------------------------
+  About
+  -------------------------------------------*/
+  #about .content {
+    flex-direction: column;
+  }
+  #about img {
+    margin-right: 0;
+  }
+
+  /*-------------------------------------------
+  Bicycle
+  -------------------------------------------*/
+  #bicycle ul {
+    flex-direction: column;
+  }
+  #bicycle li {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+}
