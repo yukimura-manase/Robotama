@@ -1,0 +1,57 @@
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本地図🔥</title>
+
+    <!-- DeckGL CDN -->
+    <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
+
+    <!-- optional if mapbox base map is needed -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        new deck.DeckGL({
+        mapStyle: 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json',
+        initialViewState: {
+            longitude: 137, // 経度
+            latitude: 37,   // 緯度
+            zoom: 5,        // ズーム
+            minZoom: 2,     // 最小ズーム
+            maxZoom: 8,     // 最大ズーム
+            pitch: 30,      // 傾き・角度
+            bearing: 10,    // 回転
+        },
+        controller: true,
+        layers: []
+        });
+    </script>
+</body>
+</html>
+
+<!-- 
+    
+    DeckGLで日本地図を表示する🔥
+
+    < 参考・引用🔥 >
+
+    1. Deck.gl の世界へようこそ！ ３歩でわかる お手軽 データビジュアライゼーション
+    https://qiita.com/dsudo/items/b1db5f965d1eb58e8f38
+
+
+    2. Reactなしでdeck.glを使用する
+    https://deck.gl/docs/get-started/using-standalone
+
+
+ -->
