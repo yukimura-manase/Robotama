@@ -1,0 +1,403 @@
+@charset "UTF-8";
+
+
+/* -----------------------------------------------
+  全体に適用するStyle
+----------------------------------------------- */
+
+html {
+    font-size: 100%;
+}
+
+body {
+  background-color: #f0f0f0;
+  color: #000;
+  font-size: 0.8rem;
+}
+
+li {
+    list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+/* 
+  画像のレスポンシブ対応や、要素に応じた幅での表示にする🔥
+
+  max-width: 100%;
+  height: auto;
+
+  画像の大きさを最適化する max-width:100%;
+  https://www.homepage-tukurikata.com/css/max-width.html
+*/
+
+
+
+/* 
+  HTMLの画像（imgタグ）の使い方・コンプリートガイド
+  https://code-kitchen.dev/html/img/
+*/
+
+
+/* -----------------------------------------------
+  Wrapper
+----------------------------------------------- */
+
+.wrapper {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+
+
+/* -----------------------------------------------
+  Header
+----------------------------------------------- */
+
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+}
+
+#header .nav-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+#header .logo {
+  width: 100px;
+  margin-right: 20px;
+}
+
+#header ul {
+  display: flex;
+  align-items: center;
+}
+
+#header li {
+  margin-left: 30px;
+  font-size: 0.9rem;
+}
+
+#header .contact {
+  width: 12%;
+  height: 80px;
+  line-height: 80px;
+  background-color: #000;
+  color: white;
+  text-align: center;
+}
+
+/* 
+  CSSで文字を上下左右中央に配置する方法
+  https://www.esz.co.jp/blog/2847.html
+*/
+
+
+/* -----------------------------------------------
+  MainVisual
+----------------------------------------------- */
+
+
+#mainvisual img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    margin-bottom: 100px;
+}
+
+/* 
+  vh(view height)は、要素のサイズを指定する単位の1つで、100vhは、スマホの画面の高さを示します。
+
+  スマホの画面サイズを基準にしたvhは、そんな場面で役立つ単位です。
+
+*/
+
+
+
+/* -----------------------------------------------
+  Contents 共通のStyle
+----------------------------------------------- */
+
+.section-block {
+  margin-bottom: 100px;
+}
+
+.section-title {
+  margin-bottom: 50px;
+}
+
+/*
+  疑似要素を使って下線を引く
+*/
+.section-title::after {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background-color: #000;
+  display: block;
+}
+
+
+.section-title .en {
+  font-size: 2rem;
+  font-weight: normal;
+  display: block;
+}
+
+.section-title .ja {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: lighter;
+  margin-bottom: 30px;
+  /* ブロック化することで、改行されてmargin-bottomが使用できるようになる */
+}
+
+
+/* -----------------------------------------------
+  News
+----------------------------------------------- */
+
+#news .news-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+#news .news-highlight {
+  display: inline-block;
+  color: white;
+  background-color: #000;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+#news .news-list li {
+  width: calc(100%/3); /* 横幅を均等に、3等分にする */
+  border-left: 1px solid #000000; /* 縦線の設定 */
+  padding-left: 20px; /* Border との間(Padding) */
+}
+
+/* li:first-child だけ 縦線を消す */
+#news .news-list li:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+
+
+/* -----------------------------------------------
+  About
+----------------------------------------------- */
+
+#about {
+  display: flex;
+  align-items: center;
+}
+
+#about .img-box {
+  width: 55%;
+}
+
+#about .img-box img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+#about .content {
+  margin-top: 10%;
+  padding-right: 5%;
+  padding-left: 5%;
+}
+
+#about .content p {
+  line-height: 2.0;
+}
+
+
+/* -----------------------------------------------
+  Business
+----------------------------------------------- */
+
+#business .business-block {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10%; /* space-between を調整する */
+}
+
+#business .business-block .content {
+  margin-top: 50px;
+}
+
+#business .business-block img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+#business .business-block .left {
+  margin-top: 100px;
+}
+
+#business .business-block .title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  /* text-align: left; */
+
+  /* タイトルの左側に横線を引くための Style */
+  display: flex;
+  align-items: center; /* 垂直中心 */
+  justify-content: left;
+}
+
+
+/* 疑似要素で、タイトルの左側に横線を引く */
+#business .business-block .title::before {
+  border-top: 1px solid black;
+  content: ""; 
+  width: 1rem; /* 線の長さ */
+  margin-left: 10px;
+}
+
+/* 疑似要素横線の後に、1rem の margin */
+#business .business-block .title::before {
+  margin-right: 1rem;
+}
+
+/* 
+
+  【CSS】テキスト(見出し，タイトル)に横線をつける方法
+  https://www.rectus.co.jp/archives/105
+
+*/
+
+
+/* -----------------------------------------------
+  Company
+----------------------------------------------- */
+
+/*
+  テキストと画像はpositionを使って配置
+  子要素の「position: absolute;」で高さがなくなるため、
+  「height: 750px;」を指定して高さを確保
+*/
+
+
+#company {
+  display: flex;
+  align-items: center; /* アイテムを中央に配置する */
+  height: 600px;
+
+  /* 親要素に、position: relative; */
+  position: relative;
+}
+
+#company .inner-box {
+  background-color: white;
+  width: 55%;
+  padding: 10% 5%;
+}
+
+
+#company img {
+  width: 55%;
+  height: 400px;
+  object-fit: cover;
+  position: absolute;
+  right: 0;
+  top: 100px;
+}
+
+
+#company .company-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* margin:0 auto; */
+}
+
+
+/* 
+  dt + dd = 100% になるように設定 => wrap で折り返す！
+*/
+#company .company-info dt {
+  width: 20%;
+  margin-top: 10px;
+}
+
+#company .company-info dd {
+  width: 80%;
+  margin-top: 10px;
+}
+
+#company .company-info .add {
+  margin-left: 20%;
+}
+
+
+/* 
+
+
+【CSS】positionを徹底解説！簡単Webレイアウト入門
+https://blog.codecamp.jp/css-position-property
+
+*/
+
+
+/* -----------------------------------------------
+  Footer
+----------------------------------------------- */
+
+#footer {
+  background-color: white;
+  width: 100%;
+  padding: 40px 0 15px 0;
+}
+
+#footer .footer-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+#footer .logo {
+  width: 100px;
+  margin-right: 20px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* 
+  CSSで文字を上下左右中央に配置する方法いろいろ
+  https://www.esz.co.jp/blog/2847.html
+*/
+
+
+#footer .copyright {
+  font-size: 0.6rem;
+}
+
+
+
+/*-------------------------------------------
+  SmartPhone
+-------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
