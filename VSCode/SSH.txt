@@ -1,0 +1,55 @@
+
+< VSCode で SSHを使用してリモートサーバーに接続する方法🔥 >
+
+
+1. VSCode の SSH-系統の拡張機能を入れる🔥
+
+    => Remote - SSH or Remote Development (3つのまとめた拡張パック)
+
+
+2. 歯車 => SSH構成ファイルを開くを選択する => config がでてくるので、リモートサーバーの情報を記載する🔥
+
+[ config (ファイル) ]
+
+
+Host 192.168.100.222
+    HostName 192.168.101.222
+    User robotama
+    Port 22
+
+
+[ ssh-接続 ]
+
+ssh 192.168.101.222
+
+user: robotama
+
+pass: robotama
+
+ssh robotama@192.168.101.222
+
+
+
+
+
+< CLI で SSH-接続🔥 >
+
+
+    ssh remote_host
+
+
+    ssh remote_username@remote_host
+
+
+    ssh robotama@192.168.101.222
+
+    Passwordを求められるので、入力してEnter
+
+
+
+SSHを使用してリモートサーバーに接続する方法
+https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server-ja
+
+
+
+
