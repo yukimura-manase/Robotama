@@ -1,0 +1,91 @@
+
+
+< UnicodeDecodeError: 'cp932' codec can't decode byte 0x83 in position 105: illegal multibyte sequence エラーの解決方法🔥 >
+
+UnicodeDecodeError: 'cp932' コーデックは位置 0 のバイト 0xef をデコードできません: 不正なマルチバイト シーケンス
+
+
+
+このUnicodeDecodeErrorエラーはcsvファイルだけでなく、json形式のデータなどでも同様のエラーが発生します。
+
+csvやjsonなどを扱うアプリ開発の経験がある方は一度はこのエラーを経験したことがあるかと思います。
+
+本記事では、このUnicodeDecodeError: 'cp932' codec can't decodeエラーの原因と解決方法について解説していきます。
+
+エラー発生時の環境はPythonのバージョンは3.7.6、Anaconda使用、OSはWindows10です。
+
+
+
+エラー解析
+    cp932とは
+    cp932とは日本語の文字コードの１つであり、Shift＿JIS規格の独自実装。
+
+    Pythonは基本デフォルトエンコーディングとして「utf-8」を使用するが、cp932という別の文字コードがエラーの中に出ているため、文字コードの違いがエラーを引き起こしていると推測できる。
+
+    UnicodeDecodeErrorとは
+    UnicodeDecodeErrorが発生する条件は、ファイルの文字コードと、読み込み時に指定した文字コードが異なる際に、変換エラーとして発生します。
+
+    このエラーの原因には、読み込みたいファイルの文字コード・プログラムファイルの文字コード・OSのデフォルト文字コードなどを疑うといいです。
+
+
+
+
+
+UnicodeDecodeErrorの発生原因
+
+    今回に関してエラーが発生した原因は、
+    Windowsのデフォルトの標準出力がcp932になることが起因しています。
+
+    Windowsはstr型（UTF-8）をbyte型（cp932）に勝手に変換しようとしますが、変換できないためUnicodeDecodeErrorが発生します。
+
+    私の場合は、open関数でcsvファイルを開こうとしていました。
+
+    f = open(CSV_FILE)
+    しかしopen関数はプラットフォームの出力方式にencoding方式を合わせます。
+    そのためcsvファイルをcp932で開き、エラーが発生していました。
+
+
+
+
+エラーの解決方法
+
+
+    デフォルトエンコーディングの確認
+    エラー解決に向けて、まずは現在使用しているPythonのデフォルトエンコーディングを確認します。
+
+    以下のようにsys.getdefaultencodingを使用して、デフォルトエンコーディングを確認しましょう。
+
+    $ python
+    >>> import sys
+    >>> sys.getdefaultencoding()
+    'utf-8'
+    私の環境ではデフォルトエンコーディングが「utf-8」であることがわかりました。
+
+
+
+エラー解決
+
+
+    単純にencoding方式を「utf-8」に指定することでこのエラーを回避することができます。
+
+    f = open(CSV_FILE, encoding="utf-8")
+    もしjsonなどで以下のようなエラーが発生した場合は、UTF-8のBOM付きにする必要があります。
+
+    json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+
+
+    BOM付きにするには以下のようにエンコーディングします。
+
+    encodeing=”utf-8_sig”
+    BOM付きとは
+    BOM（Byte Order Mark）とは、Unicode文書の先頭に付与される符号。文字コードや符号化形式の判別に使用される
+
+
+
+
+< 参考・引用🔥 >
+
+【Python】UnicodeDecodeError: 'cp932' codec can't decodeの原因と解決方法
+https://office54.net/python/error/unicode-decode-cp932
+
+
