@@ -1,0 +1,72 @@
+
+
+< Pythonで ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate エラーの解決方法 >
+
+
+
+[ エラー内容 ]
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate (_ssl.c:997)
+
+[ 翻訳 ]
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] 証明書の検証に失敗しました: 自己署名証明書 (_ssl.c:997)
+
+
+[ 概要 ]
+
+requestsモジュールを利用していて、
+https:// で始まるURLに対してリクエストを実施しようとしているときに発生するエラー。
+
+
+[ 解決策（暫定対応） ]
+
+※恒久的な対応ではない点に注意。
+
+リクエスト時の関数にverify=Falseを指定するだけでOK。
+
+# before
+response = requests.get("https://example.com")
+
+# after
+response = requests.get("https://example.com", verify=False)
+
+
+[ 解決策（ちゃんとした対応） ]
+
+今回接続したいAPIは、Root認証局の証明書と中間認証局の証明書が必要だった。
+エラーの原因は、システムがRoot認証局の証明書については持っていたが、中間認証局の証明書を持っていなかったことだった。
+
+
+
+1. verifyにRoot認証局の証明書と中間認証局の証明書のあるフォルダパスを渡す
+
+requests.get('https://example.com/someapi', verify='/etc/ssl/certs')
+
+2. 中間認証局の証明書を含めた、単一の証明書ファイルを更新する
+
+requests.get('https://example.com/someapi', verify='/etc/ssl/certs/ca-certificates.crt')
+
+
+3. REQUESTS_CA_BUNDLEという環境変数にセットすれば、verify引数をセットしなくてもよくなる。
+
+
+$ REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt python
+
+>> requests.get('https://example.com/someapi')
+
+
+
+
+< 参考・引用🔥 >
+
+
+
+1. requestsでAPIコールする際にSSL: CERTIFICATE_VERIFY_FAILEDが出ても、認証を切らない対処法
+https://qiita.com/ryan5500/items/24fe626a25f977c0e860
+
+
+2. 【Python】[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1123) エラー
+https://developers-book.com/2020/09/24/302/
+
+
+
+
