@@ -46,9 +46,14 @@ finally :
 
     print('必ず最後に実行したり処理を実行するブロック')
 
+    try:
+        print(Robotama)
+
+    # 例外を無視したい場合は、pass を使用する
+    except Exception as error:
+        pass
 
     try :
-
         # 意図的に Exception クラスのエラーを発生させる
         raise Exception("Robotama-Error-発生")
 
