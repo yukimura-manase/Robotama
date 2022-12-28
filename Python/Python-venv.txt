@@ -1,0 +1,230 @@
+
+< Python venvによる環境構築 >
+
+・ 独立した仮想環境を作成する！
+
+
+1. 仮想環境の作成
+
+    では、最初の仮想環境を作成しましょう。sample1 ディレクトリで、次のコマンドを実行します。
+
+    C:\Users\user1\sample1>python -m venv .venv
+    このコマンドは、指定したディレクトリ C:\Users\user1\sample1\.venv に仮想環境を作成します。仮想環境のディレクトリ名は、.venv 以外でも、好きな名前をつけても大丈夫です。
+
+
+
+2. 仮想環境への切り替え
+
+    Windowsでは、Python を コマンド プロンプトで実行する場合と、PowerShell で実行する場合で、仮想環境の使い方が違います。
+
+
+    2-1. コマンド プロンプトでの切り替え
+
+        作成した仮想環境 .venv ディレクトリにある Scripts\activate.bat を実行します
+
+            C:\Users\user1\sapmle1>.venv\Scripts\activate.bat
+            
+            (.venv) C:\Users\user1\sample1>
+
+
+        コマンド プロンプトの先頭に (.venv) と表示され、仮想環境で実行中であることを示します。
+
+
+
+
+3. パッケージのインストール
+
+    仮想環境を使用中に pip モジュールでPyPIからパッケージをインストールすると、仮想環境にインストールされます。
+    
+    sample.py で使っている、requests モジュールをインストールしましょう。
+
+        (.venv) C:\Users\user1\sample1>python -m pip install requests
+        ここで、さきほど作成した sample.py を実行してみましょう。
+
+        (.venv) C:\Users\user1\sample1>python sample.py
+            
+    こんどは、エラー無しで実行できるはずです。
+
+    インストールしたモジュールは、仮想環境内にのみ書き込まれ、元の Pythonや、他の仮想環境からは利用できません。
+
+
+
+
+仮想環境
+https://www.python.jp/install/windows/venv.html
+
+
+
+
+venv について
+
+venv を使うと pip によるパッケージの導入状態をプロジェクトごとに独立させることができる．
+
+venv は virtualenv が Python 3.3 から標準機能として取り込まれたもの．
+
+別途ソフトウェアをインストールすることなく使用できるため，最も手軽に仮想環境を管理する方法の一つと言える．
+
+2 系を偶に使うという程度なら 3 系は venv，2 系は virtualenv で管理すると同じように管理できるので良い．
+
+Since Python 3.3, a subset of it has been integrated into the standard library under the venv module.
+
+Virtualenv — virtualenv 16.6.1 documentation
+
+Python 3.x.x 下に組み込まれた機能なので，Python 自体のバージョンは管理できない．
+
+venv と同等な py"v"env (≠pyenv) というものがあるが，Puthon 3.5 以降 pyvenv は非推奨となっている．
+
+注釈 pyvenv スクリプトは Python 3.6 で非推奨となり、代わりに python3 -m venv を使い、仮想環境を動かす Python インタープリタを取り違える可能性を防ぎやすくします。
+
+
+venv: Python 仮想環境管理
+https://qiita.com/fiftystorm36/items/b2fd47cf32c7694adc2e
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pythonのバージョンを指定して、venvを実行する！
+
+
+venvのインストール
+
+    venvはPythonの仮想環境作成のためにPython 3.3 から標準に組み込まれたモジュールです。標準組込みなので、新たにインストールは必要ありません。
+
+仮想環境を作る
+
+    Pythonのバージョンを選ぶ
+    まず、どのバージョンのPythonで仮想環境を作るか決めます。
+
+    この時、自分の環境にインストールされているバージョンからしか選べないことに注意です。
+    自分の環境に入っていないバージョンで作成したい場合は、インストールしましょう。
+
+
+python3.9 -m venv myenv
+
+
+
+
+
+
+【Python】venvを使った仮想環境の作り方
+https://hibiki-press.tech/python/venv/4567
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< DatasetParse.py => 必要なモジュールのinstall >
+
+
+
+# pipでElasticsearchクライアントのインストール
+    python -m pip install elasticsearch
+
+
+# Excelを解析するためのライブラリをインストール Ver.2
+
+    python -m pip install openpyxl
+
+
+# PDFを解析するためのライブラリをインストール
+    python -m pip install pdfminer.six
+
+
+# パワーポイントを解析するためのライブラリをインストール
+    python -m pip install python-pptx
+
+
+# Wordを解析するためのライブラリをインストール
+    python -m pip install python-docx
+
+
+
+# requestsをpipからインストール => requestsライブラリ(HTTP通信)を実施するためのライブラリ！
+    python -m pip install requests
+
+# tqdmをインストール
+    python -m pip install tqdm
+
+
+# IISデプロイのためにモジュールをインストール
+    python -m pip install wfastcgi
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< DatasetParse.py 仕様モジュールたち >
+
+# zipfileを解析するためのzipfileモジュールを読み込む!
+import zipfile
+
+# ディレクトリ移動のために必要
+import os
+
+# 指定したフォルダにある特定のファイルを取得するためにglob関数を使用！
+import glob
+
+
+
+# Pythonクライアント用のElasticsearchライブライをimportする！
+from elasticsearch import Elasticsearch
+
+
+# Word
+import docx
+
+
+# Excel
+import openpyxl
+
+# PowerPoint
+from pptx import Presentation
+
+# PDF
+from pdfminer.converter import PDFPageAggregator
+from pdfminer.layout import LAParams, LTContainer, LTTextBox
+from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+from pdfminer.converter import TextConverter
+from pdfminer.pdfpage import PDFPage
+
+
+from io import StringIO
+
+
+from chardet.universaldetector import UniversalDetector
+
+import chardet
+
+# chardetによるエンコーディングの判定とテキストデータのデコード
+# sjis.txtの内容：このファイルはシフトJISでエンコーディングされています
+from chardet import detect
+
+
+from pathlib import Path
+from typing import List
+
+
+# 日付ライブラリ
+import datetime
+import time
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
