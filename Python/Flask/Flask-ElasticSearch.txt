@@ -1,0 +1,93 @@
+
+< elastic_python_venv(開発用)を起動させる >
+
+# ディレクトリ移動
+
+    cd C:\Users\suda\Desktop\elastic_python_venv
+
+
+# venvアクティベート
+
+    .venv\Scripts\activate
+
+
+
+(.venv) C:\Users\suda\Desktop\elastic_python_venv>
+
+# Flask-APIに移動
+
+    cd flask-api\src
+
+(.venv) C:\Users\suda\Desktop\elastic_python_venv\flask-api\src>
+
+# Python実行
+    python main.py
+
+
+
+http://192.168.101.176:8080/
+
+
+
+# ElasticSearch内の検索元データをall-delete => init(初期化)するエンドポイント
+http://192.168.101.176:8080/elasticsearch/clear/dataset/init
+
+
+
+
+# ElasticSearchにinitデータを投入するエンドポイント => 初回のみ起動させる！
+http://192.168.101.176:8080/elasticsearch/init/create/dataset
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< ElasticSearch(開発用)を起動させるコマンド >
+
+
+# ElasticSearchディレクトリに移動
+    cd C:\elasticsearch-7.16.2
+
+# ElasticSearchのプラグイン日本語検索プラグイン「 kuromoji 」をインストール
+    bin/elasticsearch-plugin install analysis-kuromoji
+
+
+# Elasticsearch を起動
+   .\bin\elasticsearch.bat
+
+# ローカルホスト9200番でサーバーが立てば環境構築成功！！
+    http://localhost:9200/ 
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+< Kibanaの起動 >
+
+# Kibanaディレクトリに移動
+    
+    cd c:\kibana-7.16.2-windows-x86_64
+
+
+# Kibanaを起動します。
+    .\bin\kibana
+
+
+# ローカルホスト5601番でサーバーが立てば環境構築成功！！
+    http://localhost:5601/
+
+
+# kibanaのコンソール
+
+    http://localhost:5601/app/kibana#/dev_tools/console
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
