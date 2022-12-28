@@ -1,0 +1,186 @@
+
+< Flaskを動作させるための仮想環境を構築する >
+
+
+1. Virtual Environment（仮想環境）
+
+コマンドプロンプトを開き、pip を使って、virtualenvをインストールします(virtualenv-16.7.5)。
+
+コマンドプロンプト.cmd
+    
+    pip install virtualenv
+
+
+
+2. 仮想環境の構築と有効化
+
+    c:\projects\flaskyという開発用フォルダを作成し、そこに仮想環境（venv）を構築します。
+
+
+    コマンドプロンプト.cmd
+    c:\>mkdir projects
+    c:\>cd projects
+    c:\projects>mkdir flasky
+    c:\projects>cd flasky
+    c:\projects\flasky>virtualenv venv
+
+
+3. 構築後、仮想環境をactivateコマンド（batファイル）で有効化します。
+
+    コマンドプロンプト.cmd
+    flaskyプロジェクト内にて、
+
+    venv\Scripts\activate
+
+
+
+4. Flaskのインストール
+仮想環境が有効な状態で、Flaskをインストールします。
+
+    コマンドプロンプト.cmd
+    pip install flask
+
+
+5. ソースコードと実行
+
+    hello.pyをテキストエディタで作成し、実行します。
+
+    hello.py
+    from flask import Flask
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        return 'Hello, Flask World!'
+
+    if __name__ == '__main__':
+        app.run(debug=True)
+
+
+6. ファイルの実行
+    python hello.py
+
+
+7. 終了
+
+    Ctrl+Cで実行を中断し、deactivateコマンド（batファイル）で仮想環境を無効化します。
+
+    コマンドプロンプト.cmd
+    venv\Scripts\deactivate
+
+
+8. 仮想環境が無効な状態では、Flaskフレームワークを実行できません。
+
+
+9. Flask-Scriptを使う（コマンドライン・オプション）
+
+    Flask-Scriptのインストール
+    
+    仮想環境内でFlask-Scriptをインストールします。
+
+10. ソースコードのManager化
+
+    hello.pyをManager化します。
+
+    hello.py
+    from flask import Flask
+    app = Flask(__name__)
+
+    from flask_script import Manager
+    manager = Manager(app)
+
+    @app.route('/')
+    def index():
+        return 'Hello World!'
+
+    if __name__ == '__main__':
+        manager.run()
+
+    
+11. コマンドラインオプションを使った起動
+
+    runserverをコマンドライン・オプションに指定して、起動することができます。
+
+    コマンドライン.cmd
+    python hello.py runserver -d
+
+
+12. コマンドライン・オプションの詳細
+
+runserverの詳しい使い方は、helpを参照してください。
+
+    コマンドライン.cmd
+    (venv) C:\projects\flasky>python hello.py runserver --help
+    usage: hello.py runserver [-?] [-h HOST] [-p PORT] [--threaded]
+                            [--processes PROCESSES] [--passthrough-errors] [-d]
+                            [-D] [-r] [-R] [--ssl-crt SSL_CRT]
+                            [--ssl-key SSL_KEY]
+
+    Runs the Flask development server i.e. app.run()
+
+    optional arguments:
+    -?, --help            show this help message and exit
+    -h HOST, --host HOST
+    -p PORT, --port PORT
+    --threaded
+    --processes PROCESSES
+    --passthrough-errors
+    -d, --debug           enable the Werkzeug debugger (DO NOT use in production
+                            code)
+    -D, --no-debug        disable the Werkzeug debugger
+    -r, --reload          monitor Python files for changes (not 100% safe for
+                            production use)
+    -R, --no-reload       do not monitor Python files for changes
+    --ssl-crt SSL_CRT     Path to ssl certificate
+    --ssl-key SSL_KEY     Path to ssl key
+
+    (venv) C:\projects\flasky>
+
+
+Windows10のPython3上でFlaskのHello World!を動かしてみる（仮想環境）
+https://qiita.com/jp-96/items/b607d52a8a39b1278e01
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< Winodws10でのFlask環境変数設定など >
+
+
+Windowsで準備
+windowsの準備の手順としては、以下の通りとなります。
+
+1. プロジェクト階層へ移動
+
+    「C:¥Users¥任意¥Python¥myproject」としています。
+
+2. 仮想環境を起動
+
+    venvという名前の仮想環境とします。
+
+    > cd Python¥myproject
+    > venv¥Scripts¥activate
+
+
+3. サーバーで立ち上げるPythonプログラムの指定
+
+    FLASK_APP環境変数に書き込みを行います。setというコマンドで書き込みを行います。
+
+4. サーバーのデバッグモード指定
+
+    FLASK_ENV環境変数に書き込みを行います。setというコマンドで書き込みを行います。
+
+5. サーバーを立ち上げます。
+
+    > set FLASK_APP=hello.py
+    > set FLASK_ENV=development
+    > flask run
+
+
+
+
+【Flask】Webアプリケーション開発の準備、Python仮想環境とデバッグ用Webサーバー
+https://panda-clip.com/flask-dev/
+
+
+
+
