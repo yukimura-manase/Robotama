@@ -1,0 +1,31 @@
+
+< Flask-envファイル作成🔥 >
+
+
+インストール
+pip install python-dotenv
+
+.env
+コードと同じフォルダーに.envというファイルを作成する。
+
+MONGO_URI='xxxxxxx'
+
+コード
+既にOS等で定義済みの環境変数を.envの内容で上書き実行する場合は、オプションにoverride=Trueを指定する。
+
+from dotenv import load_dotenv
+from flask import Flask
+from pymongo import MongoClient
+
+load_dotenv(override=True)
+app = Flask(__name__)
+mongo = MongoClient(os.getenv('MONGO_URI'))
+...
+app.run()
+
+
+Flaskでの簡単な環境変数の使い方
+https://zenn.dev/sivaquen/articles/4cfd2561b3e071
+
+
+
