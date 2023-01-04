@@ -1,0 +1,105 @@
+
+< docker compose で Additional property 〇〇 is not allowed のエラーの解決方法 >
+
+
+概要
+docker-compose up -d をしたら　「Additional property {property} is not allowed」というエラーが出たので原因と解決策を紹介します
+
+経緯
+新しいMacに「Docker Desktop for Mac」を入れて、いざ docker-compose up -d をしたら上記のエラーが発生しました
+
+解決策
+dokcer-compose.yaml に 「version」と「services」を入れることで解決しました
+
+修正前
+docker-compose.yaml
+web:
+  image: xxxx
+修正後
+docker-compose.yaml
+version: "3"
+services:
+  web:
+    image: xxxx
+原因
+ドキュメント
+下記のドキュメントを読むと
+https://matsuand.github.io/docs.docker.jp.onthefly/compose/compose-file/compose-versioning/
+
+バージョン 1（非推奨）
+Compose files that do not declare a version are considered “version 1”. In those files, all the services are declared at the root of the document.
+Version 1 is supported by Compose up to 1.6.x. It will be deprecated in a future Compose release.
+
+docker-compose.yamlにversion指定がないとversion 1と解釈されます
+version 1はdocker-compose 1.6.xまでサポートされます
+
+Version 2🔗
+Compose files using the version 2 syntax must indicate the version number at the root of the document. All services must be declared under the services key.
+
+dokcer-compose.yamlにversion 2を指定した場合にservicesの宣言が必須です
+
+docker-compose version
+そこでインストールされたdocker-composeのバージョンを調べます
+
+$ docker-compose version
+Docker Compose version v2.0.0
+推察
+最新のDockerを入れたところDocker Compose version v2.0.0がインストールされた
+docker-compose.yamlにversion指定がないので本来ならばversion 1として解釈される
+ただ、version 1はdokcer-compose 1.6.xまでしかサポートされておらずversion 2と解釈された(と思われる)
+version 2ではservicesの宣言が必要となっているのでエラーになった
+そこで、docker-compose.yamlにversionとservicesを宣言することでエラーが解消された
+
+
+
+docker compose で「Additional property {property} is not allowed」エラーが出る
+https://qiita.com/mida12251141/items/2e07cb332e436e56fcc9
+
+
+
+
+[ Before ]
+
+nodeapp:
+    build: "./app-server"
+    container_name: "nodeapp"
+    working_dir: "/usr/src/app"
+    ports:
+    - "10080:10080"
+    volumes:
+    - "./app-server/src:/usr/src/app"
+    links:
+    - "noderedis"
+noderedis:
+    image: "redis:3"
+    container_name: "noderedis"
+
+
+
+
+[ After ]
+
+version: "3"
+services:
+  nodeapp:
+    build: "./app-server"
+    container_name: "nodeapp"
+    working_dir: "/usr/src/app"
+    ports:
+    - "10080:10080"
+    volumes:
+    - "./app-server/src:/usr/src/app"
+    links:
+    - "noderedis"
+  noderedis:
+    image: "redis:3"
+    container_name: "noderedis"
+
+
+
+
+
+
+
+
+
