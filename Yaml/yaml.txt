@@ -1,0 +1,409 @@
+
+< YAML 入門: サンプルから学べる初心者向けガイド >
+
+[ YAML(ヤメル) とは？ ]
+
+    YAML とは、わかりやすいデータ シリアライズ (serialize) 言語です。
+    
+    設定ファイルの記述に使用されることが多く、あらゆるプログラミング言語に対応しています。
+
+    YAML では、プログラマーにとっての使いやすさが重視されています。 
+    
+    別のデータ シリアライズ言語である JSON の完全な上位版であり、 完全という言葉のとおり、JSON でできることだけでなくそれ以上のことも可能です。 
+    
+    大きな違いとして、YAML では改行とインデントが明確な意味を持ちますが、角カッコと波カッコを使用する JSON はそうではありません。
+
+    YAML はその形式ゆえに設定の記述に適しているため、CircleCI の設定ファイルに採用されています。
+
+
+[ YAML入門: 初心者向けガイド ]
+
+    2001年、当初はYAML(Yet-Another-Markup-Language) => もう1つのマークアップ言語の略とされていました。
+
+        Yet: まだ
+
+    現在では、「 YAML Aint't Markup Language 」(YAMLはマークアップ言語ではない)が、YAMLの正式名称になっています。
+
+    
+    YAML-File の基本構造 
+    
+        1.「 key: value 」を関連付けして表現するMapです => Mapping(関連付け)
+
+            => Mapは、Programing-Language によって、ObjectやDictなどと呼ばれる構造
+
+        2. Number, Boolean, String などあらゆるスカラー型を値として使用できます。
+
+        3. 項目(イメージ)のリスト(YAMLではシーケンスと呼びます)は、「 - 」を使って記述できます。
+
+        4. Key の Value が複数行にわたる場合、「 | 」を使用して、「 Leteral-Block 」形式で記述することができます。
+
+            => 「 Leteral-Block 」はShell-Commandを記述する場合に特に有用です。
+
+                複数行の文字列では、行頭のインデントは除去されます。
+
+                Key の文字列は、アンスコ( _ ), ハイフン( - ), スペースで区切ることができます。
+
+
+
+[ YAML の書き方 ]
+
+    YAML ファイルの基本構造は、キーと値を組み合わせるマップです。 
+
+    マップは、プログラミング言語やお作法によって、ディクショナリやハッシュ、オブジェクトとも呼ばれます。
+
+    大ざっぱに言えば、「Key と Value」が YAML のすべてです。
+
+        Key: Value
+
+
+1. YAML サンプル: スカラー型 => 基本的な型: Primitive-Type
+            
+    数字、ブール変数、文字列 (引用符は任意) のあらゆるスカラー型を値として使用できます。 
+    
+    たとえば、config.yml の 1 行目は、通常、次のように記述します。
+
+        version: 2
+
+
+    キーの文字列は、アンダースコア (_)、ハイフン、スペースで区切ることができます。 
+    
+    CircleCI ではアンダースコアを採用しています。
+
+    キーの値が複数行にわたる場合、”|” 記号を使用して “リテラル ブロック” 形式で記述することもできます。 
+    
+    リテラル ブロックは、シェル コマンドを定義する場合に特に有用です。
+
+
+    command: |
+        if [ "${CIRCLE_BRANCH}" == "master" ];
+            then ansible-playbook site.yml -i production;
+        fi
+
+
+    複数行の文字列では、行頭のインデントは除去されます。
+
+        
+2. YAML サンプル: コレクション型 => Array-List型: Collection-Type
+
+    インデントを使うだけで、コレクションを作成できます。
+
+        environment:
+            TEST_REPORTS: /tmp/test-reports
+
+
+    項目 (イメージなど) のリスト (YAML では “シーケンス” と呼びます) は、ハイフン (-) を使って記述できます。
+
+
+        docker:
+            - image: ubuntu:14.04
+            - image: mongo:2.6.8
+            command: [mongod, --smallfiles]
+            - image: postgres:9.4.1
+
+
+    シーケンスの 2 番目の項目に、image と command という 2 つのキーがあることに注目してください。 
+
+    command キーの記述方法は、JSON 形式のリストの記述方法と同じです。 
+
+    なぜなら、YAML は (前述のとおり) JSON の上位版だからです。
+
+
+    最後に、YAML ではタブ文字は使用できません。
+
+    そのため、タブを使用してインデントする場合には、テキスト エディターでスペースに変換する必要があります。 
+
+    circleci/config.yml で YAML 構文のミスをしてしまい、CircleCI のビルドが打ち切られてしまうことがあるかもしれません。
+
+    そうなった際でも、オンライン バリデーション ツールでミスを簡単に特定、修正できるので、ご安心ください。
+
+
+
+< 参考・引用 >
+
+1. YAML 入門: サンプルから学べる初心者向けガイド
+https://circleci.com/ja/blog/what-is-yaml-a-beginner-s-guide/
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< 【初心者】YAML入門 >
+
+Ruby On RailsやLaravelなどモダンなWebフレームワークや、Dockerなどのインフラを触ると必ず出てくるYAML(ヤメル、ヤムル）。
+
+[ YAMLとは ]
+
+    YAMLは構造化データを人間の目にわかりやすいように表現できるように設計された言語です。
+
+    正式名称は「YAML Ain’t Markup Language」。
+    
+    マークアップ言語ではなく、「 構造化 」されたデータを表現するためのフォーマット。
+    拡張子は「.yml」または「.yaml」を使用。
+
+
+    Rootは、暗黙的にObject-構造「 {} 」で囲われている！
+
+
+[ YAMLの文法 ]
+
+YAMLを理解する上でまずはじめに押さえておきたい点として、YAMLはスカラー、シーケンス、マッピングといったデータ形式をインデントで表現するのを基本としている点です。
+
+こちらのサイトでYAMLをJSONなどに変換できるので色々遊びながらやっていくといいと思います。
+
+YAML Converter
+https://codebeautify.org/yaml-to-json-xml-csv
+
+
+[ YAMLで扱えるデータ型3つ ]
+
+
+    1. スカラー
+
+        数字や文字列、真偽値などの基本的な値を表現できる。
+
+        ※文字列のダブルクォートは省略できる！
+
+        < YAML >
+            counts: 3
+            author: "Qiita"
+            rating: 3.3
+            active: true
+
+                
+        上記のYAMLデータをJSONに変換すると、以下のようになる。
+
+
+        < JSON >
+        {
+            "counts": 3,
+            "author": "Qiita",
+            "rating": 3.3,
+            "active": true
+        }
+
+
+
+    2. シーケンス(Sequence)
+
+        YAMLでは要素の集合をシーケンスで表現できます。
+            
+        要素の集合で、配列・リストのこと。
+
+        Sequence-Syntax: 要素は「インデント」,「ダッシュ（-)」,「スペース」の後に続けて書きます。
+
+        YAMLでは、行頭に「-」をつけることで配列を表現する。
+
+        「-」のあとに半角スペースを入れる。
+
+            < YAML >
+                languages:
+                    - Ruby
+                    - JavaScript
+                    - PHP
+                    - SQL
+        
+        上記のYAMLデータをJSONに変換すると、以下のようになる。
+
+            < JSON >
+            {
+                "languages": [
+                    "Ruby",
+                    "JavaScript",
+                    "PHP",
+                    "SQL"
+                ]
+            }
+
+
+    3. マッピング(Mapping)
+
+        YAMLではkey：value型のコレクションをマッピングとして表現できる。
+
+        コロン（:）のあとのスペースは必須です！
+
+            < YAML >
+                spot:
+                    name: "Enoshima Aquarium"
+                    hours: "9:00〜17:00"
+                    price: 2500
+                    kindOfFish: 810
+
+        上記のYAMLデータをJSONに変換すると、以下のようになる。
+
+            < JSON >
+            {
+                "spot": {
+                    "name": "Enoshima Aquarium",
+                    "hours": "9:00〜17:00",
+                    "price": 2500,
+                    "kindOfFish": 810
+                }
+            }
+
+
+[ コメント ]
+
+1. JSONでは、記述することのできないコメントを記述することができるのも、YAMLの特徴
+
+2. #から始める文章はコメントとして扱われ無視されます。
+
+    < YAML >
+        # 生き物の情報
+        name: jellyfish
+
+
+[ シーケンスとマッピングのネスト ]
+
+    シーケンスの中にマッピングをネストしたり、逆にマッピングの中にシーケンスをネストすることができる。
+
+        < YAML >
+
+            dolphin:
+                - name: hope
+                  age: 9
+                - name: atene
+                  age: 16
+                - name : marin
+                  age: 18
+
+
+    上記のYAMLデータをJSONに変換すると、以下のようになる。
+
+        < JSON >
+        {
+            "dolphin": [
+                {
+                    "name": "hope",
+                    "age": 9
+                },
+                {
+                    "name": "atene",
+                    "age": 16
+                },
+                {
+                    "name": "marin",
+                    "age": 18
+                }
+            ]
+        }
+
+
+[ インライン記法 ]
+
+    マッピングやシーケンスをJSONのような形式でインラインに記述することができます。
+
+        => [] , {} を使って、インラインで表現ができる！
+
+    < YAML >
+
+        languages: [Ruby, PHP, JavaScript]
+
+        student: {name: takeda, age: 14}
+
+
+    < JSON >
+    {
+        "languages": [
+            "Ruby",
+            "PHP",
+            "JavaScript"
+        ],
+        "student": {
+            "name": "takeda",
+            "age": 14
+        }
+    }
+
+
+
+[ マルチドキュメント ]
+
+    YAMLでは一つのファイルに複数のドキュメントを区切って表現することができます。
+    
+        => 区切り文字として３つのダッシュ(—)を使います。
+
+    区切り文字としてアンダースコア３つ「 ___ 」を使うことで、１つのファイルに複数のドキュメントを区切って表現することが可能。
+
+    < YAML >
+
+        people:
+            - name: abe
+            age: 65
+            - name: baiden
+            age: 80
+
+    ---
+
+        countory:
+            - Japan
+            - America
+
+
+[ 特殊文字の扱い ]
+
+    YAMLでは、　 [] {} : > |.　などの記号を「文字列」としてそのまま使うとエラーになる。
+
+        => これらの文字を使うときはクオートで囲みましょう。
+
+        < YAML >
+            greeting: "[hello]>{world.}"
+
+
+[ 改行を含む文字列 ]
+
+    改行を含む文字列を扱いたいときは　|　を使います。
+
+    < YAML >
+        introduction:　|
+            HIGH
+            MID
+            LOW　
+            
+
+    < JSON >
+        {
+            "introduction": "HIGH\nMID\nLOW\n"
+        }
+
+
+
+< 参考・引用 >
+
+1. 【初心者】YAML入門
+https://qiita.com/mackeyTA/items/7dd9282ae7c0599495a6
+
+
+2. WINDIIテック>なんとなく使っていませんか？？YAMLの基本をまとめました！
+https://tech.windii.jp/tool/yaml
+
+
+< YAMLを試せるTool >
+
+1. YAML Converter
+https://codebeautify.org/yaml-to-json-xml-csv
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+< その他参考になりそうなLink-Collection >
+
+1. フロントエンド・エンジニアのためのYAML入門  第1回
+https://www.codegrid.net/articles/2020-yaml-1/
+
+
+2. プログラマーのための YAML 入門 (初級編)
+https://magazine.rubyist.net/articles/0009/0009-YAML.html
+
+
+3. YAML入門
+https://tracpath.com/works/development/yaml_beginers_guide/
+
+
+
+
+
+
+
+
+
