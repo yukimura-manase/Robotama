@@ -1,0 +1,57 @@
+
+< Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/json: dial unix /var/run/docker.sock: connect: permission denied エラーの解決🔥 >
+
+
+    Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: 
+
+    Get http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/json: dial unix /var/run/docker.sock: connect: permission denied
+
+[ 翻訳 ]
+    unix:///var/run/docker.sock で Docker デーモン ソケットに接続しようとしたときにアクセス許可が拒否されました: 
+
+    Get http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/json: dial unix /var/run/docker.sock: 接続: 許可が拒否されました
+
+    
+
+
+
+
+#一番下に記載
+sudo chown $(whoami) ///var/run/docker.sock
+
+
+
+「whoami」コマンドは
+
+    ログインしているユーザのユーザIDを取得するときに使うコマンド
+
+    です。
+    UNIX系（LinuxとかMacとか）及びWindows系で使えます。
+
+    書き方は
+
+whoami
+
+
+コマンド置換（コマンドの出力結果を文字列として利用する方法）
+$() で囲む、もしくは バッククォート で囲みます。個人的には、$() の方が見やすいです。
+
+
+< 参考・引用🔥 >
+
+
+"Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/containers/json": dial unix /var/run/docker.sock: connect: permission denied"エラーを解決
+https://qiita.com/Muusann/items/93918a1e78130e46cd0e
+
+
+chownコマンドについてまとめました 【Linuxコマンド集】
+https://eng-entrance.com/linux-command-chown
+
+
+シェルスクリプト入門【書き方のまとめ】
+https://www.wakuwakubank.com/posts/347-linux-shell/
+
+
+whoami【コマンド】とは
+https://wa3.i-3-i.info/word11198.html
+
