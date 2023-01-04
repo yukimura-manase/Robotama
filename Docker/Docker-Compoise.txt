@@ -1,0 +1,173 @@
+
+< Docker-Compose を試してみよう🔥 >
+
+
+「まずは、小さく試す🔥」
+
+
+
+< Docker compose ことはじめハンズオン >
+
+
+1. Docker Compose 概要
+
+    Docker compose とは、複数のコンテナから成るサービスを構築・実行する手順を自動的にし、管理を容易にする機能です。
+
+    Docker compose では、compose ファイルを用意してコマンドを　1回実行することで、そのファイルから設定を読み込んですべてのコンテナサービスを起動することができます。
+
+
+2. Docker Compose を使うまでの主なステップ
+
+
+    Docker compose を使用するには、大きく分けて以下の3 つの手順から成り立ちます。
+
+        1. それぞれのコンテナの Dockerfile を作成します(既にあるイメージを使う場合は不要)
+
+        2. docker-compose.yml を作成し、それぞれ独立した「コンテナの起動定義」を行います(場合によっては構築定義も含まれる)
+
+        3. "docker-compose up" コマンドを実行して　docker-compose.yml で定義したコンテナを開始します
+
+    Docker compose はstart, stop, status, 起動中のコンテナのログ出力, ちょっとしたコマンドの実行といった機能も持ち合わせています(今回は割愛)。
+
+
+3. docker-compose.yml ファイルとは
+
+    docker-compose.yml ファイルは以下のようにyaml でDocker コンテナに関する起動オプション(build オプションも含まれることもある)を記述したファイルになります
+
+
+    [ docker-compose.yml ]
+
+    web:
+        build: .
+        ports:
+        - "5000:5000"
+        volumes:
+        - .:/code
+        links:
+        - redis
+    redis:
+        image: redis
+
+        # yaml の記載方法については下記を参照
+        # https://docs.docker.com/compose/compose-file/
+
+
+    このファイルに記載されている内容は基本的にdocker build, docker run コマンド指定することができるオプションになりますが、
+    
+    Docker compose の yaml ファイルとして記述することで複数のコンテナーから成るサービスを俯瞰的に見ることができるようになり、保守性のコストを軽くすることができます。
+
+
+
+4. Docker compose のインストール
+
+# Docker compose のインストール確認する
+docker-compose --version
+
+
+
+5. ハンズオン-App作成
+
+
+
+
+< 参考・引用 >
+
+1. Docker compose ことはじめハンズオン
+https://qiita.com/TsutomuNakamura/items/7e90e5efb36601c5bc8a
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+< Docker Composeとは？使い方やコマンドを紹介（Rails,MySQL,Nginx） >
+
+    Dockerを使いこなすのであれば、「Docker Compose」を避けて通ることはできません。
+
+    Docker Composeを使うことで、Dockerでの環境構築や管理がとっても楽になるからです。
+
+    ちなみに、前回解説した「Dockerネットワーク」も、自分でわざわざ作る必要がなくなります。
+
+    今回は、Docker Composeの使い方を覚えるためにも、「Rails」「MySQL」「Nginx」のコンテナをそれぞれ立ち上げ、コンテナ間で通信できるようにします。
+
+    「Rails」と「Nginx」をまとめて１つのコンテナにしている記事は多いのですが、別々に動かして連携させる記事は少なかったので、参考になると思いますよ！
+
+
+[ Docker Composeとは ] compose => 作曲・編曲
+
+    Docker Composeとは、複数のDockerコンテナからなるアプリケーションを定義し、操作するためのツールです。
+
+    Dockerイメージの作成方法やコンテナ起動時の設定などを「 docker-compose.yml 」に記述することで、「docker compose」コマンドでまとめて操作できるようになります。
+
+        => YAML-file に実行内容を記述して、「docker compose」コマンドでまとめて操作
+
+
+[ Docker Composeのメリット ]
+
+    1. コンテナ間の通信ができる（Dockerネットワークを作成しなくていい）
+
+    2. 実行コマンドが簡潔になる
+
+    3. ファイルで管理するため、インフラ構成の可視化、バージョン管理が可能
+    
+    
+    Docker Composeを使うことで、Dockerネットワークを自分で作らなくても、「ディレクトリ名_default」というネットワークを自動で作成してくれます。
+
+    また、「docker run」コマンドのやたら長いオプションも「docker-compose.yml」に記述できるようになり、実行コマンド自体が簡潔になります。
+
+
+    これにより、イメージを作成する「docker build」や、コンテナを起動する「docker run」などのコマンドを、コンテナの数だけ実行するなんてこともなくなるのです。
+
+    また、「 docker-compose.yml 」はファイルなので、コンテナ構成を可視化でき、バージョン管理もできるようになります。
+
+
+[ Docker ComposeとDockerfileの違い ]
+
+    「Docker Compose」と「Dockerfile」は、似ているようで少し役割が違います。
+
+        「Docker Compose」…Dockerイメージのビルドやコンテナの作成と起動方法、ネットワークを使った構成管理
+
+            => すべての組み合わせをまとめたFile
+
+        「Dockerfile」…Dockerイメージの作成手順
+
+
+    「docker-compose.yml」にはイメージのビルド方法やコンテナ起動方法などを書き、「Dockerfile」にはイメージの作成手順を書くようになっているのです。
+
+    つまり、今後は「docker-compose.yml」と「Dockerfile」を使って、コンテナ環境を構築していくことになります。
+
+
+< 参考・引用 >
+
+1. Docker Composeとは？使い方やコマンドを紹介（Rails,MySQL,Nginx）
+https://kitsune.blog/docker-compose
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+docker-compose up => docker-compose.yml の 実行！
+
+
+
+
+
+< 参考・引用 >
+
+
+【Docker】初心者のための Docker Compose まとめ
+https://ai-can-fly.hateblo.jp/entry/summary-of-docker-compose-for-beginners
+
+
+
+
+
+コンポーズ仕様
+https://docs.docker.com/compose/compose-file/
+
+
+
+
+
+
