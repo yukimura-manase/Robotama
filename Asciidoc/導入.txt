@@ -1,0 +1,87 @@
+
+< AsciiDoc VScode導入 >
+
+
+VSCodeを使ってAsciiDocファイルをどうしたいか？
+
+    1. 作成したり編集したりしたい
+    2. 1 + プレビューを表示したい
+    3. 2 + HTMLで出力したい
+
+とはいえ、1だけなら、テキストエディタだけで十分可能です。AsciiDocファイルは、テキスト
+で書かれていますので。
+
+
+インストールするもの
+
+    Visual Studio Code本体
+
+    Visual Studio Codeの拡張機能：AsciiDoc
+
+
+右上の"Open Preview to the Side"のアイコンPreviewIcon.png をクリックする。
+
+
+HTML出力
+Visual Studio Codeを起動し、test.adoc を開く。
+
+上方のメニュー[View]→[Command Palette]をクリックする。
+
+AsciiDoc: Save HTML Document と入力し、Enterキーを押下すると、test.adoc と同じフォルダに test.html が作成される。これをChromeやSafariなどのブラウザで開けばOK。
+
+まとめ
+Visual Studio CodeでAsciiDocを開き、編集、プレビュー表示、HTML出力ができることがわかった。
+
+
+Visual Studio Code で AsciiDoc を
+https://qiita.com/takoyakitabeo/items/bbe5deabaf351ffc5b14
+
+
+
+vscode-pdf
+
+Visual Studio CodeによるAsciiDocの編集
+https://waku-take-a.github.io/Visual%2520Studio%2520Code%25E3%2581%25AB%25E3%2582%2588%25E3%2582%258BAsciiDoc%25E3%2581%25AE%25E7%25B7%25A8%25E9%259B%2586.html
+
+
+
+AsciiDoc入門
+https://qiita.com/xmeta/items/de667a8b8a0f982e123a
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[VisualStudioCode] 拡張機能の設定
+インストール
+以下の拡張機能をインストールします。
+
+AsciiDoc
+asciidoctor-vscode
+PlantUML
+
+
+VisualStudioCodeでAsciiDoc＋PlantUMLを使う
+https://qiita.com/meitoo/items/1adb19690c5f891d5ef2
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< AsciiDocの文法・リファレンス >
+
+
+AsciiDocは記事、書籍、Webページ、マニュアルなどをプレーンテキストで書くための軽量マークアップ言語です。 本ガイドはAsciidocドキュメントとマークアップ形式テキストのクイックリファレンスです。
+
+本ガイドに記載している例は、HTML形式で生成されたドキュメントの出力結果です。 AsciiDocはその他にもPDF, EPUB, DocBook形式でドキュメントを出力できます。
+
+Asciidoctor限定とレベル付けされた文法を、Pythonで実装された旧AsciiDocで使う場合、 Asciidoctor用に提供されているthis AsciiDoc configuration fileを使う必要があります。
+
+
+
+
+Asciidoctor 文法クイックリファレンス(日本語訳)
+https://takumon.github.io/asciidoc-syntax-quick-reference-japanese-translation/
+
+
+
+
