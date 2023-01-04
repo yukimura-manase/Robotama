@@ -1,0 +1,15 @@
+
+Webメルカトルの話はここが詳しい感じです。
+https://www.teradas.net/archives/21704/
+
+地球を完全な球として考えると難しい計算もなくなるし、都合がいいのですが、測量ではダメみたいです。
+
+国内の測地系の話はここが詳しいです。
+https://www.gsi.go.jp/sokuchikijun/datum-main.html
+
+国内の公共座標系(平面直角座標系)
+https://www.gsi.go.jp/sokuchikijun/jpc.html
+
+
+
+
