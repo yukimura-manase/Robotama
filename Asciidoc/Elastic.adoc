@@ -1,0 +1,83 @@
+:icons: font
+:toc: right
+:toc-title: 目次
+:toclevels: 5
+:pagenums:
+:sectnums:
+:author: Robotama-Lab
+:revdate: 2022/03/04
+:revnumber: 1.0
+:lang: ja
+:doctype: book
+:chapter-label:
+:pdf-style: mystyle-theme.yml
+:pdf-fontsdir: fonts
+
+
+= Robotama管理アプリケーション機能拡張 導入ソフトウェア保守マニュアル
+
+
+[cols="3", options="header"]
+|===
+|導入ソフトウェア
+|導入バージョン
+|ソフトウェア概要
+
+|Elasticsearch
+|7.16.2
+|オープンソースソフトウェアの全文検索エンジン。Robotama管理アプリの全文検索機能に使用する。
+
+|MariaDB
+|10.4.22
+|オープンソースのデータベース。Exmentのデータベースとして使用する。
+
+|PHP
+|7.4.27
+|Webアプリケーションで使用する言語。Exmentの動作言語として使用する。
+
+|Composer
+|2.2.7
+|PHPのパッケージ管理システム。Exmentで使用するPHPのパッケージ管理に使用する。
+
+|Exment
+|4.3.1
+|オープンソースのWebデータベース。Robotama管理アプリの保守ツール及び工程管理ツールとして使用する。
+
+
+|===
+
+
+== Elasticsearch
+=== 導入手順
+==== 前提条件
+* Elasticsearchの実行には、Java 8以降が必要です。特にこの文書の執筆時において、Oracle JDKバージョン1.8.0_131の使用を推奨します。
+(Elasticsearch公式ドキュメントから引用)
+* Elasticsearch 7.0から、OpenJDKがバンドルされているようなので、Javaを別途インストールする必要はない。
+
+==== 導入
+
+* Elasticsearchのzipファイルをプロジェクトのディレクトリに解凍して配置する。
+
+
+. Elasticsearchのディレクトリに移動 => cd D:\Elasticsearch-7.16.2
+
+
+. コマンド実行 => .\bin\elasticsearch-service.bat install
+によりWindowsサービスへ登録する。Windowsのサービス管理機能によりスタートアップの種類を「自動」に変更する。
+
+. 起動確認 =>
+    curl localhost:9200
+    または、
+    http://localhost:9200/
+
+
+==== プラグイン導入について
+
+. コマンドプロンプト上で、Elasticsearchのbinフォルダまで移動する。
+    cd C:\elasticsearch-7.16.2\bin
+. 日本語の全文検索機能を実装するために「analysis-kuromoji」と「analysis-icu」の2つプラグインを追加しています。
+. elasticsearchのpluginsフォルダ内に上記2つのPluginが存在するかどうかをチェックする。
+. インストールの確認コマンド: elasticsearch-plugin list でPluginの導入状況を確認することもできます。
+. プラグインがない場合は、プラグイン・インストールコマンドをコマンドプロンプトから実行する。
+. elasticsearch-plugin install analysis-kuromoji
+. elasticsearch-plugin install analysis-icu
