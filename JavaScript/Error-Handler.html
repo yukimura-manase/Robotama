@@ -4,13 +4,35 @@
 // JavaScriptの例外処理 try-catch-finally文とthrow new Error の使い方
 
 
+let robotama = null
+
+// 1. try-ブロック => 通常の処理を記述する
+try {
+
+    let id = robotama.id;
+
+// 2. catch-ブロック => 異常系の処理インターファイスを記述する
+} catch (error) {
+
+    // Error-Objectから、Error-メッセージだけを出力している
+    console.log(error.message);
+
+    // Error-Level で Error-Objectをそのまま出力している
+    console.error(error);
+
+
+// 3. finally-ブロック => Success か Error かに関わらず、実行する処理を記述する！
+// finally-ブロックの中に書いたコードは、 try および catch ブロックの後で常に実行されます。
+} finally {
+    console.log('神聖グンマー帝国、万歳！');
+}
+
 const SaitamaNoSpy = {
     id: 1,
     robotama: 'ロボ玉',
     like: 'ひまたね',
     yama: '富士山',
     from: 'さいたまー共和国',
-    purupuru: false,
 }
 
 const Gunmar = {
@@ -19,7 +41,6 @@ const Gunmar = {
     like: '焼きまんじゅう',
     yama: '赤城山',
     from: '神聖グンマー帝国',
-    purupuru: true,
 }
 
 const GunmarCheck = (key, val) => {
@@ -29,11 +50,27 @@ const GunmarCheck = (key, val) => {
 
 
         // 1-1. グンマーの民かどうかを試すブロック
-        if (key == 'from' && val !== '神聖グンマー帝国') throw new Error('お前、グンマーじゃないな・・・');
+        if (key == 'from' && val !== '神聖グンマー帝国') {
+            const error1 = new Error('お前、グンマーじゃないな・・・');
+            alert(error1.message);
 
-        if (key == 'yama' && val !== '赤城山') throw new Error('グンマー帝国の山は、赤城山だ！');
+            throw error1;
+        }
 
-        if (key == 'like' && val !== '焼きまんじゅう') throw new Error('故郷の味は、焼きまんじゅう！');
+        if (key == 'yama' && val !== '赤城山') {
+            const error2 = new Error('グンマー帝国の山は、赤城山だ！');
+            alert(error2.message);
+
+            throw error2;
+        }
+
+        if (key == 'like' && val !== '焼きまんじゅう') {
+
+            const error3 = new Error('故郷の味は、焼きまんじゅう！');
+            alert(error3.message);
+
+            throw error3;
+        }
 
 
         // 1-2. 無事に、グンマーの民、Checkをクリアしたらここまで来れる！
@@ -45,12 +82,11 @@ const GunmarCheck = (key, val) => {
     // 2. catch-ブロック => 異常系の処理インターファイスを記述する
     } catch (error) {
 
-        console.error(error);
+        // Error-Objectから、Error-メッセージだけを出力している
+        console.warn(error.message);
 
-    // 3. finally-ブロック => Success か Error かに関わらず、実行する処理を記述する！
-    // finally-ブロックの中に書いたコードは、 try および catch ブロックの後で常に実行されます。
-    } finally {
-        console.log('神聖グンマー帝国、万歳！');
+        // Error-Level で Error-Objectをそのまま出力している
+        console.error(error);
     }
 }
 
