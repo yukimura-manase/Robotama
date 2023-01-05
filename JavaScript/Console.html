@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+        
+// Console-Classのテクニック🔥
+
+
+const Robotama = {
+    id: 1,
+    robotama: 'ロボ玉試作1号機',
+    like: 'ひまたね',
+    from: '神聖グンマー帝国',
+    purupur: true,
+}
+
+
+// JavaScriptで、変数名を文字列に変換する方法
+
+console.log(Robotama);
+// {id: 1, robotama: 'ロボ玉試作1号機', like: 'ひまたね', from: '神聖グンマー帝国', purupur: true}
+
+console.dir(Robotama);
+
+
+console.table(Robotama);
+
+
+console.log(JSON.stringify(Robotama));
+// {"id":1,"robotama":"ロボ玉試作1号機","like":"ひまたね","from":"神聖グンマー帝国","purupur":true}
+
+
+console.log({Robotama});
+// Robotama: {id: 1, robotama: 'ロボ玉試作1号機', like: 'ひまたね', from: '神聖グンマー帝国', purupur: true}
+
+
+console.log('Robotama', Robotama);
+// Robotama {id: 1, robotama: 'ロボ玉試作1号機', like: 'ひまたね', from: '神聖グンマー帝国', purupur: true}
+
+
+
+// Log-Level ごとに表示が違います
+
+console.log('Log-Level-1: ', 'Log');
+console.info('Log-Level-2: ', 'Info');
+console.warn('Log-Level-3: ', 'Warn');
+console.error('Log-Level-4: ', 'Error');
+
+
+console.log('Robotama');
+
+
+</script>
+</body>
+</html>
