@@ -1,0 +1,97 @@
+
+<style>
+
+/* タイムスライダーの基本Style */
+.msil-time-slider {
+    text-align: center;
+    margin: 20px 0px;
+    color: #808080;
+
+}
+
+/* タイムスライダー・List */
+.msil-time-slider ul {
+    display: flex;
+    width: 500px;
+    margin: 0 auto;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1rem;
+    list-style: none;
+}
+
+
+/* タイムスライダーの横線 */
+.time-line {
+    width: 230px;
+    margin: 0 auto;
+    height: 2px;
+    background: #6ecfd7;
+    position: absolute;
+    left: 50%;
+    margin-top: 25px;
+    margin-left: -90px;
+}
+
+.msil-time-slider li {
+    padding-top: 20px;
+}
+
+/* 疑似要素を作成する丸い点を作成する */
+.msil-time-slider li::before {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+/* active の時は、点灯する */
+.msil-time-slider li.active::before {
+    background: #6ecfd7; 
+}
+
+</style>
+
+
+<div class="msil-time-slider">
+    <ul id="msil-time-line">
+        <li class="active">情報のご入力</li>
+        <li class="active">入力内容の確認</li>
+        <li class="active">受付の完了</li>
+    </ul>
+</div>
+
+
+<script>
+
+// < TimeSliderを作成する >
+
+// HTMLが出来上がってから、位置情報を取得しないとずれる・・・
+window.addEventListener('DOMContentLoaded', ()=> {
+    // 1. タイムスライダーを囲む Divタグ
+    const timeSlider = document.getElementsByClassName('msil-time-slider')[0];
+
+    // 2. タイムスライダー本体となる ulタグ
+    const timeLine = document.getElementById('msil-time-line');
+
+    // 3. 要素の位置情報
+    const rect = timeLine.getBoundingClientRect();
+
+    // 4. 指定要素の頂点-座標をSetする
+    const elemTop = rect.top;
+
+    // タイムスライダーの横線を作る
+    let div = document.createElement('div');
+    
+    div.style.top = elemTop + 5;
+
+    div.classList.add('time-line');
+
+    timeLine.before(div);
+});
+
+
+</script>
