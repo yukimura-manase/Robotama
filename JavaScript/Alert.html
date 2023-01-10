@@ -1,0 +1,46 @@
+
+<div>
+
+<button id="robotama1">ロボ玉試作1号機</button>
+<button id="robotama2">ロボ玉試作2号機</button>
+<button id="robotama3">ロボ玉試作3号機</button>
+
+<script>
+    const alertBtn = document.getElementById('robotama1');
+    const confirmBtn = document.getElementById('robotama2');
+    const promptBtn = document.getElementById('robotama3');
+
+
+    // 1. 警告などをポップアップ表示させたいときに使用するのが、alert()
+    alertBtn.addEventListener('click', () => {
+        // 改行は「 \n 」でする
+        alert('商品を受け付けました！\nご利用いただきありがとうございました。');
+    });
+
+
+    // 2. 確認のポップアップを表示させたいときに使用するのが、confirm()
+    // Yes/No をユーザーに選択させたい時に役立ちます
+    confirmBtn.addEventListener('click', () => {
+
+        // 真偽値が、返ってくる
+        const confirmResult = confirm('確認画面に進みます。\nよろしいですか？');
+        console.log({confirmResult});
+
+        // 真偽値を使って、処理の条件分岐ができる
+        if (confirmResult) {
+            console.log('確認画面に進む・処理を実行する');
+        } else {
+            console.log('確認画面に進まない');
+        }
+    });
+
+    // 3. ユーザーからの文字入力をしてもらいたい時に使用するポップアップ
+    promptBtn.addEventListener('click', () => {
+        
+        // 入力テキスト or null => キャンセルされると null になる
+        const text = prompt('パスワードを入力してください', 'ロボ玉');
+        console.log({text});
+    });
+
+</script>
+</div>
