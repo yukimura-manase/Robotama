@@ -1,0 +1,24 @@
+
+< Concrete5 での Log出力方法 >
+
+
+Logクラスを使ったカスタムログ
+
+
+    use Concrete\Core\Support\Facade\Log;
+
+
+    Log::addEntry('Robotama-Nanoda');
+
+
+書きだしたログは管理画面 > レポート > ログに出力されています。
+
+
+ログとデバッグ
+https://concrete5-japan.org/help/5-6/developer/introduction/logging-and-debugging/
+
+
+Concrete5でデバッグ用のログを書き出す
+https://worktoolsmith.com/9781/
+
+
