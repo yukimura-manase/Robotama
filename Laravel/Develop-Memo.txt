@@ -1,0 +1,256 @@
+
+< Laravel で管理者-Appを開発する🔥 >
+
+
+< Laravel-Management-API🔥 >
+
+
+    Name: Admin
+
+    Mail: masahiro19951212@gmail.com
+
+    Password: Admin@Msil
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+[ 【laravel】管理ページを作ってみる ]
+
+
+目標: 以下の項目の作成
+
+    データベース
+
+    ログインシステム
+
+    ログインページ
+
+    簡易的なダッシュボード
+
+    アカウント登録システム
+
+    アカウント登録ページ
+
+以下はこの記事ではやらない
+
+    パスワードの変更/リセット
+
+    メール認証/送信
+
+    adminアカウントの管理ページ
+
+
+1. Migrationの作成 => DBのテーブル定義の作成🔥
+
+
+    php artisan make:migration create_admin_users_table
+
+
+
+    [ 2023_01_11_051225_create_admin_users_table.php ]
+
+        public function up()
+        {
+            Schema::create('admin_users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->integer('admin_level');
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
+
+
+2. Modelの作成 => 実データの作成🔥
+
+
+
+
+【laravel】管理ページを作ってみる
+https://qiita.com/yuu_1st/items/d580fb4cb10b5fcc85d9
+
+
+
+laravel-adminでお手軽に管理画面を作る
+https://enjoyworks.jp/tech-blog/7298
+
+
+
+Laravel9のLaravel Breeze+Reactでマルチ認証(Multi Authentification)
+https://reffect.co.jp/laravel/laravel9-laravel-breeze#Laravel
+
+
+
+< 文字列型の選別方法🔥 >
+
+1. Laravelで文字列を格納する時、「どのデータ型を使えばいいんだろう」と悩んだら、
+
+255文字以内なら string, 16384文字以内ならtext, それ以上ならlongTextを使うと良いでしょう。
+
+
+
+laravelの文字列用のデータ型stringとtextとlongTextの違い。何文字まで入れられる？
+https://biz.addisteria.com/string_text_longtext/
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+< Migrationの作成 >
+
+
+# 1. questions テーブルを作成する
+
+php artisan make:migration create_questions_table
+
+
+
+[ 2023_01_11_051225_create_questions_table.php ]
+
+    public function up()
+    {
+        // 質問設定のテーブル
+        Schema::create('questions', function (Blueprint $table) {
+            $table->increments('query_id'); // 自動採番のID
+            $table->boolean('required_flag')->default(true); // 回答必須フラグ => 必須, Default: true
+            $table->string('question_text');  // 質問文
+            $table->integer('sort_order'); // 並び順
+            $table->json('input_id_list'); // 質問文に紐づいている、入力フォームのリスト
+            $table->boolean('required_flag')->default(false); // 非表示フラグ => Default: false(表示する)
+            $table->string('created_user');  // 作成ユーザー
+            $table->string('updated_user');  // 更新ユーザー
+            $table->string('deleted_user');  // 削除ユーザー
+            $table->timestamps();  // created_at と updated_at が作成
+            $table->softDeletes(); // deleted_at が作成
+        });
+    }
+
+
+
+    php artisan make:model Question
+
+
+# 2. answer_inputs テーブルを作成する
+
+php artisan make:migration create_answer_inputs_table
+
+
+
+# 3. answers テーブルを作成する
+
+php artisan make:migration create_answers_table
+
+
+
+
+
+< Laravel でマイグレーションをする際のテーブル設定・情報🔥 >
+
+
+
+
+
+
+
+
+
+migrationの作成と実行方法
+https://www.wakuwakubank.com/posts/450-laravel-migration/
+
+
+
+Laravel – モデル作成とマイグレーション
+http://taustation.com/laravel-model-and-migration/
+
+
+【Laravel】マイグレーションのカラム(データ型)の種類まとめ！完全版
+https://tech.amefure.com/php-laravel-migration-column
+
+
+Laravel migration カラム編集まとめ
+https://qiita.com/mdrq/items/f10e488caa4497eec79b
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+< Laravel ～Migration & Modelの解説～ >
+
+
+1. Migration編
+
+    DBテーブルの履歴を管理する仕組み
+
+    DBに新しいテーブルを作ったり、列やカラムを追加する事が出来る。
+
+    また、作ったテーブルや付属品の削除を行う事も可能だ。
+
+
+    注意点
+
+        Modelを、Migrationで作る場合は、複数形のsを付ける
+
+
+    ✧テーブルの作り方✧
+
+    php artisanコマンドを使う。
+    注意点としては、テーブル名の最後にsを付けて複数形にする事。
+
+    テーブルの作り方
+    php artisan make:migration create_テーブル名s_table
+    Migrationの場所は、Databaseフォルダの中にある。
+
+    テーブルのカラムや列を作る事が出来て、カラムの種類を選択できるコマンドなどがある。
+
+    作成したMigrationフォルダは、databaseフォルダの中に存在する。
+    php artisan make:migration create_テーブル名s_tableで作った場合、
+    日にち_createe_テーブル名s_tableという名前で、Migrationフォルダの中に格納される。
+
+
+
+
+Laravel ～Migration & Modelの解説～
+https://qiita.com/Tetsu_Oikawa/items/c6248883558d8e4385da
+
+
+【laravel】モデル（Model）とマイグレーションとは？使い方と意味
+https://framework-book.com/laravel/how-to-use-model-and-migration/
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+LaravelのMigrationでテーブルを作成して、モデルでテーブル操作する流れ
+https://yama-itech.net/laravel-migration-model-start
+
+
+
+
+
+
+
+
