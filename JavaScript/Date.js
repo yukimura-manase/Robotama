@@ -1,111 +1,145 @@
 
-// < JavaScriptで日付や時間の取り扱い・操作する方法・Dateオブジェクトの使い方🔥 >
+
+let today = new Date(); // 現在時刻の取得
+console.log(today);
+
+console.log(Date.parse(today)); // Date.parseによってDate文字列から数値に変換する！
+
+console.log(today.toString()); // Date文字列に変換する！
+console.log(today.toUTCString());
+console.log(today.toISOString());
+
+let today2 = new Date( // 「年・月・日・時間」までの日付情報(文字列)を生成する！
+    today.getFullYear(), //年
+    today.getMonth(), //月
+    today.getDate(), //日
+    today.getHours(), //時間
+);
+console.log(today2);
 
 
-// 1. JavaScript で日付や時間操作をするのなら、まずは、Dateインスタンスを作成する
-let date = new Date();
-console.log('date:', date);
-// date: Fri Jan 06 2023 10:16:00 GMT+0900 (日本標準時)
+// Date.parse() => https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date/parse
+
+let today3 = new Date().toString();
+console.log(today3);
+console.log(Date.parse(today3)); // 数値化できる！
+console.log(Number(today3)); // NaNになってしまう！
+
+let today5 = new Date().toISOString();
+console.log(today5);
+console.log(Date.parse(today5)); // 数値化できる！
+console.log(Number(today5)); // NaNになってしまう！
+
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// 計算する時は、数値化して計算する => 
+// 文字表示するときは、文字列化するなどして表示する！
+
+let today = new Date(); // Dateオブジェクトを生成
+console.log(today);
+//console.log(typeof now);
+
+let order = new Date(
+    today.getFullYear(), //年
+    today.getMonth(), //月
+    today.getDate(), //日
+    today.getHours(), //時間
+);
+console.log(order);
+
+let numberNow = Number(now);
+//console.log(numberNow);
+// console.log(typeof numberNow);
+// console.log(numberNow.toString());
+
+let parseNow = Date.parse(now);
+//console.log(parseNow);
+// console.log(typeof parseNow);
+// console.log(parseNow.toString());
+
+let stringNow = now.toString();
+console.log(stringNow);
+//console.log(typeof stringNow);
+//console.log(Date.parse(stringNow));
+//console.log(Number(stringNow)); // NaNになってしまう！
+
+let NumberNow = Date.parse(stringNow);
+console.log(NumberNow);
+
+let ReStringNow = NumberNow.toString();
+console.log(ReStringNow);
 
 
-// 2. 西暦を取得する
-const year = date.getFullYear();
-console.log('year:', year);
-// year: 2023
+console.log('Dateオブジェクトの生成');
+console.log(new Date(now));
+console.log(new Date(stringNow)); // 文字列データも日付変換できる！
+console.log(typeof new Date(stringNow));
+console.log(new Date(NumberNow)); // 数値データも日付変換できる！
+console.log(new Date(ReStringNow));
+console.log(typeof new Date(ReStringNow));
 
 
-// 3. 日付を取得する
-const month = date.getMonth();
-console.log('month:', month);
-// month: 0
-
-// getMonth() は、0-11の数字のいずれかを返す🔥
-
-// 1月が0扱いなので、注意 => +1して使用する
-
-// 1月は、0 , 2月は、1 となる => なので、+1して使用する
-
-const today = date.getDate();
-console.log('today:', today);
-// today: 6
-
-console.log(`今日は、${month + 1}月${today}日です！`);
-// 今日は、1月6日です！
+var today = new Date();
+  console.log(today.getFullYear() + "/" +  today.getMonth() + 1 + "/"+ today.getDate()  + "/" + today.getDay());
 
 
-// 4. 時間を取得する
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+let today = new Date()//今日の日付
 
-const hour = date.getHours();
-console.log('hour:', hour);
-// hour: 10
+today = new Date(
+    today.getFullYear(), //年
+    today.getMonth(), //月
+    today.getDate(), //日
+    today.getDay(), //曜日
+    today.getHours(), //時間
+);
+console.log(today);
+console.log(typeof today);
 
-// getHours() は、0-23の数字のいずれかを返す🔥
+let month = today.getMonth();
+console.log(month);
+console.log(typeof month);
 
-// 24時が、0扱いなので、注意！
+let day = today.getDay();
+console.log(day);
+console.log(typeof day);
 
-const minutes = date.getMinutes();
-console.log('minutes:', minutes);
-// minutes: 16
+console.log(today.getFullYear() + "/" +  today.getMonth() + 1 + "/"+ today.getDate()  + "/" + today.getDay());
 
-// getMinutes() は、0-59の数字のいずれかを返す🔥
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+let today = new Date();//今日の日付
 
-// 60分が、0扱いなので、注意！
+let orderDate = `${today.getFullYear()}年 ${today.getMonth() + 1}月 ${today.getDate()}日 ${today.getHours()}:${today.getMinutes()}に注文！ `;
+console.log(orderDate);
+console.log(typeof orderDate);
 
-const seconds = date.getSeconds();
-console.log('seconds:', seconds);
+// ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
+const dayOfWeek = ['(日)','(月)','(火)','(水)','(木)','(金)','(土)'];
 
-// getSeconds() は、0-59の数字のいずれかを返す🔥
+let now = new Date();
+console.log(now);
 
-// 60秒が、0扱いなので、注意！
+const zeroCheck = (num)=> {
+    console.log(num);
+    if(num <= 10 ){
+        console.log('ゼロチェック！');
+        return 0 + num;
+    }else {
+        return num;
+    };
+};
 
-const ms = date.getMilliseconds();
-console.log('ms:', ms);
-// ms: 896
-
-
-console.log(`現在時刻は、${hour}時${minutes}分${seconds}秒です！`);
-// 現在時刻は、10時34分19秒です！
-
-
-// 5. 午前と午後の判定をする
-
-let judgment = '';
-
-if (hour <= 12) {
-    judgment = '午前';
-} else {
-    judgment = '午後';
-    hour = hour - 12;
-}
-
-console.log(`現在は、${judgment} ${hour}です！`);
+let stringNow = `${now.getFullYear()}年 ${now.getMonth() + 1}月 ${now.getDate()}日 ${ dayOfWeek[now.getDay()] } ${ now.getHours() }時 ${ zeroCheck( now.getMinutes() ) }分`;
+console.log(stringNow); // 2021年 11月 18日 (木) 14時 24分
 
 
 
-// 6. 曜日を取得する
-const dayNum = date.getDay();
-console.log('dayNum:', dayNum);
-// dayNum: 5
 
 
-const dayofweek = [ '日', '月', '火', '水', '木', '金', '土' ];
 
-console.log(`今日は、${dayofweek[dayNum]}曜日です！`);
-
-
-// 7. Localeの日付を取得する => 利用者の言語環境にあわせた時刻表示が得られる！
-// => 多言語の日付時刻表示をしたいときに、役立ちます！
-
-date = new Date();
-
-const locale = date.toLocaleString();
-const localeDate = date.toLocaleDateString();
-const localeTime = date.toLocaleTimeString();
-
-console.log('locale:', locale);             // locale: 2023/1/6 13:38:07
-console.log('localeDate:', localeDate);     // localeDate: 2023/1/6
-console.log('localeTime:', localeTime);     // localeTime: 13:38:07
+// JavaScriptでDateオブジェクトを使って日付を表示する方法【初心者向け】
+// https://techacademy.jp/magazine/5587#sec8
 
 
 
