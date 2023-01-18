@@ -133,6 +133,42 @@ https://ginneko-atelier.com/blogs/entry236/
 
 
 
+Express オブジェクト属性のオプション リストをプログラムで更新する
+https://archive.concretecms.org/community/forums/customizing_c5/programmatically-update-option-list-for-express-object-attribute/
+
+
+
+
+
+Programmatically Creating Express Objects
+https://documentation.concretecms.org/developers/express/programmatically-creating-express-objects
+
+
+
+Dev-Doc
+https://documentation.concretecms.org/
+
+
+
+Working with Express objects programmatically
+https://archive.concretecms.org/community/forums/customizing_c5/working-with-express-objects-programmatically/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
