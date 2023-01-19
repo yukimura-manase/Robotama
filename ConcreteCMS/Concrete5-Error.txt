@@ -1,0 +1,80 @@
+
+< Concrete5のError対応🔥 >
+
+
+1. Concrete5で画面が真っ白になるときのError
+
+    => キャッシュのクリア🔥
+
+    => [ \application\files\cache ]
+
+2. 管理画面から、キャッシュ設定をすべて無効化する🔥
+
+
+
+3. プリティーURL化でError
+
+
+    [ \application\config\generated_overrides\concrete.php ]
+
+
+    以下の方法で手動でプリティーURL機能をオフにしました。
+
+        手動で戻す方法は
+        /application/config/generated_overrides/concrete.php
+        の
+        —–
+        ‘seo’ => [
+        ‘url_rewriting’ => true,
+        ],
+        —–
+        の表記を
+
+        —–
+        ‘seo’ => [
+        ‘url_rewriting’ => false,
+        ],
+        —–
+        に変えてアップロードすると、プリティー URL 機能をオフにできます。
+
+        プリティーURLをONでアクセス不能 :: concrete5 Japan 日本語公式サイト
+
+
+
+concrete5のプリティーURL化でアクセス不可エラーとなったときの解除方法
+https://marketing-wizard.biz/blog/concrete5/concrete5-prettyurl-error/
+
+
+
+
+
+4. メンテナンスモードの解除🔥
+
+
+    [ \application\config\generated_overrides\concrete.php ]
+
+
+    'maintenance_mode' => true,
+
+    から
+
+    'maintenance_mode' => false,
+
+
+
+
+
+
+5. サーバーがロードバランサー配下にある場合の対処法s
+
+サーバーがロードバランサー配下にある場合の対処法
+https://macareux.co.jp/blog/best-config-behind-load-balancer
+
+
+
+
+
+
+
+
+
