@@ -1,0 +1,2 @@
+// JSON を読みやすくする方法2選 VSCode 拡張 と Webツール
+// https://zenn.dev/junki555/articles/60b7647dfa21bdb84a58
