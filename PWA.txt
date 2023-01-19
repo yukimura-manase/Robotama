@@ -1,0 +1,2 @@
+ViewerとEditorのアプリ化を検討してみてほしいです。
+https://pisuke-code.com/web-way-to-convert-site-to-pwa/
