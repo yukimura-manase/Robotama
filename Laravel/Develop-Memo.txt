@@ -247,10 +247,3 @@ https://framework-book.com/laravel/how-to-use-model-and-migration/
 LaravelのMigrationでテーブルを作成して、モデルでテーブル操作する流れ
 https://yama-itech.net/laravel-migration-model-start
 
-
-
-
-
-
-
-
