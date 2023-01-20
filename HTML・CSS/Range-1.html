@@ -1,0 +1,78 @@
+
+<!-- HTML & JavaScript でメモリ付きのスライダー・レンジ入力フォームを作成する方法 -->
+
+<div>
+    最小値<input type="range" name="speed" id="speed-range" min="0" max="100" step="10" value="20"> 最大値
+    
+</div>
+<p id="current-value"></p>
+
+<script>
+    const speedRange = document.getElementById('speed-range');
+    const currentVal = document.getElementById('current-value');
+
+    // 現在の値を出力
+    console.log(speedRange.value);
+
+    currentVal.textContent = `現在の値は${speedRange.value}です`;
+
+    speedRange.addEventListener('input', () => {
+
+        console.log(speedRange.value); // 現在の値を出力
+        currentVal.textContent = `現在の値は${speedRange.value}です`;
+    });
+
+
+    // speedRange.removeEventListener('input', RangeOnChange);
+
+
+</script>
+
+<script>
+
+// [ 数値を選ぶスライダーを作成する input type="range" ]
+
+// min="数値"：選択できる最小値
+// max="数値"：選択できる最大値
+// step="数値"：数値の変化の単位
+// value="数値":初期値
+
+// 最小値minが0、最大値maxが100なので 0〜100の範囲のスライダーになり、10単位で数値を変更できます。
+// 言い換えると0 10 20 30...100だけに「つまみ」が止まるスライダーになります。
+
+// 1. minとmaxの値はstepの倍数にすること
+
+    // たとえばstep="10"とした場合、max="13"とすることはできません。
+    // 10ずつ動くスライダーのつまみが13に止まることはないからです。
+    // minとmaxの値はstepで決めた数値の倍数にしなければなりません。
+
+
+// 2. value属性で初期値を設定する
+
+// スライダーの初期値（つまみが最初どこに止まっているか）は、value属性により指定できます。
+
+
+// 現在の値が表示されていないので分かりづらいですね…。以下で現在の値を表示する方法を解説します。
+
+// 3. JavaScriptでスライダーの値を表示する
+
+// inputの現在の値を取得する方法
+
+
+// SPAならremoveEventListenerも忘れずに！
+// SPA（シングル・ページ・アプリケーション）でaddEventListenerを使うときは注意が必要です。アプリ内でページ遷移をしたことで要素が消えたにも関わらず、イベントだけが残ってしまう可能性があるからです。
+
+// これを防ぐため、SPAでは要素が消えるタイミングでイベントを解除しましょう。
+
+
+
+// < 参考・引用🔥 >
+
+//  数値を選ぶスライダーを作成する input type="range"
+// https://catnose.me/learning/html/input-range
+
+
+// HTML【フォーム】5～input要素（6）レンジ（range）の入力部品
+// https://programmercollege.jp/column/2415/
+
+</script>
