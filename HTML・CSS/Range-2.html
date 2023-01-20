@@ -1,0 +1,41 @@
+
+<!-- HTML & JavaScript でメモリ付きのスライダー・レンジ入力フォームを作成する方法 -->
+
+<div>
+    最小値<input type="range" name="speed" id="speed-range" min="0" max="100" step="10" value="20" list="my-datalist"> 最大値
+    <datalist id="my-datalist">
+        <option value="0">
+        <option value="10">
+        <option value="20">
+        <option value="30">
+        <option value="40">
+        <option value="50">
+        <option value="60">
+        <option value="70">
+        <option value="80">
+        <option value="90">
+        <option value="100">
+      </datalist>
+</div>
+<p id="current-value"></p>
+
+<script>
+    const speedRange = document.getElementById('speed-range');
+    const currentVal = document.getElementById('current-value');
+
+    // 現在の値を出力
+    console.log(speedRange.value);
+
+    currentVal.textContent = `現在の値は${speedRange.value}です`;
+
+    speedRange.addEventListener('input', () => {
+
+        console.log(speedRange.value); // 現在の値を出力
+        currentVal.textContent = `現在の値は${speedRange.value}です`;
+    });
+
+
+    // speedRange.removeEventListener('input', RangeOnChange);
+
+
+</script>
