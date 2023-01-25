@@ -1,0 +1,36 @@
+
+< 外部フォーム・ブロックをカスタマイズして、入力・確認・完了画面のフォームを作成する🔥 >
+
+
+msil_cms/updates/concrete-cms-9.1.3_remote_updater/concrete/blocks/express_form/controller.php
+
+
+\Log::addEntry($e);
+
+// 通常のToken-Errorは無視するように改造する
+
+\Log::addEntry(json_encode($e));
+// {"error":true,"errors":["Invalid form token. Please reload this form and submit again."]}
+
+
+
+
+
+外部フォームブロックをカスタマイズし、入力・確認・完了画面のフォームを作る
+https://macareux.co.jp/blog/how-to-customize-external-block
+
+
+
+Protecting Against Cross-Site Request Forgery with the Token Validation Library
+https://documentation.concretecms.org/developers/security/protecting-against-csrf-with-token-validation
+
+
+
+コアブロックタイプのコントローラーをカスタマイズする
+https://concrete5-japan.org/help/5-7/developer/working-with-blocks/working-with-existing-block-types/using-a-custom-controller-for-a-core-block-type/
+
+
+
+
+
+
