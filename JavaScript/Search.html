@@ -1,0 +1,89 @@
+
+<div style="text-align: center;">
+    <select name="pref" id="select-pref" multiple>
+        <option value="">選択してください</option>
+        <option value="1">北海道</option>
+        <option value="2">青森県</option>
+        <option value="3">岩手県</option>
+        <option value="4">宮城県</option>
+        <option value="5">秋田県</option>
+    </select>
+    <div style="margin-top: 12px;">
+        <span>検索</span>
+        <input type="text" id="searchbox">
+        <input type="button" id="clear" value="クリア">
+    </div>
+</div>
+
+
+<script>
+
+    // [ 実行すべき処理内容: Tasks ]
+
+    // 1. 検索窓の入力を受け取って、OptionListに該当するものがあるかどうかを調べる
+
+    // 2. 該当のものを見つけたら、そのOptionListだけを表示する
+
+    // 3. クリアボタンでリセットする
+
+
+    // 1. SelectBox => HTMLSelectElement
+    const selectPref = document.getElementById('select-pref');
+
+    console.log(selectPref);
+    console.dir(selectPref);
+
+    // 選択肢 => HTMLOptionsCollection
+    const options = selectPref.options;
+
+    console.log(options);
+    console.dir(options);
+
+    const prefList = [];
+
+    // HTMLCollectionをforEachするなら、一度、配列に変換する
+    [...options].forEach((option) => {
+        // console.log(option.value);
+        // console.log(option.label);
+        // console.log(option.innerText);
+
+        prefList.push(option.innerText); 
+    });
+
+
+    // 2. 検索Box
+    const searchbox = document.getElementById('searchbox');
+    let searchResult = [];
+
+    // 入力文字列を受け取る処理
+    searchbox.addEventListener('input', (e) => {
+        console.log(e.target.value);
+
+        let val = e.target.value;
+
+        // 検索文字列から絞り込む
+
+        // robotama => (/^ロボ玉/.test(robotama)));
+        let searchResult = prefList.filter((pref)=> {
+            console.log(pref);
+
+            let reg = new RegExp(`${val}`);
+            console.log({reg});
+
+            let bool = reg.test(pref);
+            console.log(bool);
+        });
+
+        console.log({searchResult});
+
+    });
+    
+
+
+
+
+
+
+
+
+</script>
