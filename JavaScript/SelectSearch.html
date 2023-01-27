@@ -1,0 +1,228 @@
+
+<style>
+
+input[type='text'] {
+    width: 80%;
+    height: 30px;
+    margin-top: 10px;
+}
+
+
+</style>
+
+<h1>日本 47都道府県</h1>
+<div style="text-align: center;">
+    <div style="margin-top: 12px;">
+        <span>検索</span>
+        <input type="text" id="searchbox">
+        
+        <!-- <input type="button" id="clear" value="リセット"> -->
+        <!-- <input type="button" id="delete" value="削除"> -->
+        <!-- <input type="button" id="add" value="追加"> -->
+        <!-- <input type="button" id="add" value="検索"> -->
+        <!-- <input type="button" id="clear" value="リセット"> -->
+    </div>
+    <select name="pref" id="select-pref" multiple>
+        <option value="">選択してください</option>
+        <optgroup label="北海道">
+            <option value="1">北海道</option>
+        </optgroup>
+        <optgroup label="東北">
+            <option value="2">青森県</option>
+            <option value="3">岩手県</option>
+            <option value="4">宮城県</option>
+            <option value="5">秋田県</option>
+            <option value="6">山形県</option>
+            <option value="7">福島県</option>
+        </optgroup>
+        <optgroup label="関東">
+            <option value="8">茨城県</option>
+            <option value="9">栃木県</option>
+            <option value="10">群馬県</option>
+            <option value="11">埼玉県</option>
+            <option value="12">千葉県</option>
+            <option value="13">東京都</option>
+            <option value="14">神奈川県</option>
+        </optgroup>
+    </select>
+    <div>
+        <input type="text" id="select-info" value="" placeholder="選択されたものが表示されます" disabled>
+    </div>
+</div>
+
+
+<script>
+
+    // [ 実行すべき処理内容: Tasks ]
+
+    // 1. 検索窓の入力を受け取って、OptionListに該当するものがあるかどうかを調べる
+
+    // 2. 該当のものを見つけたら、そのOptionListだけを表示する
+
+    // 3. リセットボタンで、検索状態や追加状態をリセットする
+
+    // 
+
+    // 4. セレクトしたものを表示する
+
+    // const clickBtn = () => {
+
+    //     const select = document.getElementById('robotama');
+
+    //     console.log({select});
+
+    //     // 値(数値)を取得
+    //     const num = select.selectedIndex;
+
+    //     console.log({num});
+
+    //     // 値(数値)から値(value値)を取得
+    //     const value = select.options[num].value;
+    //     console.log({value});
+
+    //     document.getElementById("output").textContent = value; 
+    // }
+
+
+    function AddChildren (select, list) {
+
+        // Optionリストの要素数まで繰り返し処理を実行する (0が要素数と同じ長さ以上になるまでは true)
+        for (let i = 0; i <= list.length; i++) {
+
+            console.log(typeof list[i]);
+            select.appendChild(list[i]);
+        }
+    }
+
+
+    // 子要素をすべて削除する関数
+    function RemoveChildren (x) {
+        if (x.hasChildNodes()) {
+            while (x.childNodes.length > 0) {
+                x.removeChild(x.firstChild);
+            }
+            // let option = document.createElement('option');
+            // option.setAttribute('value', 'robtoama');
+            // option.textContent = 'ロボ玉';
+            // x.appendChild(option);
+        }
+    }
+
+    // 指定した要素だけをOptionとしてSetする関数
+
+    // クリアボタンで、すべてSetする関数
+
+
+
+    // 1. SelectBox => HTMLSelectElement
+    const selectPref = document.getElementById('select-pref');
+
+    // selectPref.addEventListener('change', (e) => {
+    //     console.log(e);
+    // });
+
+    // console.log(selectPref);
+    // console.dir(selectPref);
+
+    // 2. 初期設定の選択肢 => HTMLOptionsCollection
+    const options = selectPref.options;
+
+    const optionInit = document.querySelectorAll('#select-pref option');
+    // console.dir(optionInit);
+
+    const optionList = [...selectPref.options];
+
+    // console.log(options);
+    // console.dir(options);
+
+    // console.log(options.length);
+
+    const prefList = [];
+
+    // HTMLCollectionをforEachするなら、一度、配列に変換する
+    [...options].forEach((option) => {
+        // console.log(option.value);
+        // console.log(option.label);
+        // console.log(option.innerText);
+
+        prefList.push(option.innerText);
+    });
+
+
+    // 3. 検索Box
+    const searchbox = document.getElementById('searchbox');
+
+    // 検索結果のOption-List
+    let searchResult = [];
+
+    // 入力文字列を受け取る処理
+    searchbox.addEventListener('input', (e) => {
+        // console.log(e.target.value);
+
+        let val = e.target.value;
+
+        // 検索文字列から絞り込む
+        searchResult = prefList.filter((pref) => {
+
+            // 正規表現で変数を使用するためには、RegExp-Classを使用する
+            let reg = new RegExp(`^${val}`);
+            // console.log({reg});
+
+            // 条件と一致したものを返す
+            return reg.test(pref);
+        });
+
+        console.log({searchResult});
+
+        // 既存のものを削除して、新しいOption-ListをSetする
+
+        // RemoveChildren(selectPref);
+
+        // AddChildren(selectPref, searchResult);
+
+        
+        // console.log(options);
+
+        // for (const key in options) {
+        //     console.log({key});
+
+        //     const val = options[key];
+
+        //     console.log({val});
+
+        // }
+
+
+    });
+
+
+
+    // リセットボタン
+    // const clearBtn = document.getElementById('clear');
+
+    // clearBtn.addEventListener('click', () => {
+    //     // console.log('クリア処理');
+    //     // console.dir(options);
+    //     // console.dir(optionList);
+    //     // console.log(options.length);
+
+    //     AddChildren(selectPref, optionInit);
+    // });
+
+    // // 削除ボタン
+    // const deleteBtn = document.getElementById('delete');
+    // deleteBtn.addEventListener('click', () => {
+    //     // console.log('削除処理');
+    //     RemoveChildren(selectPref);
+    // });
+
+
+</script>
+
+<script>
+    // 参考・引用🔥
+
+    // 1. 日本の地方区分
+    // https://makitani.net/shimauma/knowledge/regional-classification-of-japan
+
+</script>
