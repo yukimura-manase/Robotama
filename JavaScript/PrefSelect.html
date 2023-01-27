@@ -1,0 +1,232 @@
+
+<style>
+
+input[type='text'] {
+    width: 80%;
+    height: 30px;
+    margin-top: 10px;
+}
+
+
+</style>
+<body>
+    
+<h1>日本 47都道府県</h1>
+<div style="text-align: center;">
+    <div style="margin-top: 12px;">
+        <span>検索</span>
+        <input type="text" id="searchbox">
+    </div>
+    <div>
+        <select name="pref" id="select-pref">
+            <option value="">選択してください</option>
+        </select>
+    </div>
+    <div>
+        <input type="text" id="select-info" value="" placeholder="選択されたものが表示されます" disabled>
+    </div>
+</div>
+
+<script>
+
+    // [ 実行-Task-List ]
+
+        // 1. Serverから受信した optionData から動的に SelectBoxを作成する
+
+        // 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する 
+
+        // 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である
+
+    
+    // [ 1. Serverから受信した optionData から動的に SelectBoxを作成する ]
+
+    // Serverから受信した、DataSet
+    const optionData = [
+        {id: null, value: 'group@北海道'},
+        {id: 1, value: '北海道'},
+        {id: null, value: 'group@東北'},
+        {id: 2, value: '青森県'},
+        {id: 3, value: '岩手県'},
+        {id: 4, value: '宮城県'},
+        {id: 5, value: '秋田県'},
+        {id: 6, value: '山形県'},
+        {id: 7, value: '福島県'},
+    ];
+
+    const optionCopy = [...optionData];
+
+    let selectPref = document.getElementById('select-pref');
+
+    let optionList = document.querySelectorAll('#select-pref option');
+
+    let groupCount = 1;
+    let groupId = '';
+
+    optionData.forEach((opt) => {
+
+        // グループ・データか、普通のものかを判定する
+        if (/^group@/.test(opt.value)){
+            let optgroup = document.createElement('optgroup');
+            let setGroupId = `group_${groupCount}`;
+
+            groupId = setGroupId;
+            optgroup.setAttribute('id', groupId);
+            optgroup.setAttribute('label', opt.value.replace("group@", ""));
+            selectPref.appendChild(optgroup);
+
+            groupCount++;
+        } else {
+
+           let option = document.createElement('option');
+           option.setAttribute('value', opt.id);
+           option.innerText = opt.value;
+
+           let belongToGroup = document.getElementById(`${groupId}`);
+
+           belongToGroup.appendChild(option);
+        }
+        
+    });
+
+
+    // 
+
+
+    // [ 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する  ]
+    
+    const searchbox = document.getElementById('searchbox');
+
+    // 検索結果のOption-List
+    let searchResult = [];
+
+    // 入力文字列を受け取る処理
+    searchbox.addEventListener('input', (e) => {
+        // console.log(e.target.value);
+
+        let val = e.target.value;
+
+        console.log({val});
+
+        let searchResult = [];
+
+        // 検索文字列から絞り込む
+        searchResult = optionData.filter((pref) => {
+
+            // console.log(pref.value);
+
+            if (/^group@/.test(pref.value)) return false;
+
+            // 正規表現で変数を使用するためには、RegExp-Classを使用する
+            let reg = new RegExp(`^${pref.value}`);
+            // console.log({reg});
+
+            // 条件と一致したものを返す
+            return reg.test(pref.value);
+        });
+
+        console.log({searchResult});
+
+
+    });
+
+
+
+    // [ 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である ]
+
+    selectPref.addEventListener('change', (e) => {
+
+        console.log(e.target);
+
+        // 選択されたoption番号を取得
+        // let idx =  e.selectedIndex;
+
+        // let val = optionList[idx].value;
+        // let text = optionList[idx].innerHTML;
+
+        // console.log(idx, val, text);
+    });
+
+
+
+
+    // JavaScript select要素で選択された値を取得する
+    // https://qiita.com/oiz-y/items/52d97fb96800bc4a0ff1
+
+
+
+
+    
+    // // robotama.appendChild();
+
+    // // 上記のDataSetから、SelectListを動的に作成する
+
+
+    // 1. SelectBox => HTMLSelectElement
+    // const selectPref = document.getElementById('select-pref');
+
+    // // selectPref.addEventListener('change', (e) => {
+    // //     console.log(e);
+    // // });
+
+    // // console.log(selectPref);
+    // // console.dir(selectPref);
+
+    // // 2. 初期設定の選択肢 => HTMLOptionsCollection
+    // const options = selectPref.options;
+
+    // const optionInit = document.querySelectorAll('#select-pref option');
+    // // console.dir(optionInit);
+
+    // const optionList = [...selectPref.options];
+
+    // // console.log(options);
+    // // console.dir(options);
+
+    // // console.log(options.length);
+
+    // const prefList = [];
+
+    // // HTMLCollectionをforEachするなら、一度、配列に変換する
+    // [...options].forEach((option) => {
+    //     // console.log(option.value);
+    //     // console.log(option.label);
+    //     // console.log(option.innerText);
+
+    //     prefList.push(option.innerText);
+    // });
+
+
+    // // 3. 検索Box
+    // const searchbox = document.getElementById('searchbox');
+
+    // // 検索結果のOption-List
+    // let searchResult = [];
+
+    // // 入力文字列を受け取る処理
+    // searchbox.addEventListener('input', (e) => {
+    //     // console.log(e.target.value);
+
+    //     let val = e.target.value;
+
+    //     // 検索文字列から絞り込む
+    //     searchResult = prefList.filter((pref) => {
+
+    //         // 正規表現で変数を使用するためには、RegExp-Classを使用する
+    //         let reg = new RegExp(`^${val}`);
+    //         // console.log({reg});
+
+    //         // 条件と一致したものを返す
+    //         return reg.test(pref);
+    //     });
+
+    //     console.log({searchResult});
+
+
+    // });
+
+
+
+
+</script>
+
+</body>
