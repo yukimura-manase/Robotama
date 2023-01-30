@@ -11,218 +11,199 @@ input[type='text'] {
 </style>
 <body>
     
-<h1>日本 47都道府県</h1>
+<h1 style="text-align: center;">日本 47都道府県</h1>
 <div style="text-align: center;">
+    <!-- <p>好きな都道府県を5つまで、選択可能です</p> -->
+
+    <!-- 検索-Box -->
     <div style="margin-top: 12px;">
         <span>検索</span>
         <input type="text" id="searchbox">
     </div>
+
+    <!-- Select-Box -->
     <div>
         <select name="pref" id="select-pref">
-            <option value="">選択してください</option>
         </select>
     </div>
+
+    <!-- 選択中のものが表示される -->
     <div>
+        <p>選択されたものが表示されます</p>
         <input type="text" id="select-info" value="" placeholder="選択されたものが表示されます" disabled>
     </div>
 </div>
 
 <script>
 
-    // [ 実行-Task-List ]
+// [ 実行-Task-List ]
 
-        // 1. Serverから受信した optionData から動的に SelectBoxを作成する
+    // 1. Serverから受信した optionData から動的に SelectBoxを作成する
 
-        // 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する 
+    // 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する 
 
-        // 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である
+    // 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である
 
+
+
+// 選択肢・Optionの作成と追加を実行する関数
+function OptionCreator (selectPrefBox, optionList, optGroupList) {
     
-    // [ 1. Serverから受信した optionData から動的に SelectBoxを作成する ]
+    optionList.forEach((opt, index) => {
 
-    // Serverから受信した、DataSet
-    const optionData = [
-        {id: null, value: 'group@北海道'},
-        {id: 1, value: '北海道'},
-        {id: null, value: 'group@東北'},
-        {id: 2, value: '青森県'},
-        {id: 3, value: '岩手県'},
-        {id: 4, value: '宮城県'},
-        {id: 5, value: '秋田県'},
-        {id: 6, value: '山形県'},
-        {id: 7, value: '福島県'},
-    ];
+    // 1. 最初は、<option value="">選択してください</option> を作成する
+    if (index == 0) {
+        let option = document.createElement('option');
+        option.setAttribute('value', '');
+        option.innerText = '選択してください';
+        selectPrefBox.appendChild(option);
+    }
 
-    const optionCopy = [...optionData];
+    let option = document.createElement('option');
+    option.setAttribute('value', opt.id);
+    option.innerText = opt.value;
 
-    let selectPref = document.getElementById('select-pref');
+    let groupId = opt.groupId;
 
-    let optionList = document.querySelectorAll('#select-pref option');
+    let belongToGroup = document.getElementById(`${groupId}`);
 
-    let groupCount = 1;
-    let groupId = '';
+    // 所属するoptgroupがなかったら、追加する
+    if (belongToGroup == null) {
 
-    optionData.forEach((opt) => {
+        const belong = optGroupList.find(group => group.id == groupId);
 
-        // グループ・データか、普通のものかを判定する
-        if (/^group@/.test(opt.value)){
-            let optgroup = document.createElement('optgroup');
-            let setGroupId = `group_${groupCount}`;
+        selectPrefBox.appendChild(belong);
 
-            groupId = setGroupId;
-            optgroup.setAttribute('id', groupId);
-            optgroup.setAttribute('label', opt.value.replace("group@", ""));
-            selectPref.appendChild(optgroup);
+        belongToGroup = document.getElementById(`${groupId}`); // 再度、取得する
+    }
 
-            groupCount++;
-        } else {
-
-           let option = document.createElement('option');
-           option.setAttribute('value', opt.id);
-           option.innerText = opt.value;
-
-           let belongToGroup = document.getElementById(`${groupId}`);
-
-           belongToGroup.appendChild(option);
-        }
-        
-    });
-
-
-    // 
-
-
-    // [ 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する  ]
-    
-    const searchbox = document.getElementById('searchbox');
-
-    // 検索結果のOption-List
-    let searchResult = [];
-
-    // 入力文字列を受け取る処理
-    searchbox.addEventListener('input', (e) => {
-        // console.log(e.target.value);
-
-        let val = e.target.value;
-
-        console.log({val});
-
-        let searchResult = [];
-
-        // 検索文字列から絞り込む
-        searchResult = optionData.filter((pref) => {
-
-            // console.log(pref.value);
-
-            if (/^group@/.test(pref.value)) return false;
-
-            // 正規表現で変数を使用するためには、RegExp-Classを使用する
-            let reg = new RegExp(`^${pref.value}`);
-            // console.log({reg});
-
-            // 条件と一致したものを返す
-            return reg.test(pref.value);
-        });
-
-        console.log({searchResult});
-
+    belongToGroup.appendChild(option);
 
     });
+}
 
 
 
-    // [ 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である ]
+// SelectBoxを作成する関数 => 引数: 1. selectPrefBox: Select-HTML-Element, 2. optionList = {id: number, value: string}[]
 
-    selectPref.addEventListener('change', (e) => {
+function SelectCreator (selectPrefBox, optionList, optGroup, searchList) {
 
-        console.log(e.target);
+    if (optionList.length == 0) return; 
 
-        // 選択されたoption番号を取得
-        // let idx =  e.selectedIndex;
+    selectPrefBox.innerHTML = ''; // 初期化処理
 
-        // let val = optionList[idx].value;
-        // let text = optionList[idx].innerHTML;
+    // 1. グループ・カテゴリを作成する
 
-        // console.log(idx, val, text);
+    // optgroupタグを作成 => グループカテゴリを作成する
+    const optGroupList = optGroup.map((group) => {
+        let optgroup = document.createElement('optgroup');
+        optgroup.setAttribute('id', group.id);
+        optgroup.setAttribute('label', group.value);
+        return optgroup;
+    });
+    
+
+    // 2. 選択肢・Optionの作成と追加
+    if (searchList.length !== 0) OptionCreator(selectPrefBox, searchList, optGroupList);
+    else OptionCreator(selectPrefBox, optionList, optGroupList);
+}
+
+
+
+// [ 1. Serverから受信した optionData から動的に SelectBoxを作成する ]
+
+// Serverから受信した、DataSet
+const optionData = [
+    {id: null, value: 'group@北海道'},
+    {id: 1, value: '北海道'},
+    {id: null, value: 'group@東北'},
+    {id: 2, value: '青森県'},
+    {id: 3, value: '岩手県'},
+    {id: 4, value: '宮城県'},
+    {id: 5, value: '秋田県'},
+    {id: 6, value: '山形県'},
+    {id: 7, value: '福島県'},
+];
+
+
+let groupCount = 1;
+let groupId = '';
+
+// Group-配列 => {id: 'group_1', value: '北海道'}[]
+const optGroup = [];
+
+// 47都道府県データに、groupを紐づける
+// {id: 1, value: '北海道', groupId: 'group_1'}[]
+const optionCustom = optionData.filter((opt, index) => {
+
+    if (/^group@/.test(opt.value)) { // グループ・データなら、加工して、optGroupに投入する
+        groupId = `group_${groupCount}`;
+        groupCount++;
+        opt.id = groupId;
+        opt.value = opt.value.replace("group@", "");
+        optGroup.push(opt);
+    } else {
+        opt.groupId = groupId;
+        return opt;
+    }
+});
+
+console.log({optionCustom});
+
+console.log({optGroup});
+
+let selectPrefBox = document.getElementById('select-pref');
+
+
+// 初回のSelect-作成
+SelectCreator(selectPrefBox, optionCustom, optGroup, []);
+
+
+// [ 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する  ]
+
+const searchbox = document.getElementById('searchbox');
+
+let searchResult = []; // 検索結果のOption-List
+
+searchbox.addEventListener('input', (e) => { // 入力文字列を受け取る処理
+
+    let searchStr = e.target.value; // 検索文字列
+
+    let searchResult = optionCustom.filter((pref) => { // 検索文字列から絞り込む
+        if (/^group@/.test(pref.value)) return false;
+
+        let reg = new RegExp(`^${searchStr}`); // 正規表現で変数を使用するためには、RegExp-Classを使用する
+        return reg.test(pref.value); // 検索文字列のパターンと、登録データがマッチするかでTestをする
     });
 
+    console.log({searchResult});
 
 
+    SelectCreator(selectPrefBox, optionCustom, optGroup, searchResult);
 
-    // JavaScript select要素で選択された値を取得する
-    // https://qiita.com/oiz-y/items/52d97fb96800bc4a0ff1
-
-
+});
 
 
-    
-    // // robotama.appendChild();
+// [ 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である ]
 
-    // // 上記のDataSetから、SelectListを動的に作成する
+// 選択中のものを表示するInput-Box
+let selectInfo = document.getElementById('select-info');
 
+let selectData = [];
 
-    // 1. SelectBox => HTMLSelectElement
-    // const selectPref = document.getElementById('select-pref');
+selectPrefBox.addEventListener('change', (e) => {
+    const id = Number(e.target.value);
+    const option = optionCustom.find(opt => opt.id === id);
+    selectData.push(option);
 
-    // // selectPref.addEventListener('change', (e) => {
-    // //     console.log(e);
-    // // });
+    selectData.forEach((opt, index) => {
+        if (index == 0) selectInfo.value = ''; // 初期化処理
+        if (index == selectData.length -1) selectInfo.value += `${opt.value}`; // 最後は、「,」を付与しない
+        else selectInfo.value += `${opt.value},`;
+    });
 
-    // // console.log(selectPref);
-    // // console.dir(selectPref);
+});
 
-    // // 2. 初期設定の選択肢 => HTMLOptionsCollection
-    // const options = selectPref.options;
-
-    // const optionInit = document.querySelectorAll('#select-pref option');
-    // // console.dir(optionInit);
-
-    // const optionList = [...selectPref.options];
-
-    // // console.log(options);
-    // // console.dir(options);
-
-    // // console.log(options.length);
-
-    // const prefList = [];
-
-    // // HTMLCollectionをforEachするなら、一度、配列に変換する
-    // [...options].forEach((option) => {
-    //     // console.log(option.value);
-    //     // console.log(option.label);
-    //     // console.log(option.innerText);
-
-    //     prefList.push(option.innerText);
-    // });
-
-
-    // // 3. 検索Box
-    // const searchbox = document.getElementById('searchbox');
-
-    // // 検索結果のOption-List
-    // let searchResult = [];
-
-    // // 入力文字列を受け取る処理
-    // searchbox.addEventListener('input', (e) => {
-    //     // console.log(e.target.value);
-
-    //     let val = e.target.value;
-
-    //     // 検索文字列から絞り込む
-    //     searchResult = prefList.filter((pref) => {
-
-    //         // 正規表現で変数を使用するためには、RegExp-Classを使用する
-    //         let reg = new RegExp(`^${val}`);
-    //         // console.log({reg});
-
-    //         // 条件と一致したものを返す
-    //         return reg.test(pref);
-    //     });
-
-    //     console.log({searchResult});
-
-
-    // });
 
 
 
