@@ -1,0 +1,232 @@
+
+<style>
+
+    input[type='text'] {
+        width: 80%;
+        height: 30px;
+        margin-top: 10px;
+    }
+    
+    
+</style>
+<body>
+    
+<h1 style="text-align: center;">日本 47都道府県</h1>
+<div style="text-align: center;">
+    <p>好きな都道府県を5つまで、選択可能です</p>
+
+    <!-- 検索-Box -->
+    <div style="margin-top: 12px;">
+        <span>検索</span>
+        <input type="text" id="searchbox">
+    </div>
+
+    <!-- Select-Box -->
+    <div>
+        <select name="pref" id="select-pref">
+        </select>
+    </div>
+
+    <!-- 選択中のものが表示される -->
+    <p>選択されたものが表示されます (ボタンを押すと選択が解除されます)</p>
+    <div id="disp-select">
+    </div>
+</div>
+
+<script>
+
+// [ 実行-Task-List ]
+
+    // 1. Serverから受信した optionData から動的に SelectBoxを作成する
+
+    // 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する 
+
+    // 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である
+
+
+
+// 選択肢・Optionの作成と追加を実行する関数
+function OptionCreator (selectPrefBox, optionList, optGroupList) {
+    
+    optionList.forEach((opt, index) => {
+
+    // 1. 最初は、<option value="">選択してください</option> を作成する
+    if (index == 0) {
+        let option = document.createElement('option');
+        option.setAttribute('value', '');
+        option.innerText = '選択してください';
+        selectPrefBox.appendChild(option);
+    }
+
+    let option = document.createElement('option');
+    option.setAttribute('value', opt.id);
+    option.innerText = opt.value;
+
+    let groupId = opt.groupId;
+
+    let belongToGroup = document.getElementById(`${groupId}`);
+
+    // 所属するoptgroupがなかったら、追加する
+    if (belongToGroup == null) {
+
+        const belong = optGroupList.find(group => group.id == groupId);
+
+        selectPrefBox.appendChild(belong);
+
+        belongToGroup = document.getElementById(`${groupId}`); // 再度、取得する
+    }
+
+    belongToGroup.appendChild(option);
+
+    });
+}
+
+
+
+// SelectBoxを作成する関数 => 引数: 1. selectPrefBox: Select-HTML-Element, 2. optionList = {id: number, value: string}[]
+
+function SelectCreator (selectPrefBox, optionList, optGroup, searchList) {
+
+    if (optionList.length == 0) return; 
+
+    selectPrefBox.innerHTML = ''; // 初期化処理
+
+    // 1. グループ・カテゴリを作成する
+
+    // optgroupタグを作成 => グループカテゴリを作成する
+    const optGroupList = optGroup.map((group) => {
+        let optgroup = document.createElement('optgroup');
+        optgroup.setAttribute('id', group.id);
+        optgroup.setAttribute('label', group.value);
+        return optgroup;
+    });
+    
+
+    // 2. 選択肢・Optionの作成と追加
+    if (searchList.length !== 0) OptionCreator(selectPrefBox, searchList, optGroupList);
+    else OptionCreator(selectPrefBox, optionList, optGroupList);
+}
+
+
+
+// [ 1. Serverから受信した optionData から動的に SelectBoxを作成する ]
+
+// Serverから受信した、DataSet
+const optionData = [
+    {id: null, value: 'group@北海道'},
+    {id: 1, value: '北海道'},
+    {id: null, value: 'group@東北'},
+    {id: 2, value: '青森県'},
+    {id: 3, value: '岩手県'},
+    {id: 4, value: '宮城県'},
+    {id: 5, value: '秋田県'},
+    {id: 6, value: '山形県'},
+    {id: 7, value: '福島県'},
+];
+
+
+let groupCount = 1;
+let groupId = '';
+
+// Group-配列 => {id: 'group_1', value: '北海道'}[]
+const optGroup = [];
+
+// 47都道府県データに、groupを紐づける
+// {id: 1, value: '北海道', groupId: 'group_1'}[]
+const optionCustom = optionData.filter((opt, index) => {
+
+    if (/^group@/.test(opt.value)) { // グループ・データなら、加工して、optGroupに投入する
+        groupId = `group_${groupCount}`;
+        groupCount++;
+        opt.id = groupId;
+        opt.value = opt.value.replace("group@", "");
+        optGroup.push(opt);
+    } else {
+        opt.groupId = groupId;
+        return opt;
+    }
+});
+
+console.log({optionCustom});
+
+console.log({optGroup});
+
+let selectPrefBox = document.getElementById('select-pref');
+
+
+// 初回のSelect-作成
+SelectCreator(selectPrefBox, optionCustom, optGroup, []);
+
+
+// [ 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する  ]
+
+const searchbox = document.getElementById('searchbox');
+
+let searchResult = []; // 検索結果のOption-List
+
+searchbox.addEventListener('input', (e) => { // 入力文字列を受け取る処理
+
+    let searchStr = e.target.value; // 検索文字列
+
+    let searchResult = optionCustom.filter((pref) => { // 検索文字列から絞り込む
+        if (/^group@/.test(pref.value)) return false;
+
+        let reg = new RegExp(`^${searchStr}`); // 正規表現で変数を使用するためには、RegExp-Classを使用する
+        return reg.test(pref.value); // 検索文字列のパターンと、登録データがマッチするかでTestをする
+    });
+
+    console.log({searchResult});
+
+
+    SelectCreator(selectPrefBox, optionCustom, optGroup, searchResult);
+
+});
+
+
+// [ 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である ]
+
+// 選択中のものを表示するInput-Box
+let dispDiv = document.getElementById('disp-select');
+
+
+selectPrefBox.addEventListener('change', (e) => {
+
+    // 1. 上限を5つまでにして、それ以上は、弾く！
+    if (6 <= dispDiv.childElementCount + 1) {
+        alert('選択できる数は、5つまでです');
+        return;
+    }
+
+    const id = Number(e.target.value);
+
+    // 2. 選択済みの都道府県は、弾く！
+    const idList = [...dispDiv.children].map(btn => btn.id);
+
+    console.log({idList});
+
+    if (idList.some(i => Number(i) == id)) {
+        alert('選択済みです');
+        return;
+    }
+
+    // Optionデータを取得して、ボタンに紐づける
+    const option = optionCustom.find(opt => opt.id === id);
+    console.log(option);
+
+    let input = document.createElement('input');
+    input.setAttribute('type', 'button');
+    input.setAttribute('id', option.id);
+    input.setAttribute('value', option.value);
+
+    // 選択を解除する機能をボタンに付与する
+    input.onclick = e => dispDiv.removeChild(e.target);
+
+    dispDiv.appendChild(input);
+
+});
+
+
+
+</script>
+
+</body>
