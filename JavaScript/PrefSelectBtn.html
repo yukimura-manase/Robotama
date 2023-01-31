@@ -21,6 +21,12 @@
         <input type="text" id="searchbox">
     </div>
 
+    <!-- 検索ボタン・リセットボタン -->
+    <span>
+        <input type="button" id="search" value="検索">
+        <input type="button" id="reset" value="リセット">
+    </span>
+
     <!-- Select-Box -->
     <div>
         <select name="pref" id="select-pref">
@@ -81,11 +87,19 @@ function OptionCreator (selectPrefBox, optionList, optGroupList) {
     });
 }
 
+function NoMatchOption (selectPrefBox) {
+
+    let option = document.createElement('option');
+    option.setAttribute('value', '');
+    option.innerText = '検索に該当はありません';
+    selectPrefBox.appendChild(option);
+}
+
 
 
 // SelectBoxを作成する関数 => 引数: 1. selectPrefBox: Select-HTML-Element, 2. optionList = {id: number, value: string}[]
 
-function SelectCreator (selectPrefBox, optionList, optGroup, searchList) {
+function SelectCreator (selectPrefBox, optionList, optGroup, searchList, searchBool) {
 
     if (optionList.length == 0) return; 
 
@@ -103,8 +117,9 @@ function SelectCreator (selectPrefBox, optionList, optGroup, searchList) {
     
 
     // 2. 選択肢・Optionの作成と追加
-    if (searchList.length !== 0) OptionCreator(selectPrefBox, searchList, optGroupList);
-    else OptionCreator(selectPrefBox, optionList, optGroupList);
+    if (searchList.length !== 0 && searchBool) OptionCreator(selectPrefBox, searchList, optGroupList);
+    else if (!searchBool) OptionCreator(selectPrefBox, optionList, optGroupList);
+    else NoMatchOption(selectPrefBox);
 }
 
 
@@ -155,7 +170,7 @@ let selectPrefBox = document.getElementById('select-pref');
 
 
 // 初回のSelect-作成
-SelectCreator(selectPrefBox, optionCustom, optGroup, []);
+SelectCreator(selectPrefBox, optionCustom, optGroup, [], false);
 
 
 // [ 2. 検索-Inputフォームで、動的にSelectBoxを再作成する => 検索によって、リアルタイムでSelectBoxを変更する  ]
@@ -164,11 +179,14 @@ const searchbox = document.getElementById('searchbox');
 
 let searchResult = []; // 検索結果のOption-List
 
+
+// let InfoNoHit = document.getElementById('info-no-hit');
+
 searchbox.addEventListener('input', (e) => { // 入力文字列を受け取る処理
 
     let searchStr = e.target.value; // 検索文字列
 
-    let searchResult = optionCustom.filter((pref) => { // 検索文字列から絞り込む
+    searchResult = optionCustom.filter((pref) => { // 検索文字列から絞り込む
         if (/^group@/.test(pref.value)) return false;
 
         let reg = new RegExp(`^${searchStr}`); // 正規表現で変数を使用するためには、RegExp-Classを使用する
@@ -176,11 +194,14 @@ searchbox.addEventListener('input', (e) => { // 入力文字列を受け取る�
     });
 
     console.log({searchResult});
-
-
-    SelectCreator(selectPrefBox, optionCustom, optGroup, searchResult);
-
 });
+
+
+
+// 検索ボタン
+let searchBtn = document.getElementById('search');
+
+search.onclick = () => SelectCreator(selectPrefBox, optionCustom, optGroup, searchResult, true);
 
 
 // [ 3. SelectBoxで選択したものは、画面に表示される => 複数選択が可能である ]
@@ -188,8 +209,10 @@ searchbox.addEventListener('input', (e) => { // 入力文字列を受け取る�
 // 選択中のものを表示するInput-Box
 let dispDiv = document.getElementById('disp-select');
 
-
 selectPrefBox.addEventListener('change', (e) => {
+
+    // 選択してくださいは、弾く！
+    if (!e.target.value) return;
 
     // 1. 上限を5つまでにして、それ以上は、弾く！
     if (6 <= dispDiv.childElementCount + 1) {
@@ -225,6 +248,13 @@ selectPrefBox.addEventListener('change', (e) => {
 
 });
 
+
+// [ 4. 検索状態をResetするボタンを作成する ]
+
+// reset
+let resetBtn = document.getElementById('reset');
+
+resetBtn.onclick = () => SelectCreator(selectPrefBox, optionCustom, optGroup, [], false);
 
 
 </script>
