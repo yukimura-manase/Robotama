@@ -1,7 +1,11 @@
 // JSON を読みやすくする方法2選 VSCode 拡張 と Webツール
 
+Command Alt P でパレットを開く！
+
 Visual Studio Code Extension : Prettify JSON
 https://marketplace.visualstudio.com/items?itemName=mohsen1.prettify-json
+
+
 JSONきれい ～JSON整形ツール～
 https://tools.m-bsys.com/development_tooles/json-beautifier.php
 
